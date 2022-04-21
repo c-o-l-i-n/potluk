@@ -1,0 +1,39 @@
+body {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+}
+
+.potluk-box {
+	.potluk-box-item {
+		padding: 1rem 0;
+		border-bottom: solid #f5f5f5 2px;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+	}
+}
+
+// ---------------------- Bulma ----------------------
+
+// Set your brand colors
+// $scarlet: #bb0000;
+// $gray: #666666;
+
+$primary: #37c54e;
+$link: $primary;
+
+$family-primary: 'Montserrat';
+
+@import '~bulma/bulma.sass';
+@import '~bulma-calendar/src/sass/index.sass';

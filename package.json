@@ -1,24 +1,37 @@
 {
-  "name": "potluk",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "12.1.5",
-    "react": "18.0.0",
-    "react-dom": "18.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "17.0.25",
-    "@types/react": "18.0.5",
-    "@types/react-dom": "18.0.1",
-    "eslint": "8.13.0",
-    "eslint-config-next": "12.1.5",
-    "typescript": "4.6.3"
-  }
+	"name": "potluk",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^6.1.1",
+		"@fortawesome/free-brands-svg-icons": "^6.1.1",
+		"@fortawesome/free-regular-svg-icons": "^6.1.1",
+		"@fortawesome/free-solid-svg-icons": "^6.1.1",
+		"@fortawesome/react-fontawesome": "^0.1.18",
+		"axios": "^0.26.1",
+		"bulma": "^0.9.3",
+		"bulma-calendar": "^6.1.18",
+		"copy-to-clipboard": "^3.3.1",
+		"dashify": "^2.0.0",
+		"firebase-admin": "^10.0.2",
+		"next": "12.1.5",
+		"next-absolute-url": "^1.2.2",
+		"react": "18.0.0",
+		"react-dom": "18.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "17.0.25",
+		"@types/react": "18.0.5",
+		"@types/react-dom": "18.0.1",
+		"eslint": "8.13.0",
+		"eslint-config-next": "12.1.5",
+		"sass": "^1.50.1",
+		"typescript": "4.6.3"
+	}
 }
