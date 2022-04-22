@@ -14,7 +14,6 @@ const CreateButton = ({ eventName, eventDate, categories }: Props) => {
 
 	const onCreateButtonClick = async () => {
 		const potluk = new Potluk(eventName, eventDate, categories)
-		console.log(potluk)
 		await axios.post('/api/v1/potluk', potluk)
 		router.replace('/' + potluk.id)
 	}

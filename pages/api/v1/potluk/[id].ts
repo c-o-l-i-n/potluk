@@ -3,8 +3,6 @@ import db from '../../../../utils/db'
 const putGetOrDeletePotluk = async (request: any, response: any) => {
 	const { id } = request.query
 
-	console.log(id)
-
 	try {
 		const potluksDatabase = db.ref('potluks')
 
