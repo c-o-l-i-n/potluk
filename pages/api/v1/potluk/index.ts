@@ -1,11 +1,21 @@
+import { eventNames } from 'process'
+import Potluk from '../../../../models/potluk'
 import db from '../../../../utils/db'
 
 const postPotluk = async (request: any, response: any) => {
+	const potluk = new Potluk(
+		request.body.eventName,
+		request.body.eventDate,
+		request.body.categories,
+		request.body.id,
+		request.body.createdDate,
+		request.body.lastModifiedDate
+	)
+
 	try {
-		const { id } = request.body
 		const potluksDatabase = db.ref('potluks')
-		await potluksDatabase.child(id).set(request.body)
-		const newPotluk = await potluksDatabase.child(id).get()
+		await potluksDatabase.child(potluk.id).set(potluk)
+		const newPotluk = await potluksDatabase.child(potluk.id).get()
 		response.status(200).json(newPotluk)
 	} catch (e) {
 		console.error(e)

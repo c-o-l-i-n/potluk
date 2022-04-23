@@ -1,20 +1,26 @@
-import axios from 'axios'
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Potluk from '../models/potluk'
 import absoluteUrl from 'next-absolute-url'
-import Category from '../models/category'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faArrowUpRightFromSquare,
 	faList,
 } from '@fortawesome/free-solid-svg-icons'
 import copy from 'copy-to-clipboard'
-import { eventNames } from 'process'
+import Box from '../components/Box'
+import BoxItem from '../components/BoxItem'
+import Item from '../models/item'
+import AddItemButton from '../components/AddItemButton'
+import BoxHeader from '../components/BoxHeader'
+import { useEffect, useState } from 'react'
+import InputField from '../components/InputField'
+import Category from '../models/category'
 
 type Props = {
-	potluk: Potluk
+	initialPotlukJson: any
+	initialUsername: string
 }
 
 const props = {
@@ -70,10 +76,18 @@ const props = {
 	],
 }
 
-export default function Edit({ potluk }: Props) {
-	const username = 'Colin'
+export default function Main({ initialPotlukJson, initialUsername }: Props) {
+	const [potluk, setPotluk] = useState(Potluk.createFromJson(initialPotlukJson))
+	const [username, setUsername] = useState(initialUsername)
+	const [loginFieldValue, setLoginFieldValue] = useState('')
 
 	const router = useRouter()
+
+	if (!potluk) {
+		return (
+			<p>Potluk with ID &quot;{router.asPath.substring(1)}&quot; not found</p>
+		)
+	}
 
 	if (router.isFallback) {
 		return <p>Loading...</p>
@@ -109,17 +123,19 @@ export default function Edit({ potluk }: Props) {
 
 	const shareList = async () => {
 		share({
-			text: await generateListString(props),
+			text: await generateListString(potluk),
 		})
 	}
 
-	const generateListString = async (potluk: any) => {
+	const generateListString = async (potluk: Potluk) => {
 		let text = `${potluk.eventName}\n${new Date(
 			potluk.eventDate
 		).toLocaleDateString()}\n${window.location.href}\n`
 
 		for (const category of potluk.categories) {
 			text += '\n' + category.name.toUpperCase() + '\n'
+
+			if (!category.items) continue
 			for (const item of category.items) {
 				text += item.broughtByUser ? '✅ ' : '⬜️ '
 				text +=
@@ -131,60 +147,155 @@ export default function Edit({ potluk }: Props) {
 		return text
 	}
 
-	if (potluk) {
-		return (
-			<>
-				<Head>
-					<title>{potluk.eventName}</title>
-				</Head>
+	const addItem = (categoryId: string) => {
+		// so TS doesn't get mad at me
+		if (!username) return
 
-				<main
-					className='section
+		const category = {
+			...potluk.categories.find((c) => c.id === categoryId),
+		} as Category
+		category.items.push(new Item('', username, null, categoryId))
+		const newCategories = [
+			...potluk.categories.filter((c) => c.id !== categoryId),
+			category,
+		]
+		setPotluk({ ...potluk, categories: newCategories } as Potluk)
+	}
+
+	const deleteItem = (item: Item) => {
+		const category = {
+			...potluk.categories.find((c) => c.id === item.categoryId),
+		} as Category
+		if (!category?.items) {
+			console.error(`Category ${item.categoryId} or its items not found`)
+			return
+		}
+		category.items = category.items.filter((i) => i.id !== item.id)
+
+		const categories = potluk.categories.filter((c) => c.id !== category.id)
+		categories.push(category)
+
+		setPotluk({ ...potluk, categories: categories } as Potluk)
+	}
+
+	const changeItem = (item: Item) => {
+		const category = {
+			...potluk.categories.find((c) => c.id === item.categoryId),
+		} as Category
+
+		if (!category?.items) {
+			console.error(`Category ${item.categoryId} or its items not found`)
+			return
+		}
+		category.items = category.items.filter((i) => i.id !== item.id)
+		category.items.push(item)
+
+		const categories = potluk.categories.filter((c) => c.id !== category.id)
+		categories.push(category)
+
+		setPotluk({ ...potluk, categories: categories } as Potluk)
+	}
+
+	return (
+		<>
+			<Head>
+				<title>{potluk.eventName}</title>
+			</Head>
+
+			<main
+				className='section
 					content
 					is-flex
 					is-flex-direction-column
 					is-align-items-center
 					is-justify-content-space-between'
-				>
-					<h1>{potluk.eventName}</h1>
-					<h6 className='is-uppercase'>
-						{new Date(potluk.eventDate.toString()).toDateString()}
-					</h6>
-					<div className='is-flex is-justify-content-space-between is-align-items-flex-end'>
-						<p>Logged in as: {username}</p>
-						<button className='button is-primary'>Log Out</button>
-					</div>
+			>
+				<h1>{potluk.eventName}</h1>
+				<h6 className='is-uppercase'>{potluk.eventDate.toDateString()}</h6>
+				<div className='is-flex is-justify-content-space-between is-align-items-flex-end'>
+					{username ? (
+						<>
+							<p>Logged in as: {username}</p>
+							<button
+								className='button is-primary'
+								onClick={() => {
+									setUsername('')
+								}}
+							>
+								Log Out
+							</button>
+						</>
+					) : (
+						<>
+							<InputField
+								type='text'
+								label='Log in to edit'
+								placeholder='Name'
+								onChange={setLoginFieldValue}
+								disabled={false}
+							/>
+							<button
+								className='button is-primary mb-3 ml-3'
+								onClick={() => {
+									if (loginFieldValue.trim()) {
+										setLoginFieldValue('')
+										setUsername(loginFieldValue.trim())
+									}
+								}}
+							>
+								Log In
+							</button>
+						</>
+					)}
+				</div>
 
-					<p className='buttons'>
-						<button className='button is-primary' onClick={shareList}>
-							<span>Share List</span>
-							<span className='icon'>
-								<FontAwesomeIcon icon={faList} />
-							</span>
-						</button>
-						<button className='button is-primary' onClick={shareLink}>
-							<span>Share Link</span>
-							<span className='icon'>
-								<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-							</span>
-						</button>
-					</p>
-				</main>
-			</>
-		)
-	} else {
-		return (
-			<p>Potluk with ID &quot;{router.asPath.substring(1)}&quot; not found</p>
-		)
-	}
+				{potluk.categories.map((category) => (
+					<Box key={category.id}>
+						<BoxHeader text={category.name} />
+						{category.items?.map((item) => (
+							<BoxItem
+								key={item.id}
+								initialItem={item}
+								onChange={changeItem}
+								onDelete={deleteItem}
+								disabled={false}
+								username={username}
+							/>
+						))}
+						{username ? (
+							<AddItemButton
+								onClick={() => addItem(category.id)}
+								disabled={false}
+							/>
+						) : (
+							<></>
+						)}
+					</Box>
+				))}
+
+				<p className='buttons'>
+					<button className='button is-primary' onClick={shareList}>
+						<span>Share List</span>
+						<span className='icon'>
+							<FontAwesomeIcon icon={faList} />
+						</span>
+					</button>
+					<button className='button is-primary' onClick={shareLink}>
+						<span>Share Link</span>
+						<span className='icon'>
+							<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+						</span>
+					</button>
+				</p>
+			</main>
+		</>
+	)
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	if (!context.params) {
 		return {
-			props: {
-				potluk: null,
-			},
+			notFound: true,
 		}
 	}
 
@@ -193,19 +304,28 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		`${origin}/api/v1/potluk/${context.params.id}`.replace('https', 'http')
 	)
 
-	if (request.status !== 200) {
+	let initialPotlukJson
+	try {
+		initialPotlukJson = await request.json()
+	} catch {
 		return {
-			props: {
-				potluk: null,
-			},
+			notFound: true,
 		}
 	}
 
-	const potluk = await request.json()
+	if (!initialPotlukJson) {
+		return {
+			notFound: true,
+		}
+	}
+
+	const initialUsername =
+		decodeURIComponent(context.query.u?.toString() || '') || null
 
 	return {
 		props: {
-			potluk: potluk,
+			initialPotlukJson: initialPotlukJson,
+			initialUsername: initialUsername,
 		},
 	}
 }

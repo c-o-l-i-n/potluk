@@ -1,27 +1,15 @@
-import axios from 'axios'
-import { useRouter } from 'next/router'
-import Category from '../models/category'
-import Potluk from '../models/potluk'
-
 type Props = {
-	eventName: string
-	eventDate: Date
-	categories: Category[]
+	onClick: Function
+	isLoading: boolean
 }
 
-const CreateButton = ({ eventName, eventDate, categories }: Props) => {
-	const router = useRouter()
-
-	const onCreateButtonClick = async () => {
-		const potluk = new Potluk(eventName, eventDate, categories)
-		await axios.post('/api/v1/potluk', potluk)
-		router.replace('/' + potluk.id)
-	}
-
+const CreateButton = ({ onClick, isLoading }: Props) => {
 	return (
 		<button
-			className='button is-primary is-size-4 is-large has-text-weight-bold mt-3'
-			onClick={onCreateButtonClick}
+			className={`button is-primary is-size-4 is-large has-text-weight-bold mt-3 ${
+				isLoading ? 'is-loading' : ''
+			}`}
+			onClick={() => onClick()}
 		>
 			Create
 		</button>

@@ -1,10 +1,15 @@
 import { NextPage } from 'next'
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import CreateButton from '../components/CreateButton'
 import Category from '../models/category'
 import InputField from '../components/InputField'
+import Potluk from '../models/potluk'
+import axios from 'axios'
+import router from 'next/router'
+import BoxCategoryItem from '../components/BoxCategoryItem'
+import AddItemButton from '../components/AddItemButton'
+import BoxHeader from '../components/BoxHeader'
+import Box from '../components/Box'
 
 const New: NextPage = () => {
 	const defaultDate = new Date(new Date().setDate(new Date().getDate() + 7)) // 1 week in the future
@@ -19,6 +24,24 @@ const New: NextPage = () => {
 	const [eventDate, setEventDate] = useState<Date>(defaultDate)
 	const [username, setUsername] = useState<string>('')
 	const [categories, setCategories] = useState<Category[]>(defaultCategories)
+	const [isLoading, setIsLoading] = useState(false)
+
+	const addCategory = () => {
+		const category = new Category('', [])
+		setCategories([...categories, category])
+	}
+
+	const deleteCategory = (id: string) => {
+		const newCategories = categories.filter((c) => c.id !== id)
+		setCategories(newCategories)
+	}
+
+	const createPotluk = async () => {
+		setIsLoading(true)
+		const potluk = new Potluk(eventName, eventDate, categories)
+		await axios.post('/api/v1/potluk', potluk)
+		router.push(`/${potluk.id}?u=${username}`)
+	}
 
 	return (
 		<>
@@ -29,69 +52,40 @@ const New: NextPage = () => {
 						label='Event Name'
 						placeholder='House Warming Party'
 						onChange={setEventName}
+						disabled={isLoading}
 					/>
-					<InputField type='date' label='Event Date' onChange={setEventDate} />
+					<InputField
+						type='date'
+						label='Event Date'
+						onChange={setEventDate}
+						disabled={isLoading}
+					/>
 					<InputField
 						type='text'
 						label='Your Name'
 						placeholder='Colin'
 						onChange={setUsername}
+						disabled={isLoading}
 					/>
-					<div className='box potluk-box mb-6'>
-						<p className='potluk-box-item is-size-5 has-text-centered has-text-weight-bold'>
-							Categories
-						</p>
-						<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
-							<input type='text' defaultValue='Mains'></input>
-							<button className='button is-danger'>
-								<span className='icon is-small'>
-									<FontAwesomeIcon icon={faTrashCan} />
-								</span>
-							</button>
-						</div>
-						<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
-							<input type='text' defaultValue='Sides'></input>
-							<button className='button is-danger'>
-								<span className='icon is-small'>
-									<FontAwesomeIcon icon={faTrashCan} />
-								</span>
-							</button>
-						</div>
-						<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
-							<input type='text' defaultValue='Desserts'></input>
-							<button className='button is-danger'>
-								<span className='icon is-small'>
-									<FontAwesomeIcon icon={faTrashCan} />
-								</span>
-							</button>
-						</div>
-						<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
-							<input type='text' defaultValue='Drinks'></input>
-							<button className='button is-danger'>
-								<span className='icon is-small'>
-									<FontAwesomeIcon icon={faTrashCan} />
-								</span>
-							</button>
-						</div>
-						<div className='potluk-box-item is-flex is-justify-content-center is-align-items-center'>
-							<button className='button is-medium is-ghost'>
-								<span className='icon is-medium'>
-									<FontAwesomeIcon
-										icon={faPlusCircle}
-										className='has-text-grey fa-2x'
-									/>
-								</span>
-							</button>
-						</div>
-					</div>
+
+					<Box>
+						<BoxHeader text='Categories' />
+
+						{categories.map((category, index) => (
+							<BoxCategoryItem
+								key={category.id}
+								category={category}
+								onDelete={deleteCategory}
+								disabled={isLoading}
+							/>
+						))}
+
+						<AddItemButton onClick={addCategory} disabled={isLoading} />
+					</Box>
 				</div>
 
 				<div className='is-flex is-justify-content-center'>
-					<CreateButton
-						eventName={eventName}
-						eventDate={eventDate}
-						categories={categories}
-					/>
+					<CreateButton onClick={createPotluk} isLoading={isLoading} />
 				</div>
 			</main>
 		</>

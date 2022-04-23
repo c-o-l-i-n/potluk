@@ -1,11 +1,7 @@
 import Category from './category'
+import UniqueID from './uniqueId'
 
-export default class Potluk {
-	public static readonly ID_LENGTH: number = 8
-	public static readonly ID_ALPHABET: string =
-		'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
-
-	public id: string
+export default class Potluk extends UniqueID {
 	public createdDate: Date
 	public lastModifiedDate: Date
 	public eventName: string
@@ -20,22 +16,32 @@ export default class Potluk {
 		createdDate?: Date,
 		lastModifiedDate?: Date
 	) {
+		super(id)
 		const now = new Date()
 		this.eventName = eventName
 		this.eventDate = eventDate
 		this.categories = categories
-		this.id = id || Potluk.generateRandomId()
 		this.createdDate = createdDate || now
 		this.lastModifiedDate = lastModifiedDate || now
 	}
 
-	private static generateRandomId() {
-		let id = ''
-		for (let i = 0; i < Potluk.ID_LENGTH; i++) {
-			id += Potluk.ID_ALPHABET.charAt(
-				Math.floor(Math.random() * Potluk.ID_ALPHABET.length)
-			)
-		}
-		return id
+	public static createFromJson = (json: any): Potluk => {
+		const { id, eventName } = json
+		const eventDate = new Date(json.eventDate)
+		const createdDate = new Date(json.createdDate)
+		const lastModifiedDate = new Date(json.lastModifiedDate)
+
+		const categories = Object.values(json.categories).map((categoryJson) =>
+			Category.createFromJson(categoryJson)
+		)
+
+		return new Potluk(
+			eventName,
+			eventDate,
+			categories,
+			id,
+			createdDate,
+			lastModifiedDate
+		)
 	}
 }

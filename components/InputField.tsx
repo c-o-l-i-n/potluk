@@ -1,17 +1,19 @@
-import { ChangeEvent, FunctionComponent } from 'react'
+import { ChangeEvent } from 'react'
 
 type Props = {
 	type: string
 	label: string
 	placeholder?: string
 	onChange: Function
+	disabled: boolean
 }
 
-const InputField: FunctionComponent<Props> = ({
+const InputField = ({
 	type,
 	label,
 	placeholder,
 	onChange,
+	disabled,
 }: Props) => {
 	const kebabCase = (text: string) => text.toLowerCase().replace(' ', '-')
 	const fieldName = kebabCase(label)
@@ -27,9 +29,10 @@ const InputField: FunctionComponent<Props> = ({
 					type={type}
 					name={fieldName}
 					placeholder={placeholder}
-					onInput={(e: ChangeEvent<HTMLInputElement>) => {
-						onChange(e.target.value)
+					onBlur={(e) => {
+						onChange((e.target as HTMLInputElement).value)
 					}}
+					disabled={disabled}
 				/>
 			</div>
 		</div>
