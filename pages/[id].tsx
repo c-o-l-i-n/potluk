@@ -112,19 +112,14 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		text?: string
 	}
 
-	const share = async (data: ShareData) => {
+	const share = (data: ShareData) => {
 		if (!navigator.canShare || !navigator.canShare(data)) {
 			const text = data.text || data.url || 'Error'
 			copy(text)
 			alert('✅ Copied to clipboard')
 			return
 		}
-		try {
-			await navigator.share(data)
-			alert('✅ Shared successfully')
-		} catch (err) {
-			alert('❌ ' + err)
-		}
+		navigator.share(data)
 	}
 
 	const shareLink = async () => {
@@ -136,11 +131,11 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 	const shareList = async () => {
 		share({
-			text: await generateListString(potluk),
+			text: generateListString(potluk),
 		})
 	}
 
-	const generateListString = async (potluk: Potluk) => {
+	const generateListString = (potluk: Potluk) => {
 		let text = `${potluk.eventName}\n${new Date(
 			potluk.eventDate
 		).toLocaleDateString()}\n${window.location.href}\n`
