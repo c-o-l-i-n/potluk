@@ -17,6 +17,7 @@ import BoxHeader from '../components/BoxHeader'
 import { useEffect, useState } from 'react'
 import InputField from '../components/InputField'
 import Category from '../models/category'
+import UniqueID from '../models/uniqueId'
 
 type Props = {
 	initialPotlukJson: any
@@ -82,6 +83,18 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	const [loginFieldValue, setLoginFieldValue] = useState('')
 
 	const router = useRouter()
+
+	const removeQueryString = () => {
+		const urlHasQueryString = Object.keys(router.query).length > 1
+
+		if (urlHasQueryString) {
+			const purePath = router.asPath.substring(0, UniqueID.ID_LENGTH + 1)
+			router.replace({ pathname: purePath }, undefined, { shallow: true })
+		}
+	}
+
+	// remove query string on page
+	useEffect(removeQueryString, [])
 
 	if (!potluk) {
 		return (
