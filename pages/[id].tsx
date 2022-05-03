@@ -166,6 +166,18 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		setPotluk({ ...potluk, categories: categories } as Potluk)
 	}
 
+
+	const login = () => {
+		if (loginFieldValue.trim()) {
+			setLoginFieldValue('')
+			setUsername(loginFieldValue.trim())
+		}
+	}
+
+	const logout = () => {
+		setUsername('')
+	}
+
 	return (
 		<>
 			<Head>
@@ -192,9 +204,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 							<p>Logged in as: {username}</p>
 							<button
 								className='button is-primary'
-								onClick={() => {
-									setUsername('')
-								}}
+								onClick={logout}
 								disabled={isLoading}
 							>
 								Log Out
@@ -207,16 +217,12 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 								label='Log in to edit'
 								placeholder='Name'
 								onChange={setLoginFieldValue}
+								onEnterKeyPressed={login}
 								disabled={isLoading}
 							/>
 							<button
 								className='button is-primary mb-3 ml-3'
-								onClick={() => {
-									if (loginFieldValue.trim()) {
-										setLoginFieldValue('')
-										setUsername(loginFieldValue.trim())
-									}
-								}}
+								onClick={login}
 								disabled={isLoading}
 							>
 								Log In

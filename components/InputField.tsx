@@ -6,6 +6,7 @@ type Props = {
 	placeholder?: string
 	onChange: Function
 	disabled: boolean
+	onEnterKeyPressed: Function
 }
 
 const InputField = ({
@@ -14,6 +15,7 @@ const InputField = ({
 	placeholder,
 	onChange,
 	disabled,
+	onEnterKeyPressed,
 }: Props) => {
 	const kebabCase = (text: string) => text.toLowerCase().replace(' ', '-')
 	const fieldName = kebabCase(label)
@@ -29,10 +31,15 @@ const InputField = ({
 					type={type}
 					name={fieldName}
 					placeholder={placeholder}
-					onBlur={(e) => {
+					onChange={(e) => {
 						onChange((e.target as HTMLInputElement).value)
 					}}
 					disabled={disabled}
+					onKeyPress={(e) => {
+						if (e.key === 'Enter') {
+							onEnterKeyPressed()
+						}
+					}}
 				/>
 			</div>
 		</div>

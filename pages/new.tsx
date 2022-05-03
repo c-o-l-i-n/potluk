@@ -52,12 +52,14 @@ const New: NextPage = () => {
 						label='Event Name'
 						placeholder='House Warming Party'
 						onChange={setEventName}
+						onEnterKeyPressed={() => {}}
 						disabled={isLoading}
 					/>
 					<InputField
 						type='date'
 						label='Event Date'
 						onChange={setEventDate}
+						onEnterKeyPressed={() => {}}
 						disabled={isLoading}
 					/>
 					<InputField
@@ -65,6 +67,7 @@ const New: NextPage = () => {
 						label='Your Name'
 						placeholder='Colin'
 						onChange={setUsername}
+						onEnterKeyPressed={() => {}}
 						disabled={isLoading}
 					/>
 
