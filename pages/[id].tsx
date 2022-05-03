@@ -24,63 +24,11 @@ type Props = {
 	initialUsername: string
 }
 
-const props = {
-	eventName: 'House Warming Party',
-	eventDate: 'April 20, 2022',
-	username: 'Colin',
-	categories: [
-		{
-			name: 'Mains',
-			items: [
-				{
-					name: 'Taco Casserole',
-					broughtByUser: 'Colin',
-					createdByUser: 'Colin',
-				},
-				{
-					name: 'Pizza',
-					broughtByUser: 'Molly',
-					createdByUser: 'Molly',
-				},
-				{
-					name: 'BBQ Meatballs',
-					broughtByUser: null,
-					createdByUser: 'Colin',
-				},
-			],
-		},
-		{
-			name: 'Sides',
-			items: [
-				{
-					name: 'Nachos and Queso',
-					broughtByUser: 'Verbsky',
-					createdByUser: 'Colin',
-				},
-			],
-		},
-		{
-			name: 'Drinks',
-			items: [
-				{
-					name: 'Fruit Punch',
-					broughtByUser: null,
-					createdByUser: 'Colin',
-				},
-				{
-					name: 'Lemonade',
-					broughtByUser: null,
-					createdByUser: 'Colin',
-				},
-			],
-		},
-	],
-}
-
 export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	const [potluk, setPotluk] = useState(Potluk.createFromJson(initialPotlukJson))
 	const [username, setUsername] = useState(initialUsername)
 	const [loginFieldValue, setLoginFieldValue] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
 
 	const router = useRouter()
 
@@ -93,8 +41,22 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		}
 	}
 
-	// remove query string on page
+	// remove query string on page load
 	useEffect(removeQueryString, [])
+
+	// update database when potluk is changed
+	useEffect(() => {
+		setIsLoading(true)
+		fetch(`/api/v1/potluk/${potluk.id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(potluk),
+		}).then(() => {
+			setIsLoading(false)
+		})
+	}, [potluk])
 
 	if (!potluk) {
 		return (
@@ -233,6 +195,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 								onClick={() => {
 									setUsername('')
 								}}
+								disabled={isLoading}
 							>
 								Log Out
 							</button>
@@ -244,7 +207,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 								label='Log in to edit'
 								placeholder='Name'
 								onChange={setLoginFieldValue}
-								disabled={false}
+								disabled={isLoading}
 							/>
 							<button
 								className='button is-primary mb-3 ml-3'
@@ -254,6 +217,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 										setUsername(loginFieldValue.trim())
 									}
 								}}
+								disabled={isLoading}
 							>
 								Log In
 							</button>
@@ -270,14 +234,14 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 								initialItem={item}
 								onChange={changeItem}
 								onDelete={deleteItem}
-								disabled={false}
+								disabled={isLoading}
 								username={username}
 							/>
 						))}
 						{username ? (
 							<AddItemButton
 								onClick={() => addItem(category.id)}
-								disabled={false}
+								disabled={isLoading}
 							/>
 						) : (
 							<></>
@@ -286,13 +250,21 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 				))}
 
 				<p className='buttons'>
-					<button className='button is-primary' onClick={shareList}>
+					<button
+						className='button is-primary'
+						onClick={shareList}
+						disabled={isLoading}
+					>
 						<span>Share List</span>
 						<span className='icon'>
 							<FontAwesomeIcon icon={faList} />
 						</span>
 					</button>
-					<button className='button is-primary' onClick={shareLink}>
+					<button
+						className='button is-primary'
+						onClick={shareLink}
+						disabled={isLoading}
+					>
 						<span>Share Link</span>
 						<span className='icon'>
 							<FontAwesomeIcon icon={faArrowUpRightFromSquare} />

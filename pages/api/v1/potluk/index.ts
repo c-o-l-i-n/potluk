@@ -1,4 +1,3 @@
-import { eventNames } from 'process'
 import Potluk from '../../../../models/potluk'
 import db from '../../../../utils/db'
 
