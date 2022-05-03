@@ -137,7 +137,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 	const generateListString = (potluk: Potluk) => {
 		let text = `${potluk.eventName}\n${new Date(
-			potluk.eventDate
+			new Date(initialPotlukJson.eventDate).toISOString().slice(0, -1)
 		).toLocaleDateString()}\n${window.location.href}\n`
 
 		for (const category of potluk.categories) {
@@ -219,7 +219,11 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 					is-justify-content-space-between'
 			>
 				<h1>{potluk.eventName}</h1>
-				<h6 className='is-uppercase'>{potluk.eventDate.toDateString()}</h6>
+				<h6 className='is-uppercase'>
+					{new Date(
+						new Date(initialPotlukJson.eventDate).toISOString().slice(0, -1)
+					).toDateString()}
+				</h6>
 				<div className='is-flex is-justify-content-space-between is-align-items-flex-end'>
 					{username ? (
 						<>
