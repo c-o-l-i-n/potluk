@@ -16,7 +16,6 @@
 		"@fortawesome/react-fontawesome": "^0.1.18",
 		"axios": "^0.26.1",
 		"bulma": "^0.9.3",
-		"bulma-calendar": "^6.1.18",
 		"copy-to-clipboard": "^3.3.1",
 		"dashify": "^2.0.0",
 		"firebase-admin": "^10.0.2",
