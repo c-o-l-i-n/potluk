@@ -3,6 +3,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import { FunctionComponent } from 'react'
 import Layout from '../components/Layout'
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import '../styles/fonts.scss'
 import '../styles/globals.scss'
 config.autoAddCss = false
 

@@ -5,11 +5,76 @@ class MyDocument extends Document {
 		return (
 			<Html>
 				<Head>
-					<link rel='preconnect' href='https://fonts.googleapis.com' />
-					<link rel='preconnect' href='https://fonts.gstatic.com' />
 					<link
-						href='https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap'
-						rel='stylesheet'
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-700.eot'
+						as='font'
+						type='font/eot'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-700.svg'
+						as='font'
+						type='font/svg'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-700.ttf'
+						as='font'
+						type='font/ttf'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-700.woff'
+						as='font'
+						type='font/woff'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-700.woff2'
+						as='font'
+						type='font/woff2'
+						crossOrigin='anonymous'
+					/>
+
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-regular.eot'
+						as='font'
+						type='font/eot'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-regular.svg'
+						as='font'
+						type='font/svg'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-regular.ttf'
+						as='font'
+						type='font/ttf'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-regular.woff'
+						as='font'
+						type='font/woff'
+						crossOrigin='anonymous'
+					/>
+					<link
+						rel='preload'
+						href='/fonts/montserrat-v24-latin-regular.woff2'
+						as='font'
+						type='font/woff2'
+						crossOrigin='anonymous'
 					/>
 				</Head>
 				<body>
