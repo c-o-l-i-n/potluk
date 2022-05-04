@@ -124,26 +124,36 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		const category = {
 			...potluk.categories.find((c) => c.id === categoryId),
 		} as Category
+
 		category.items.push(new Item('', username, null, categoryId))
-		const newCategories = [
-			...potluk.categories.filter((c) => c.id !== categoryId),
-			category,
-		]
-		setPotluk({ ...potluk, categories: newCategories } as Potluk)
+
+		const categories = UniqueID.updateListItemMaintainOrder(
+			potluk.categories,
+			category
+		) as Category[]
+
+		setPotluk({ ...potluk, categories: categories } as Potluk)
 	}
 
 	const deleteItem = (item: Item) => {
 		const category = {
 			...potluk.categories.find((c) => c.id === item.categoryId),
 		} as Category
+
 		if (!category?.items) {
 			console.error(`Category ${item.categoryId} or its items not found`)
 			return
 		}
-		category.items = category.items.filter((i) => i.id !== item.id)
 
-		const categories = potluk.categories.filter((c) => c.id !== category.id)
-		categories.push(category)
+		category.items = UniqueID.deleteListItemMaintainOrder(
+			category.items,
+			item.id
+		) as Item[]
+
+		const categories = UniqueID.updateListItemMaintainOrder(
+			potluk.categories,
+			category
+		) as Category[]
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
 	}
@@ -157,11 +167,16 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 			console.error(`Category ${item.categoryId} or its items not found`)
 			return
 		}
-		category.items = category.items.filter((i) => i.id !== item.id)
-		category.items.push(item)
 
-		const categories = potluk.categories.filter((c) => c.id !== category.id)
-		categories.push(category)
+		category.items = UniqueID.updateListItemMaintainOrder(
+			category.items,
+			item
+		) as Item[]
+
+		const categories = UniqueID.updateListItemMaintainOrder(
+			potluk.categories,
+			category
+		) as Category[]
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
 	}

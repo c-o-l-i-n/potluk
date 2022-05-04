@@ -18,4 +18,24 @@ export default class UniqueID {
 		}
 		return id
 	}
+
+	public static updateListItemMaintainOrder = (
+		list: Array<UniqueID>,
+		element: UniqueID
+	) => {
+		const index = list.findIndex((e) => e.id === element.id)
+		const updatedList = [...list]
+		updatedList.splice(index, 1, element)
+		return updatedList
+	}
+
+	public static deleteListItemMaintainOrder = (
+		list: Array<UniqueID>,
+		elementId: string
+	) => {
+		const index = list.findIndex((e) => e.id === elementId)
+		const updatedList = [...list]
+		updatedList.splice(index, 1)
+		return updatedList
+	}
 }

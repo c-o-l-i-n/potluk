@@ -10,6 +10,7 @@ import BoxCategoryItem from '../components/BoxCategoryItem'
 import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
+import UniqueID from '../models/uniqueId'
 
 const New: NextPage = () => {
 	const defaultCategories = [
@@ -88,10 +89,12 @@ const New: NextPage = () => {
 						category={category}
 						onDelete={deleteCategory}
 						onChange={(category: Category) => {
-							setCategories([
-								...categories.filter((c) => c.id !== category.id),
-								category,
-							])
+							setCategories(
+								UniqueID.updateListItemMaintainOrder(
+									categories,
+									category
+								) as Category[]
+							)
 						}}
 						disabled={isLoading}
 					/>
