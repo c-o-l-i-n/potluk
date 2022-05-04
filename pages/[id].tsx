@@ -98,9 +98,9 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	}
 
 	const generateListString = (potluk: Potluk) => {
-		let text = `${potluk.eventName}\n${customDateString(
+		let text = `👉 ${potluk.eventName}\n📆 ${customDateString(
 			initialPotlukJson.eventDate
-		)}\n${window.location.href}\n`
+		)}\n🔗 ${window.location.href}\n`
 
 		for (const category of potluk.categories) {
 			text += '\n' + category.name.toUpperCase() + '\n'
@@ -165,7 +165,6 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
 	}
-
 
 	const login = () => {
 		if (loginFieldValue.trim()) {
@@ -293,9 +292,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	}
 
 	const { origin } = absoluteUrl(context.req)
-	const request = await fetch(
-		`${origin}/api/v1/potluk/${context.params.id}`.replace('https', 'http')
-	)
+	const request = await fetch(`${origin}/api/v1/potluk/${context.params.id}`)
 
 	let initialPotlukJson
 	try {
