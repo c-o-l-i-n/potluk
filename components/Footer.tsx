@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import Link from 'next/link'
 
 const Footer: FunctionComponent = () => {
 	return (
@@ -18,7 +19,9 @@ const Footer: FunctionComponent = () => {
 				</a>
 			</p>
 			<p>
-				<a href='feedback.html'>Submit Feedback</a>
+				<Link href='/feedback'>
+					<a>Submit Feedback</a>
+				</Link>
 			</p>
 		</footer>
 	)
