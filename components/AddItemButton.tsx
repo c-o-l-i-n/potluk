@@ -8,11 +8,10 @@ type Props = {
 
 const AddItemButton = ({ onClick, disabled }: Props) => {
 	return (
-		<div className='potluk-box-item is-flex is-justify-content-center is-align-items-center'>
+		<div className='box-item is-flex is-justify-content-center is-align-items-center'>
 			<button
-				className='button is-medium is-ghost'
+				className={`button is-medium is-ghost ${disabled ? 'disabled' : ''}`}
 				onClick={() => onClick()}
-				disabled={disabled}
 			>
 				<span className='icon is-medium'>
 					<FontAwesomeIcon

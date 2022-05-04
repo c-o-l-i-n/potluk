@@ -5,27 +5,30 @@ import Category from '../models/category'
 type Props = {
 	category: Category
 	onDelete: Function
+	onChange: Function
 	disabled: boolean
 }
 
-const BoxCategoryItem = ({ category, onDelete, disabled }: Props) => {
+const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props) => {
 	return (
-		<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
+		<div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
 			<input
 				className='input mr-4'
 				type='text'
 				defaultValue={category.name}
-				onInput={(e) => {
-					category.name = (e.target as HTMLInputElement).value
+				onChange={(e) => {
+					onChange({
+						...category,
+						name: (e.target as HTMLInputElement).value.trim(),
+					})
 				}}
 				disabled={disabled}
 			></input>
 			<button
-				className='button is-danger'
+				className={`button is-danger ${disabled ? 'disabled' : ''}`}
 				onClick={() => {
 					onDelete(category.id)
 				}}
-				disabled={disabled}
 			>
 				<span className='icon is-small'>
 					<FontAwesomeIcon icon={faTrashCan} />

@@ -27,7 +27,7 @@ const BoxItem = ({
 	}, [item])
 
 	return (
-		<div className='potluk-box-item is-flex is-justify-content-space-between is-align-items-center'>
+		<div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
 			<span
 				className={`icon is-size-4 mr-4 ${
 					item.broughtByUser ? 'has-text-primary' : 'has-text-grey'
@@ -37,19 +37,18 @@ const BoxItem = ({
 			</span>
 			{username && username === item.createdByUser && !item.broughtByUser ? (
 				<input
-					className='input'
+					className={`input ${disabled ? 'disabled' : ''}`}
 					type='text'
 					defaultValue={item.name}
 					onBlur={(e) => {
 						setItem({
 							...item,
-							name: (e.target as HTMLInputElement).value,
+							name: (e.target as HTMLInputElement).value.trim(),
 						} as Item)
 					}}
-					disabled={disabled}
 				></input>
 			) : (
-				<div>
+				<div className='mr-auto'>
 					<p className='mb-0 has-text-weight-bold'>{item.name}</p>
 					{item.broughtByUser ? (
 						<p className='is-size-7'>{item.broughtByUser} is bringing</p>
@@ -63,11 +62,12 @@ const BoxItem = ({
 				<>
 					{!item.broughtByUser ? (
 						<button
-							className='button is-dark is-size-7 ml-4'
+							className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
+								disabled ? 'disabled' : ''
+							}`}
 							onClick={() => {
 								setItem({ ...item, broughtByUser: username } as Item)
 							}}
-							disabled={disabled}
 						>
 							Bring
 						</button>
@@ -75,11 +75,12 @@ const BoxItem = ({
 						<>
 							{username === item.broughtByUser ? (
 								<button
-									className='button is-dark is-size-7 ml-4'
+									className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
+										disabled ? 'disabled' : ''
+									}`}
 									onClick={() => {
 										setItem({ ...item, broughtByUser: '' } as Item)
 									}}
-									disabled={disabled}
 								>
 									Unbring
 								</button>
@@ -94,11 +95,10 @@ const BoxItem = ({
 			)}
 			{username === item.createdByUser && !item.broughtByUser ? (
 				<button
-					className='button is-danger ml-4'
+					className={`button is-danger ml-3 ${disabled ? 'disabled' : ''}`}
 					onClick={() => {
 						onDelete(item)
 					}}
-					disabled={disabled}
 				>
 					<span className='icon is-small'>
 						<FontAwesomeIcon icon={faTrashCan} />

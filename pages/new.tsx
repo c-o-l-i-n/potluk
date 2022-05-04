@@ -12,7 +12,6 @@ import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 
 const New: NextPage = () => {
-	const defaultDate = new Date(new Date().setDate(new Date().getDate() + 7)) // 1 week in the future
 	const defaultCategories = [
 		new Category('Mains', []),
 		new Category('Sides', []),
@@ -21,7 +20,7 @@ const New: NextPage = () => {
 	]
 
 	const [eventName, setEventName] = useState<string>('')
-	const [eventDate, setEventDate] = useState<Date>(defaultDate)
+	const [eventDate, setEventDate] = useState<Date>(new Date())
 	const [username, setUsername] = useState<string>('')
 	const [categories, setCategories] = useState<Category[]>(defaultCategories)
 	const [isLoading, setIsLoading] = useState(false)
@@ -45,52 +44,70 @@ const New: NextPage = () => {
 
 	return (
 		<>
-			<main className='section'>
-				<div className='container'>
-					<InputField
-						type='text'
-						label='Event Name'
-						placeholder='House Warming Party'
-						onChange={setEventName}
-						onEnterKeyPressed={() => {}}
+			<InputField
+				type='text'
+				label='Event Name'
+				placeholder='House Warming Party'
+				onChange={setEventName}
+				onEnterKeyPressed={() => {}}
+				disabled={isLoading}
+				swapBold={false}
+			/>
+			<InputField
+				type='date'
+				label='Event Date'
+				onChange={setEventDate}
+				onEnterKeyPressed={() => {}}
+				disabled={isLoading}
+				swapBold={false}
+			/>
+			<InputField
+				type='text'
+				label='Your Name'
+				placeholder='Colin'
+				onChange={setUsername}
+				onEnterKeyPressed={() => {}}
+				disabled={isLoading}
+				swapBold={false}
+			/>
+
+			<br />
+
+			<Box>
+				<BoxHeader text='Categories' />
+
+				{categories.map((category, index) => (
+					<BoxCategoryItem
+						key={category.id}
+						category={category}
+						onDelete={deleteCategory}
+						onChange={(category: Category) => {
+							setCategories([
+								...categories.filter((c) => c.id !== category.id),
+								category,
+							])
+						}}
 						disabled={isLoading}
 					/>
-					<InputField
-						type='date'
-						label='Event Date'
-						onChange={setEventDate}
-						onEnterKeyPressed={() => {}}
-						disabled={isLoading}
-					/>
-					<InputField
-						type='text'
-						label='Your Name'
-						placeholder='Colin'
-						onChange={setUsername}
-						onEnterKeyPressed={() => {}}
-						disabled={isLoading}
-					/>
+				))}
 
-					<Box>
-						<BoxHeader text='Categories' />
+				<AddItemButton onClick={addCategory} disabled={isLoading} />
+			</Box>
 
-						{categories.map((category, index) => (
-							<BoxCategoryItem
-								key={category.id}
-								category={category}
-								onDelete={deleteCategory}
-								disabled={isLoading}
-							/>
-						))}
-
-						<AddItemButton onClick={addCategory} disabled={isLoading} />
-					</Box>
-				</div>
-
-				<div className='is-flex is-justify-content-center'>
-					<CreateButton onClick={createPotluk} isLoading={isLoading} />
-				</div>
-			</main>
+			<div className='is-flex is-justify-content-center mb-3'>
+				<CreateButton
+					onClick={createPotluk}
+					isLoading={isLoading}
+					disabled={
+						!(
+							eventName &&
+							eventDate &&
+							categories.length &&
+							categories.every((c) => !!c.name)
+						)
+					}
+				/>
+			</div>
 		</>
 	)
 }

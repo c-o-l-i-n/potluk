@@ -1,14 +1,15 @@
 type Props = {
 	onClick: Function
 	isLoading: boolean
+	disabled: boolean
 }
 
-const CreateButton = ({ onClick, isLoading }: Props) => {
+const CreateButton = ({ onClick, isLoading, disabled }: Props) => {
 	return (
 		<button
 			className={`button is-primary is-size-4 is-large has-text-weight-bold mt-3 ${
-				isLoading ? 'is-loading' : ''
-			}`}
+				isLoading || disabled ? 'disabled' : ''
+			} ${isLoading ? 'is-loading' : ''}`}
 			onClick={() => onClick()}
 		>
 			Create

@@ -1,5 +1,3 @@
-import { ChangeEvent } from 'react'
-
 type Props = {
 	type: string
 	label: string
@@ -7,6 +5,7 @@ type Props = {
 	onChange: Function
 	disabled: boolean
 	onEnterKeyPressed: Function
+	swapBold: boolean
 }
 
 const InputField = ({
@@ -16,23 +15,32 @@ const InputField = ({
 	onChange,
 	disabled,
 	onEnterKeyPressed,
+	swapBold,
 }: Props) => {
 	const kebabCase = (text: string) => text.toLowerCase().replace(' ', '-')
 	const fieldName = kebabCase(label)
 
+	const defaultDate = `${new Date().getFullYear()}-${(new Date().getMonth() + 1)
+		.toString()
+		.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
+
 	return (
-		<div className='field'>
-			<label className='label' htmlFor={fieldName}>
+		<div className='field w-100'>
+			<label
+				className={`label ${swapBold ? 'has-text-weight-normal' : ''}`}
+				htmlFor={fieldName}
+			>
 				{label}
 			</label>
 			<div className='control'>
 				<input
-					className='input'
+					className={`input ${swapBold ? 'has-text-weight-bold' : ''}`}
 					type={type}
 					name={fieldName}
 					placeholder={placeholder}
+					defaultValue={type === 'date' ? defaultDate : ''}
 					onChange={(e) => {
-						onChange((e.target as HTMLInputElement).value)
+						onChange((e.target as HTMLInputElement).value.trim())
 					}}
 					disabled={disabled}
 					onKeyPress={(e) => {

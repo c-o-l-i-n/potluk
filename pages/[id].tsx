@@ -98,9 +98,9 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	}
 
 	const generateListString = (potluk: Potluk) => {
-		let text = `${potluk.eventName}\n${new Date(
-			new Date(initialPotlukJson.eventDate).toISOString().slice(0, -1)
-		).toLocaleDateString()}\n${window.location.href}\n`
+		let text = `${potluk.eventName}\n${customDateString(
+			initialPotlukJson.eventDate
+		)}\n${window.location.href}\n`
 
 		for (const category of potluk.categories) {
 			text += '\n' + category.name.toUpperCase() + '\n'
@@ -178,106 +178,109 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		setUsername('')
 	}
 
+	const customDateString = (date: Date) => {
+		const correctedDate = new Date(new Date(date).toISOString().slice(0, -1))
+		const options = {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		} as Intl.DateTimeFormatOptions
+		return correctedDate.toLocaleDateString('en-US', options)
+	}
+
 	return (
 		<>
 			<Head>
 				<title>{potluk.eventName}</title>
 			</Head>
 
-			<main
-				className='section
-					content
-					is-flex
-					is-flex-direction-column
-					is-align-items-center
-					is-justify-content-space-between'
-			>
-				<h1>{potluk.eventName}</h1>
-				<h6 className='is-uppercase'>
-					{new Date(
-						new Date(initialPotlukJson.eventDate).toISOString().slice(0, -1)
-					).toDateString()}
-				</h6>
-				<div className='is-flex is-justify-content-space-between is-align-items-flex-end'>
+			<h2 className='mb-1'>{potluk.eventName}</h2>
+			<p className='is-uppercase has-text-grey has-text-weight-bold'>
+				{customDateString(initialPotlukJson.eventDate)}
+			</p>
+			<div className='is-flex is-justify-content-space-between is-align-items-center mb-5 w-100'>
+				{username ? (
+					<>
+						<p className='mb-0'>
+							Logged in as: <strong>{username}</strong>
+						</p>
+						<button
+							className='button is-primary ml-3'
+							onClick={logout}
+							disabled={isLoading}
+						>
+							Log Out
+						</button>
+					</>
+				) : (
+					<>
+						<InputField
+							type='text'
+							label='Log in to edit'
+							placeholder='Name'
+							onChange={setLoginFieldValue}
+							onEnterKeyPressed={login}
+							disabled={isLoading}
+							swapBold={true}
+						/>
+						<button
+							className='button is-primary mb-3 ml-3 is-align-self-flex-end'
+							onClick={login}
+							disabled={isLoading}
+						>
+							Log In
+						</button>
+					</>
+				)}
+			</div>
+
+			{potluk.categories.map((category) => (
+				<Box key={category.id}>
+					<BoxHeader text={category.name} />
+					{category.items?.map((item) => (
+						<BoxItem
+							key={item.id}
+							initialItem={item}
+							onChange={changeItem}
+							onDelete={deleteItem}
+							disabled={isLoading}
+							username={username}
+						/>
+					))}
 					{username ? (
-						<>
-							<p>Logged in as: {username}</p>
-							<button
-								className='button is-primary'
-								onClick={logout}
-								disabled={isLoading}
-							>
-								Log Out
-							</button>
-						</>
+						<AddItemButton
+							onClick={() => addItem(category.id)}
+							disabled={isLoading}
+						/>
 					) : (
-						<>
-							<InputField
-								type='text'
-								label='Log in to edit'
-								placeholder='Name'
-								onChange={setLoginFieldValue}
-								onEnterKeyPressed={login}
-								disabled={isLoading}
-							/>
-							<button
-								className='button is-primary mb-3 ml-3'
-								onClick={login}
-								disabled={isLoading}
-							>
-								Log In
-							</button>
-						</>
+						<></>
 					)}
-				</div>
+				</Box>
+			))}
 
-				{potluk.categories.map((category) => (
-					<Box key={category.id}>
-						<BoxHeader text={category.name} />
-						{category.items?.map((item) => (
-							<BoxItem
-								key={item.id}
-								initialItem={item}
-								onChange={changeItem}
-								onDelete={deleteItem}
-								disabled={isLoading}
-								username={username}
-							/>
-						))}
-						{username ? (
-							<AddItemButton
-								onClick={() => addItem(category.id)}
-								disabled={isLoading}
-							/>
-						) : (
-							<></>
-						)}
-					</Box>
-				))}
-
-				<p className='buttons'>
-					<button
-						className='button is-primary'
-						onClick={shareList}
-						disabled={isLoading}
-					>
-						<span>Share List</span>
-						<span className='icon'>
-							<FontAwesomeIcon icon={faList} />
-						</span>
-					</button>
-					<button
-						className='button is-primary'
-						onClick={shareLink}
-						disabled={isLoading}
-					>
-						<span>Share Link</span>
-						<span className='icon'>
-							<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-						</span>
-					</button>
-				</p>
-			</main>
+			<div className='buttons is-flex is-justify-content-center mt-6 mb-0'>
+				<button
+					className='button is-primary'
+					onClick={shareList}
+					disabled={isLoading}
+				>
+					<span>Share List</span>
+					<span className='icon'>
+						<FontAwesomeIcon icon={faList} />
+					</span>
+				</button>
+				<button
+					className='button is-primary'
+					onClick={shareLink}
+					disabled={isLoading}
+				>
+					<span>Share Link</span>
+					<span className='icon'>
+						<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+					</span>
+				</button>
+			</div>
 		</>
 	)
 }

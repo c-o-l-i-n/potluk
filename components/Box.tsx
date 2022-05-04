@@ -3,7 +3,7 @@ type Props = {
 }
 
 const Box = ({ children }: Props) => {
-	return <div className='box potluk-box mb-6'>{children}</div>
+	return <div className='box'>{children}</div>
 }
 
 export default Box
