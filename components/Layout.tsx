@@ -11,7 +11,9 @@ const Layout: FunctionComponent<Props> = ({ children }: Props) => {
 	return (
 		<>
 			<Navbar />
-			<main>{children}</main>
+			<main>
+				<div className='container'>{children}</div>
+			</main>
 			<Footer />
 		</>
 	)
