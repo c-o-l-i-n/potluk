@@ -19,8 +19,14 @@ const New: NextPage = () => {
 		new Category('Drinks', []),
 	]
 
+	const defaultDate = new Date(
+		`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
+			.toString()
+			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
+	)
+
 	const [eventName, setEventName] = useState<string>('')
-	const [eventDate, setEventDate] = useState<Date>(new Date())
+	const [eventDate, setEventDate] = useState<Date>(defaultDate)
 	const [username, setUsername] = useState<string>('')
 	const [categories, setCategories] = useState<Category[]>(defaultCategories)
 	const [isLoading, setIsLoading] = useState(false)
