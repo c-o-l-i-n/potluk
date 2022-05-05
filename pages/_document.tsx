@@ -5,6 +5,8 @@ class MyDocument extends Document {
 		return (
 			<Html>
 				<Head>
+					<link rel='icon' href='/favicon.ico' />
+
 					<link
 						rel='preload'
 						href='/fonts/montserrat-v24-latin-700.eot'

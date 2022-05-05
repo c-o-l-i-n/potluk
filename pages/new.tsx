@@ -11,6 +11,7 @@ import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 import UniqueID from '../models/uniqueId'
+import Head from 'next/head'
 
 const New: NextPage = () => {
 	const defaultCategories = [
@@ -51,6 +52,10 @@ const New: NextPage = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Create New Potluk</title>
+			</Head>
+
 			<InputField
 				type='text'
 				label='Event Name'

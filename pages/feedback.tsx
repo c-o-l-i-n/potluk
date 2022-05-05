@@ -1,6 +1,7 @@
 import { NextPage } from 'next'
 import { useForm, ValidationError } from '@formspree/react'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 const Feedback: NextPage = () => {
 	const [state, handleSubmit] = useForm(
@@ -12,6 +13,10 @@ const Feedback: NextPage = () => {
 	if (state.succeeded) {
 		return (
 			<>
+				<Head>
+					<title>Submit Feedback</title>
+				</Head>
+
 				<h2>Thank you for your feedback!</h2>
 				<p>
 					We will review your message and take it into consideration for our
@@ -32,6 +37,10 @@ const Feedback: NextPage = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Submit Feedback</title>
+			</Head>
+
 			<h2>Submit Feedback</h2>
 			<form onSubmit={handleSubmit}>
 				<div className='field mb-5'>
