@@ -44,7 +44,9 @@ const Feedback: NextPage = () => {
 			<h2>Submit Feedback</h2>
 			<form onSubmit={handleSubmit}>
 				<div className='field mb-5'>
-					<label className='label'>Name (Optional)</label>
+					<label className='label' htmlFor='name'>
+						Name (Optional)
+					</label>
 					<div className='control'>
 						<input
 							className='input'
@@ -54,7 +56,7 @@ const Feedback: NextPage = () => {
 							disabled={state.submitting}
 						/>
 						<ValidationError
-							field='email'
+							field='name'
 							prefix='🤨 This'
 							errors={state.errors}
 							className='has-text-danger'
@@ -63,7 +65,9 @@ const Feedback: NextPage = () => {
 				</div>
 
 				<div className='field mb-5'>
-					<label className='label'>Email (if you want follow-up)</label>
+					<label className='label' htmlFor='email'>
+						Email (if you want follow-up)
+					</label>
 					<div className='control'>
 						<input
 							className='input'
@@ -82,7 +86,9 @@ const Feedback: NextPage = () => {
 				</div>
 
 				<div className='field mb-5'>
-					<label className='label'>Feedback</label>
+					<label className='label' htmlFor='feedback'>
+						Feedback
+					</label>
 					<div className='control'>
 						<textarea
 							className='textarea'
