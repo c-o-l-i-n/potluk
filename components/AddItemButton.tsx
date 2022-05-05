@@ -10,6 +10,7 @@ const AddItemButton = ({ onClick, disabled }: Props) => {
 	return (
 		<div className='box-item is-flex is-justify-content-center is-align-items-center'>
 			<button
+				type='button'
 				className={`button is-medium is-ghost ${disabled ? 'disabled' : ''}`}
 				onClick={() => onClick()}
 			>

@@ -18,8 +18,8 @@ const Feedback: NextPage = () => {
 					next update.
 				</p>
 				<button
+					type='button'
 					className='button is-primary'
-					type='submit'
 					onClick={() => {
 						router.back()
 					}}
@@ -94,10 +94,10 @@ const Feedback: NextPage = () => {
 				<div className='field is-flex is-justify-content-flex-end'>
 					<div className='control'>
 						<button
+							type='submit'
 							className={`button is-primary ${
 								state.submitting ? 'disabled is-loading' : ''
 							}`}
-							type='submit'
 						>
 							Submit
 						</button>

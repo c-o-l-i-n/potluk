@@ -220,6 +220,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 							Logged in as: <strong>{username}</strong>
 						</p>
 						<button
+							type='button'
 							className='button is-primary ml-3'
 							onClick={logout}
 							disabled={isLoading}
@@ -239,6 +240,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 							swapBold={true}
 						/>
 						<button
+							type='button'
 							className='button is-primary mb-3 ml-3 is-align-self-flex-end'
 							onClick={login}
 							disabled={isLoading}
@@ -275,6 +277,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 			<div className='buttons is-flex is-justify-content-center mt-6 mb-0'>
 				<button
+					type='button'
 					className='button is-primary'
 					onClick={shareList}
 					disabled={isLoading}
@@ -285,6 +288,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 					</span>
 				</button>
 				<button
+					type='button'
 					className='button is-primary'
 					onClick={shareLink}
 					disabled={isLoading}

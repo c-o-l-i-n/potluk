@@ -62,6 +62,7 @@ const BoxItem = ({
 				<>
 					{!item.broughtByUser ? (
 						<button
+							type='button'
 							className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
 								disabled ? 'disabled' : ''
 							}`}
@@ -75,6 +76,7 @@ const BoxItem = ({
 						<>
 							{username === item.broughtByUser ? (
 								<button
+									type='button'
 									className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
 										disabled ? 'disabled' : ''
 									}`}
@@ -95,6 +97,7 @@ const BoxItem = ({
 			)}
 			{username === item.createdByUser && !item.broughtByUser ? (
 				<button
+					type='button'
 					className={`button is-danger ml-3 ${disabled ? 'disabled' : ''}`}
 					onClick={() => {
 						onDelete(item)

@@ -25,6 +25,7 @@ const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props) => {
 				disabled={disabled}
 			></input>
 			<button
+				type='button'
 				className={`button is-danger ${disabled ? 'disabled' : ''}`}
 				onClick={() => {
 					onDelete(category.id)

@@ -35,7 +35,10 @@ const Home: NextPage = () => {
 				</p>
 
 				<Link href='/new' passHref>
-					<button className='button is-primary is-size-4 is-large has-text-weight-bold mt-3 mb-5'>
+					<button
+						type='button'
+						className='button is-primary is-size-4 is-large has-text-weight-bold mt-3 mb-5'
+					>
 						Create New Potluk
 					</button>
 				</Link>
