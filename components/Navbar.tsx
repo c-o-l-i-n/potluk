@@ -13,7 +13,7 @@ const Navbar: FunctionComponent = () => {
 				<a>
 					<div className='navbar-brand ml-5'>
 						<Image
-							src='/img/logo.svg'
+							src='/images/logo.svg'
 							alt='Logo'
 							width='36'
 							height='36'

@@ -19,7 +19,7 @@ const Home: NextPage = () => {
 				is-justify-content-space-between'
 			>
 				<Image
-					src='/img/family-meal.svg'
+					src='/images/family-meal.svg'
 					alt='People eating a meal'
 					width={300}
 					height={230}
