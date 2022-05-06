@@ -66,7 +66,7 @@ const Feedback: NextPage = () => {
 
 				<div className='field mb-5'>
 					<label className='label' htmlFor='email'>
-						Email (if you want follow-up)
+						Email (Optional, if you want follow-up)
 					</label>
 					<div className='control'>
 						<input
