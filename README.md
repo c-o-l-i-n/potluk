@@ -34,6 +34,8 @@ npm run dev
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/colinw)
 
+Fork and spoon icon by David Khai from [Noun Project](https://thenounproject.com/icon/meal-1633691/).
+
 ## Show your support
 
 Give a ⭐️ if this project helped you!
