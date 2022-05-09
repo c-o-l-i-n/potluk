@@ -16,16 +16,16 @@ const putGetOrDeletePotluk = async (request: any, response: any) => {
 		} else {
 			switch (request.method) {
 				case 'PUT':
-					await potlukDatabaseReference.update(request.body)
+					await potlukDatabaseReference.update({
+						...request.body,
+						lastModifiedDate: new Date(),
+					})
 					break
 
 				default:
 					response.status(405).end()
 					break
 			}
-
-			// update lastModifiedDate
-			await potlukDatabaseReference.child('lastModifiedDate').update(new Date())
 
 			// return updated potluk
 			const updatedPotluk = await potlukDatabaseReference.get()
