@@ -9,7 +9,7 @@ const Navbar: FunctionComponent = () => {
 			role='navigation'
 			aria-label='main navigation'
 		>
-			<Link href='/'>
+			<Link href='/' passHref>
 				<a>
 					<div className='navbar-brand ml-5'>
 						<Image
