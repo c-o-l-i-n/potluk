@@ -1,5 +1,5 @@
 import Potluk from '../../../../models/potluk'
-import db from '../../../../utils/db'
+import db from '../../../../utils/db/firebase-admin'
 
 const postPotluk = async (request: any, response: any) => {
 	const potluk = new Potluk(

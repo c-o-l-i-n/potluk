@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react'
 import InputField from '../components/InputField'
 import Category from '../models/category'
 import UniqueID from '../models/uniqueId'
+import { signIntoFirebase, subscribeToUpdates } from '../utils/db/firebase'
+import { ref, onValue } from 'firebase/database'
 
 type Props = {
 	initialPotlukJson: any
@@ -30,6 +32,10 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	const [loginFieldValue, setLoginFieldValue] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 
+	// a meaningless state whose sole purpose is to trigger a db update when it changes
+	// without this, we get an infinite loop of the db downloading and uploading
+	const [updateDatabaseDependency, setUpdateDatabaseDependency] = useState(true)
+
 	const router = useRouter()
 
 	const removeQueryString = () => {
@@ -41,8 +47,24 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		}
 	}
 
+	const updateDatabase = () => {
+		setUpdateDatabaseDependency(!updateDatabaseDependency)
+	}
+
 	// remove query string on page load
 	useEffect(removeQueryString, [])
+
+	// sign into db
+	useEffect(() => {
+		signIntoFirebase()
+	}, [])
+
+	// get realtime updates
+	useEffect(() => {
+		return subscribeToUpdates(initialPotlukJson.id, (snapshot) => {
+			setPotluk(Potluk.createFromJson(snapshot.val()))
+		})
+	}, [])
 
 	// update database when potluk is changed
 	useEffect(() => {
@@ -56,7 +78,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		}).then(() => {
 			setIsLoading(false)
 		})
-	}, [potluk])
+	}, [updateDatabaseDependency])
 
 	if (!potluk) {
 		return (
@@ -99,7 +121,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 	const generateListString = (potluk: Potluk) => {
 		let text = `👉 ${potluk.eventName}\n📆 ${customDateString(
-			initialPotlukJson.eventDate
+			potluk.eventDate
 		)}\n🔗 ${window.location.href}\n`
 
 		for (const category of potluk.categories) {
@@ -133,6 +155,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		) as Category[]
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
+		updateDatabase()
 	}
 
 	const deleteItem = (item: Item) => {
@@ -156,6 +179,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		) as Category[]
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
+		updateDatabase()
 	}
 
 	const changeItem = (item: Item) => {
@@ -179,6 +203,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		) as Category[]
 
 		setPotluk({ ...potluk, categories: categories } as Potluk)
+		updateDatabase()
 	}
 
 	const login = () => {
@@ -211,7 +236,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 
 			<h2 className='mb-1'>{potluk.eventName}</h2>
 			<p className='is-uppercase has-text-grey has-text-weight-bold'>
-				{customDateString(initialPotlukJson.eventDate)}
+				{customDateString(potluk.eventDate)}
 			</p>
 			<div className='is-flex is-justify-content-space-between is-align-items-center mb-5 w-100'>
 				{username ? (
@@ -254,7 +279,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 			{potluk.categories.map((category) => (
 				<Box key={category.id}>
 					<BoxHeader text={category.name} />
-					{category.items?.map((item) => (
+					{category.items.map((item) => (
 						<BoxItem
 							key={item.id}
 							initialItem={item}

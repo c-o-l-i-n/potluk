@@ -23,8 +23,14 @@ const BoxItem = ({
 	const [item, setItem] = useState(initialItem)
 
 	useEffect(() => {
+		if (item === initialItem) return
+
 		onChange(item)
 	}, [item])
+
+	useEffect(() => {
+		setItem(initialItem)
+	}, [initialItem])
 
 	return (
 		<div className='box-item is-flex is-justify-content-space-between is-align-items-center'>

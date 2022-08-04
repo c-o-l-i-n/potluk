@@ -1,4 +1,4 @@
-import db from '../../../../utils/db'
+import db from '../../../../utils/db/firebase-admin'
 
 const putGetOrDeletePotluk = async (request: any, response: any) => {
 	const { id } = request.query
