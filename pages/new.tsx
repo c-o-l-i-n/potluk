@@ -15,8 +15,8 @@ import Head from 'next/head'
 
 const New: NextPage = () => {
 	const defaultCategories = [
-		new Category('Mains', []),
-		new Category('Sides', []),
+		new Category('Main Dishes', []),
+		new Category('Side Dishes', []),
 		new Category('Desserts', []),
 		new Category('Drinks', []),
 	]
