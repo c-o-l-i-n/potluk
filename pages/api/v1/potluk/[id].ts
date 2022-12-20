@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from 'next'
 import db from '../../../../utils/db/firebase-admin'
 
-const putGetOrDeletePotluk = async (request: any, response: any) => {
-	const { id } = request.query
+const putGetOrDeletePotluk = async (request: NextApiRequest, response: NextApiResponse) => {
+	const id = request.query['id'] as string
 
 	try {
 		const potlukDatabaseReference = db.ref('potluks').child(id)
