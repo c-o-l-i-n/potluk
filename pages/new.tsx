@@ -4,21 +4,20 @@ import CreateButton from '../components/CreateButton'
 import Category from '../models/category'
 import InputField from '../components/InputField'
 import Potluk from '../models/potluk'
-import axios from 'axios'
 import router from 'next/router'
 import BoxCategoryItem from '../components/BoxCategoryItem'
 import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
-import UniqueID from '../models/uniqueId'
 import Head from 'next/head'
 
 const New: NextPage = () => {
 	const defaultCategories = [
-		new Category('Main Dishes', []),
-		new Category('Side Dishes', []),
-		new Category('Desserts', []),
-		new Category('Drinks', []),
+		// indeces will be set automatically when creating Potluk
+		new Category(0, 'Main Dishes'),
+		new Category(0, 'Side Dishes'),
+		new Category(0, 'Desserts'),
+		new Category(0, 'Drinks'),
 	]
 
 	const defaultDate = new Date(
@@ -34,19 +33,22 @@ const New: NextPage = () => {
 	const [isLoading, setIsLoading] = useState(false)
 
 	const addCategory = () => {
-		const category = new Category('', [])
+		const category = new Category(0, '')
 		setCategories([...categories, category])
 	}
 
-	const deleteCategory = (id: string) => {
-		const newCategories = categories.filter((c) => c.id !== id)
-		setCategories(newCategories)
+	const deleteCategory = (categoryIndex: number) => {
+		categories.splice(categoryIndex, 1)
+		setCategories([...categories])
 	}
 
 	const createPotluk = async () => {
 		setIsLoading(true)
 		const potluk = new Potluk(eventName, eventDate, categories)
-		await axios.post('/api/v1/potluk', potluk)
+		await fetch('/api/v1/potluk', {
+			method: 'POST',
+			body: JSON.stringify(potluk)
+		})
 		router.push(`/${potluk.id}?u=${username}`)
 	}
 
@@ -90,16 +92,12 @@ const New: NextPage = () => {
 
 				{categories.map((category, index) => (
 					<BoxCategoryItem
-						key={category.id}
+						key={index}
 						category={category}
-						onDelete={deleteCategory}
-						onChange={(category: Category) => {
-							setCategories(
-								UniqueID.updateListItemMaintainOrder(
-									categories,
-									category
-								) as Category[]
-							)
+						onDelete={() => deleteCategory(index)}
+						onChange={(name) => {
+							category.name = name
+							setCategories([...categories])
 						}}
 						disabled={isLoading}
 					/>

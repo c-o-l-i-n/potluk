@@ -16,10 +16,19 @@ import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import { useEffect, useState } from 'react'
 import InputField from '../components/InputField'
-import Category from '../models/category'
 import UniqueID from '../models/uniqueId'
-import { signIntoFirebase, subscribeToUpdates } from '../utils/db/firebase'
-import { ref, onValue } from 'firebase/database'
+import {
+	addItemToDatabase,
+	bringOrUnbringItemInDatabase,
+	changeItemNameInDatabase,
+	deleteItemFromDatabase,
+	getPotlukJson,
+	publishItemEvent,
+	signIntoFirebase,
+	subscribeToUpdates
+} from '../utils/db/firebase'
+import ItemEvent, { ItemEventType } from '../models/itemEvent'
+import React from 'react'
 
 type Props = {
 	initialPotlukJson: any
@@ -30,25 +39,21 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 	const [potluk, setPotluk] = useState(Potluk.createFromJson(initialPotlukJson))
 	const [username, setUsername] = useState(initialUsername)
 	const [loginFieldValue, setLoginFieldValue] = useState('')
-	const [isLoading, setIsLoading] = useState(false)
-
-	// a meaningless state whose sole purpose is to trigger a db update when it changes
-	// without this, we get an infinite loop of the db downloading and uploading
-	const [updateDatabaseDependency, setUpdateDatabaseDependency] = useState(true)
 
 	const router = useRouter()
 
-	const removeQueryString = () => {
+	function removeQueryString() {
+		if (!router.query.id) {
+			console.error('Unexpected error: router.query does not contain key "id"')
+			return
+		}
+		
 		const urlHasQueryString = Object.keys(router.query).length > 1
 
 		if (urlHasQueryString) {
-			const purePath = router.asPath.substring(0, UniqueID.ID_LENGTH + 1)
+			const purePath = router.asPath.substring(0, router.query.id.length + 1)
 			router.replace({ pathname: purePath }, undefined, { shallow: true })
 		}
-	}
-
-	const updateDatabase = () => {
-		setUpdateDatabaseDependency(!updateDatabaseDependency)
 	}
 
 	// remove query string on page load
@@ -59,44 +64,33 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		signIntoFirebase()
 	}, [])
 
+	const eventHandlers: Record<ItemEventType, Function> = {
+		[ItemEventType.ADD]: onAddEvent,
+		[ItemEventType.CHANGE_NAME]: onChangeItemNameEvent,
+		[ItemEventType.BRING]: onBringOrUnbringEvent,
+		[ItemEventType.UNBRING]: onBringOrUnbringEvent,
+		[ItemEventType.DELETE]: onDeleteEvent,
+	}
+
 	// get realtime updates
 	useEffect(() => {
 		return subscribeToUpdates(initialPotlukJson.id, (snapshot) => {
-			setPotluk(Potluk.createFromJson(snapshot.val()))
+			const event: ItemEvent = snapshot.val()
+			eventHandlers[event.type](event)
 		})
 	}, [])
-
-	// update database when potluk is changed
-	useEffect(() => {
-		setIsLoading(true)
-		fetch(`/api/v1/potluk/${potluk.id}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(potluk),
-		}).then(() => {
-			setIsLoading(false)
-		})
-	}, [updateDatabaseDependency])
-
-	if (!potluk) {
-		return (
-			<p>Potluk with ID &quot;{router.asPath.substring(1)}&quot; not found</p>
-		)
-	}
 
 	if (router.isFallback) {
 		return <p>Loading...</p>
 	}
 
-	type ShareData = {
+	interface ShareData {
 		title?: string
 		url?: string
 		text?: string
 	}
 
-	const share = (data: ShareData) => {
+	function share(data: ShareData) {
 		if (!navigator.canShare || !navigator.canShare(data)) {
 			const text = data.text || data.url || 'Error'
 			copy(text)
@@ -106,20 +100,20 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		navigator.share(data)
 	}
 
-	const shareLink = async () => {
+	function shareLink() {
 		share({
 			title: potluk.eventName,
 			url: window.location.href,
 		})
 	}
 
-	const shareList = async () => {
+	function shareList() {
 		share({
 			text: generateListString(potluk),
 		})
 	}
 
-	const generateListString = (potluk: Potluk) => {
+	function generateListString(potluk: Potluk) {
 		let text = `👉 ${potluk.eventName}\n📆 ${customDateString(
 			potluk.eventDate
 		)}\n🔗 ${window.location.href}\n`
@@ -128,7 +122,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 			text += '\n' + category.name.toUpperCase() + '\n'
 
 			if (!category.items) continue
-			for (const item of category.items) {
+			for (const item of Object.values(category.items)) {
 				text += item.broughtByUser ? '✅ ' : '⬜️ '
 				text +=
 					item.name +
@@ -139,92 +133,112 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 		return text
 	}
 
-	const addItem = (categoryId: string) => {
-		// so TS doesn't get mad at me
-		if (!username) return
+	function addItem(categoryIndex: number) {
+		const itemId = UniqueID.generateUniqueId()
 
-		const category = {
-			...potluk.categories.find((c) => c.id === categoryId),
-		} as Category
+		publishItemEvent(potluk.id, {
+			type: ItemEventType.ADD,
+			categoryIndex,
+			itemId,
+			user: username
+		})
 
-		category.items.push(new Item('', username, null, categoryId))
-
-		const categories = UniqueID.updateListItemMaintainOrder(
-			potluk.categories,
-			category
-		) as Category[]
-
-		setPotluk({ ...potluk, categories: categories } as Potluk)
-		updateDatabase()
+		addItemToDatabase(potluk.id, new Item('', username, null, categoryIndex, itemId))
 	}
 
-	const deleteItem = (item: Item) => {
-		const category = {
-			...potluk.categories.find((c) => c.id === item.categoryId),
-		} as Category
+	function onAddEvent(addEvent: ItemEvent): void {
+		const category = potluk.categories[addEvent.categoryIndex]
 
-		if (!category?.items) {
-			console.error(`Category ${item.categoryId} or its items not found`)
-			return
+		if (!category.items) {
+			category.items = {}
 		}
 
-		category.items = UniqueID.deleteListItemMaintainOrder(
-			category.items,
-			item.id
-		) as Item[]
+		const item = new Item('', addEvent.user, null, addEvent.categoryIndex, addEvent.itemId)
+		console.log('Add Item', item)
+		
+		category.items[item.id] = item
 
-		const categories = UniqueID.updateListItemMaintainOrder(
-			potluk.categories,
-			category
-		) as Category[]
+		// set state so UI reacts
+		setPotluk(potluk.copy())
+	} 
 
-		setPotluk({ ...potluk, categories: categories } as Potluk)
-		updateDatabase()
+	function deleteItem(item: Item) {
+		publishItemEvent(potluk.id, {
+			type: ItemEventType.DELETE,
+			categoryIndex: item.categoryIndex,
+			itemId: item.id,
+			user: username
+		})
+		
+		deleteItemFromDatabase(potluk.id, item)
 	}
 
-	const changeItem = (item: Item) => {
-		const category = {
-			...potluk.categories.find((c) => c.id === item.categoryId),
-		} as Category
+	function onDeleteEvent(deleteEvent: ItemEvent) {
+		const items = potluk.categories[deleteEvent.categoryIndex].items
 
-		if (!category?.items) {
-			console.error(`Category ${item.categoryId} or its items not found`)
-			return
-		}
+		console.log('Delete Item', items[deleteEvent.itemId])
+		delete items[deleteEvent.itemId]
 
-		category.items = UniqueID.updateListItemMaintainOrder(
-			category.items,
-			item
-		) as Item[]
-
-		const categories = UniqueID.updateListItemMaintainOrder(
-			potluk.categories,
-			category
-		) as Category[]
-
-		setPotluk({ ...potluk, categories: categories } as Potluk)
-		updateDatabase()
+		// set state so UI reacts
+		setPotluk(potluk.copy())
 	}
 
-	const login = () => {
+	function bringOrUnbringItem(item: Item, bring: boolean) {
+		publishItemEvent(potluk.id, {
+			type: bring ? ItemEventType.BRING : ItemEventType.UNBRING,
+			categoryIndex: item.categoryIndex,
+			itemId: item.id,
+			user: username
+		})
+		
+		bringOrUnbringItemInDatabase(potluk.id, item, username, bring)
+	}
+
+	function onBringOrUnbringEvent(bringEvent: ItemEvent) {
+		const bring = bringEvent.type === ItemEventType.BRING
+		const item = potluk.categories[bringEvent.categoryIndex].items[bringEvent.itemId]
+		item.broughtByUser = bring ? bringEvent.user : null
+		console.log(bring ? 'Bring Item' : 'Unbring Item', item)
+		setPotluk(potluk.copy())
+	}
+
+	function changeItemName(item: Item, name: string) {
+		publishItemEvent(potluk.id, {
+			type: ItemEventType.CHANGE_NAME,
+			categoryIndex: item.categoryIndex,
+			itemId: item.id,
+			user: username,
+			name
+		})
+		
+		changeItemNameInDatabase(potluk.id, item, name)
+	}
+
+	function onChangeItemNameEvent(changeNameEvent: ItemEvent) {
+		const item = potluk.categories[changeNameEvent.categoryIndex].items[changeNameEvent.itemId]
+		item.name = changeNameEvent.name as string
+		console.log('Change Item Name', item)
+		setPotluk(potluk.copy())
+	}
+
+	function login() {
 		if (loginFieldValue.trim()) {
-			setLoginFieldValue('')
 			setUsername(loginFieldValue.trim())
 		}
 	}
 
-	const logout = () => {
+	function logout() {
 		setUsername('')
 	}
 
-	const customDateString = (date: Date) => {
+	function customDateString(date: Date) {
 		const correctedDate = new Date(new Date(date).toISOString().slice(0, -1))
-		const options = {
+		const options: Intl.DateTimeFormatOptions = {
 			weekday: 'long',
 			year: 'numeric',
 			month: 'long',
 			day: 'numeric',
-		} as Intl.DateTimeFormatOptions
+		}
 		return correctedDate.toLocaleDateString('en-US', options)
 	}
 
@@ -248,7 +262,6 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 							type='button'
 							className='button is-primary ml-3'
 							onClick={logout}
-							disabled={isLoading}
 						>
 							Log Out
 						</button>
@@ -261,14 +274,12 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 							placeholder='Name'
 							onChange={setLoginFieldValue}
 							onEnterKeyPressed={login}
-							disabled={isLoading}
 							swapBold={true}
 						/>
 						<button
 							type='button'
 							className='button is-primary mb-3 ml-3 is-align-self-flex-end'
 							onClick={login}
-							disabled={isLoading}
 						>
 							Log In
 						</button>
@@ -277,23 +288,20 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 			</div>
 
 			{potluk.categories.map((category) => (
-				<Box key={category.id}>
+				<Box key={category.index}>
 					<BoxHeader text={category.name} />
-					{category.items.map((item) => (
+					{Object.values(category.items).map((item) => (
 						<BoxItem
 							key={item.id}
 							initialItem={item}
-							onChange={changeItem}
+							onChangeItemName={changeItemName}
+							onBringOrUnbring={bringOrUnbringItem}
 							onDelete={deleteItem}
-							disabled={isLoading}
 							username={username}
 						/>
 					))}
 					{username ? (
-						<AddItemButton
-							onClick={() => addItem(category.id)}
-							disabled={isLoading}
-						/>
+						<AddItemButton onClick={() => addItem(category.index)} />
 					) : (
 						<></>
 					)}
@@ -305,7 +313,6 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 					type='button'
 					className='button is-primary'
 					onClick={shareList}
-					disabled={isLoading}
 				>
 					<span>Share List</span>
 					<span className='icon'>
@@ -316,7 +323,6 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 					type='button'
 					className='button is-primary'
 					onClick={shareLink}
-					disabled={isLoading}
 				>
 					<span>Share Link</span>
 					<span className='icon'>
@@ -335,12 +341,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	}
 
-	const { origin } = absoluteUrl(context.req)
-	const request = await fetch(`${origin}/api/v1/potluk/${context.params.id}`)
-
 	let initialPotlukJson
 	try {
-		initialPotlukJson = await request.json()
+		initialPotlukJson = await (getPotlukJson(context.params.id as string))
 	} catch {
 		return {
 			notFound: true,

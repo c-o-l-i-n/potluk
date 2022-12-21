@@ -1,26 +1,18 @@
 import Item from './item'
-import UniqueID from './uniqueId'
 
-export default class Category extends UniqueID {
+export default class Category {
+	public index: number
 	public name: string
-	public items: Item[]
+	public items: Record<string, Item>
 
-	constructor(name: string, items: Item[], id?: string) {
-		super(id)
+	constructor(index: number, name: string, items: Record<string, Item> = {}) {
+		this.index = index
 		this.name = name
 		this.items = items
 	}
 
-	public static createFromJson = (json: any): Category => {
-		const { name } = json
-		const id = json.id
-
-		const items = json.items
-			? Object.values(json.items).map((itemJson) =>
-					Item.createFromJson(itemJson)
-			  )
-			: []
-
-		return new Category(name, items, id)
+	public static createFromJson = (json: Category): Category => {
+		const { index, name, items } = json
+		return new Category(index, name, items)
 	}
 }

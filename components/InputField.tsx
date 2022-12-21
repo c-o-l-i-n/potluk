@@ -3,7 +3,7 @@ type Props = {
 	label: string
 	placeholder?: string
 	onChange: Function
-	disabled: boolean
+	disabled?: boolean
 	onEnterKeyPressed: Function
 	swapBold: boolean
 }
@@ -13,11 +13,11 @@ const InputField = ({
 	label,
 	placeholder,
 	onChange,
-	disabled,
+	disabled = false,
 	onEnterKeyPressed,
 	swapBold,
 }: Props) => {
-	const kebabCase = (text: string) => text.toLowerCase().replace(' ', '-')
+	const kebabCase = (text: string) => text.toLowerCase().replaceAll(' ', '-')
 	const fieldName = kebabCase(label)
 
 	const defaultDate = `${new Date().getFullYear()}-${(new Date().getMonth() + 1)

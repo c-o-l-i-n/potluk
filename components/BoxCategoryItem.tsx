@@ -4,8 +4,8 @@ import Category from '../models/category'
 
 type Props = {
 	category: Category
-	onDelete: Function
-	onChange: Function
+	onDelete: (categoryIndex: number) => unknown
+	onChange: (name: string) => unknown
 	disabled: boolean
 }
 
@@ -16,20 +16,13 @@ const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props) => {
 				className='input mr-4'
 				type='text'
 				defaultValue={category.name}
-				onChange={(e) => {
-					onChange({
-						...category,
-						name: (e.target as HTMLInputElement).value.trim(),
-					})
-				}}
+				onChange={(e) => onChange((e.target as HTMLInputElement).value.trim())}
 				disabled={disabled}
 			></input>
 			<button
 				type='button'
 				className={`button is-danger ${disabled ? 'disabled' : ''}`}
-				onClick={() => {
-					onDelete(category.id)
-				}}
+				onClick={() => onDelete(category.index)}
 			>
 				<span className='icon is-small'>
 					<FontAwesomeIcon icon={faTrashCan} />

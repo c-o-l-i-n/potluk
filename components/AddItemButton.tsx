@@ -3,10 +3,10 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
 	onClick: Function
-	disabled: boolean
+	disabled?: boolean
 }
 
-const AddItemButton = ({ onClick, disabled }: Props) => {
+const AddItemButton = ({ onClick, disabled = false }: Props) => {
 	return (
 		<div className='box-item is-flex is-justify-content-center is-align-items-center'>
 			<button

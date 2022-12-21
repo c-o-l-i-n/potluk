@@ -1,32 +1,25 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
-import Category from '../models/category'
 import Item from '../models/item'
 import { useEffect, useState } from 'react'
 
 type Props = {
 	initialItem: Item
-	onChange: Function
-	onDelete: Function
-	disabled: boolean
+	onChangeItemName: (item: Item, name: string) => unknown
+	onBringOrUnbring: (item: Item, bring: boolean) => unknown
+	onDelete: (item: Item) => unknown
 	username: string | null
 }
 
 const BoxItem = ({
 	initialItem,
-	onChange,
+	onChangeItemName,
+	onBringOrUnbring,
 	onDelete,
-	disabled,
 	username,
 }: Props) => {
 	const [item, setItem] = useState(initialItem)
-
-	useEffect(() => {
-		if (item === initialItem) return
-
-		onChange(item)
-	}, [item])
 
 	useEffect(() => {
 		setItem(initialItem)
@@ -43,15 +36,10 @@ const BoxItem = ({
 			</span>
 			{username && username === item.createdByUser && !item.broughtByUser ? (
 				<input
-					className={`input ${disabled ? 'disabled' : ''}`}
+					className={'input'}
 					type='text'
 					defaultValue={item.name}
-					onBlur={(e) => {
-						setItem({
-							...item,
-							name: (e.target as HTMLInputElement).value.trim(),
-						} as Item)
-					}}
+					onBlur={(e) => onChangeItemName(item, (e.target as HTMLInputElement).value.trim())}
 				></input>
 			) : (
 				<div className='mr-auto'>
@@ -69,12 +57,8 @@ const BoxItem = ({
 					{!item.broughtByUser ? (
 						<button
 							type='button'
-							className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
-								disabled ? 'disabled' : ''
-							}`}
-							onClick={() => {
-								setItem({ ...item, broughtByUser: username } as Item)
-							}}
+							className='button is-dark is-size-7 ml-3 has-text-weight-bold'
+							onClick={() => onBringOrUnbring(item, true)}
 						>
 							Bring
 						</button>
@@ -83,12 +67,8 @@ const BoxItem = ({
 							{username === item.broughtByUser ? (
 								<button
 									type='button'
-									className={`button is-dark is-size-7 ml-3 has-text-weight-bold ${
-										disabled ? 'disabled' : ''
-									}`}
-									onClick={() => {
-										setItem({ ...item, broughtByUser: '' } as Item)
-									}}
+									className='button is-dark is-size-7 ml-3 has-text-weight-bold'
+									onClick={() => onBringOrUnbring(item, false)}
 								>
 									Unbring
 								</button>
@@ -104,7 +84,7 @@ const BoxItem = ({
 			{username === item.createdByUser && !item.broughtByUser ? (
 				<button
 					type='button'
-					className={`button is-danger ml-3 ${disabled ? 'disabled' : ''}`}
+					className='button is-danger ml-3'
 					onClick={() => {
 						onDelete(item)
 					}}

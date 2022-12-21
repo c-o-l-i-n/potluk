@@ -1,15 +1,12 @@
+import { NextApiRequest, NextApiResponse } from 'next'
 import Potluk from '../../../../models/potluk'
 import db from '../../../../utils/db/firebase-admin'
 
-const postPotluk = async (request: any, response: any) => {
-	const potluk = new Potluk(
-		request.body.eventName,
-		request.body.eventDate,
-		request.body.categories,
-		request.body.id,
-		request.body.createdDate,
-		request.body.lastModifiedDate
-	)
+const postPotluk = async (request: NextApiRequest, response: NextApiResponse) => {
+	const potluk: Potluk = JSON.parse(request.body)
+
+	// set proper category indeces
+	potluk.categories.forEach((category, index) => category.index = index)
 
 	try {
 		const potluksDatabase = db.ref('potluks')
