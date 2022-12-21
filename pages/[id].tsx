@@ -270,7 +270,7 @@ export default function Main({ initialPotlukJson, initialUsername }: Props) {
 					<>
 						<InputField
 							type='text'
-							label='Log in to edit'
+							label='Enter your name to edit'
 							placeholder='Name'
 							onChange={setLoginFieldValue}
 							onEnterKeyPressed={login}
