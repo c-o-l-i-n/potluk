@@ -17,7 +17,7 @@ const InputField = ({
 	onEnterKeyPressed,
 	swapBold,
 }: Props) => {
-	const kebabCase = (text: string) => text.toLowerCase().replaceAll(' ', '-')
+	const kebabCase = (text: string) => text.toLowerCase().replace(/ /g, '-')
 	const fieldName = kebabCase(label)
 
 	const defaultDate = `${new Date().getFullYear()}-${(new Date().getMonth() + 1)
