@@ -1,4 +1,7 @@
 export default class UniqueID {
+	public static readonly ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'
+	public static readonly RADIX = UniqueID.ALPHABET.length
+
 	public readonly id: string
 
 	constructor(id?: string) {
@@ -6,15 +9,31 @@ export default class UniqueID {
 	}
 
 	/**
-	 * Create unique ID by converting current Unix epoch to alphanumeric string
-	 * and adding small random portion at the end in the off change of multiple
-	 * IDs created during the same millisecond
+	 * Create a unique ID by converting the current Unix time to string and
+	 * adding a random character at the end in the off change of multiple IDs
+	 * being created during the same millisecond.
+	 * 
+	 * This doesn't 100% guarantee that all IDs will be unique, but in order for
+	 * 2 IDs to be the same, they must both be created during the same exact
+	 * millisecond, and then there is a 1 in 64 (1.6%) chance of them both
+	 * getting the same random character. I am willing to take that risk.
 	 */
-	public static generateUniqueId(): string {
-		const radix = 36 // 26 letters + 10 numbers
-		const randomPortionLength = 2
-		const timeStringProtion = new Date().getTime().toString(radix)
-		const randomPortion = Math.floor(Math.random() * radix ** randomPortionLength).toString(radix)
-		return timeStringProtion + randomPortion
+	public static generateUniqueId() {
+		let unixTime = new Date().getTime()
+    let id = ''
+		let remainder
+
+		// convert current Unix time to base-64 string
+    while (unixTime) {
+			remainder = unixTime % UniqueID.RADIX
+			unixTime -= remainder
+			unixTime /= UniqueID.RADIX
+			id = UniqueID.ALPHABET.charAt(remainder) + id
+    }
+		
+		// add random character
+		id += UniqueID.ALPHABET.charAt(Math.floor(Math.random() * UniqueID.RADIX))
+  
+		return id
 	}
 }
