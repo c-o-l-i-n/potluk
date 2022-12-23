@@ -1,8 +1,9 @@
 import { initializeApp } from 'firebase/app'
-import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, update, get, onChildChanged, query, limitToLast, endAt, onValue, remove } from 'firebase/database'
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
+import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, remove } from 'firebase/database'
 import { getAuth, signInAnonymously } from 'firebase/auth'
-import ItemEvent from '../../models/itemEvent'
-import Item from '../../models/item'
+import ItemEvent from '../models/itemEvent'
+import Item from '../models/item'
 
 // Initialize Firebase
 const app = initializeApp({
@@ -15,6 +16,12 @@ const app = initializeApp({
 	appId: '1:209562255019:web:4df88c5e816b6c865581ee',
 	measurementId: 'G-5NDQE97HZ9',
 })
+
+// Initialize App Check security
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('6LcvdtQfAAAAAKbmKpb68MIZt5GXZYubca1YLV-5'),
+  isTokenAutoRefreshEnabled: true
+});
 
 const auth = getAuth(app)
 const db = getDatabase(app)

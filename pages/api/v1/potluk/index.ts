@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import Potluk from '../../../../models/potluk'
-import db from '../../../../utils/db/firebase-admin'
+import db from '../../../../firebase/firebase-admin'
 
 const postPotluk = async (request: NextApiRequest, response: NextApiResponse) => {
 	const potluk: Potluk = JSON.parse(request.body)

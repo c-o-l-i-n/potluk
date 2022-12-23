@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import db from '../../../../utils/db/firebase-admin'
+import db from '../../../../firebase/firebase-admin'
 
 const putGetOrDeletePotluk = async (request: NextApiRequest, response: NextApiResponse) => {
 	const id = request.query['id'] as string

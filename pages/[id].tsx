@@ -2,7 +2,6 @@ import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Potluk from '../models/potluk'
-import absoluteUrl from 'next-absolute-url'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faArrowUpRightFromSquare,
@@ -26,7 +25,7 @@ import {
 	publishItemEvent,
 	signIntoFirebase,
 	subscribeToUpdates
-} from '../utils/db/firebase'
+} from '../firebase/firebase'
 import ItemEvent, { ItemEventType } from '../models/itemEvent'
 import React from 'react'
 
