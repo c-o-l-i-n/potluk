@@ -18,7 +18,7 @@ const app = initializeApp({
 })
 
 // Initialize App Check security
-const appCheck = initializeAppCheck(app, {
+const appCheck = typeof window === 'object' && initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('6LcvdtQfAAAAAKbmKpb68MIZt5GXZYubca1YLV-5'),
   isTokenAutoRefreshEnabled: true
 });
