@@ -14,6 +14,7 @@ import Head from 'next/head'
 const New: NextPage = () => {
 	const defaultCategories = [
 		// indeces will be set automatically when creating Potluk
+		new Category(0, 'Appetizers'),
 		new Category(0, 'Main Dishes'),
 		new Category(0, 'Side Dishes'),
 		new Category(0, 'Desserts'),
