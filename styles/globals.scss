@@ -62,3 +62,12 @@ button.disabled {
 	background-color: rgba($grey-light, 0.5) !important;
 	pointer-events: none;
 }
+
+.loader {
+	margin: auto;
+	height: 80px;
+	width: 80px;
+	border-width: 0.5rem;
+	border-right-color: transparent;
+	border-top-color: transparent;
+}

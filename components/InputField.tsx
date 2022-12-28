@@ -4,8 +4,9 @@ type Props = {
 	placeholder?: string
 	onChange: Function
 	disabled?: boolean
-	onEnterKeyPressed: Function
-	swapBold: boolean
+	onEnterKeyPressed?: Function
+	swapBold?: boolean
+	defaultValue?: string
 }
 
 const InputField = ({
@@ -14,15 +15,13 @@ const InputField = ({
 	placeholder,
 	onChange,
 	disabled = false,
-	onEnterKeyPressed,
-	swapBold,
+	onEnterKeyPressed = () => {},
+	swapBold = false,
+	defaultValue = ''
 }: Props) => {
 	const kebabCase = (text: string) => text.toLowerCase().replace(/ /g, '-')
 	const fieldName = kebabCase(label)
 
-	const defaultDate = `${new Date().getFullYear()}-${(new Date().getMonth() + 1)
-		.toString()
-		.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
 
 	return (
 		<div className='field w-100'>
@@ -38,7 +37,7 @@ const InputField = ({
 					type={type}
 					name={fieldName}
 					placeholder={placeholder}
-					defaultValue={type === 'date' ? defaultDate : ''}
+					defaultValue={defaultValue}
 					onChange={(e) => {
 						onChange((e.target as HTMLInputElement).value.trim())
 					}}

@@ -4,6 +4,7 @@ import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, 
 import { getAuth, signInAnonymously } from 'firebase/auth'
 import ItemEvent from '../models/itemEvent'
 import Item from '../models/item'
+import Potluk from '../models/potluk'
 
 // Initialize Firebase
 const app = initializeApp({
@@ -17,8 +18,8 @@ const app = initializeApp({
 	measurementId: 'G-5NDQE97HZ9',
 })
 
-// Initialize App Check security
-const appCheck = typeof window === 'object' && initializeAppCheck(app, {
+// Initialize App Check security (for frontend only)
+typeof window === 'object' && initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('6LcvdtQfAAAAAKbmKpb68MIZt5GXZYubca1YLV-5'),
   isTokenAutoRefreshEnabled: true
 });
@@ -45,8 +46,28 @@ const subscribeToUpdates = (
 	})
 }
 
-const udpateLastModifiedDate = (potlukId: string): void => {
-	set(ref(db, `potluks/${potlukId}/lastModifiedDate`), new Date().toISOString())
+const createPotlukInDatabase = async (potluk: Potluk): Promise<void> => {
+	const serializedPotluk = JSON.parse(JSON.stringify(potluk))
+	delete serializedPotluk['id']
+	serializedPotluk.date = potluk.date.toLocaleDateString('fr-CA', {
+		year: 'numeric',
+		month:'2-digit',
+		day:'2-digit'
+	})
+
+	return set(ref(db, `potluks/${potluk.id}`), serializedPotluk)
+}
+
+const getPotlukFromDatabase = async (potlukId: string): Promise<Potluk> => {
+	const data = await (await get(ref(db, `potluks/${potlukId}`))).val()
+	if (!data) {
+		throw new Error(`Cannot find Potluk with ID "${potlukId}"`)
+	}
+	return Potluk.createFromJson(potlukId, data)
+}
+
+const updateLastModified = (potlukId: string): void => {
+	set(ref(db, `potluks/${potlukId}/lastModified`), new Date().toISOString())
 }
 
 const publishItemEvent = (potlukId: string, event: ItemEvent): void => {
@@ -58,29 +79,37 @@ const getPotlukJson = async (potlukId: string) => {
 	return (await get(potlukRef)).toJSON()
 }
 
+const cleansedItem = (item: Item): Object => ({
+	...item,
+	id: null,
+	categoryIndex: null
+})
+
 const addItemToDatabase = (potlukId: string, item: Item): void => {
-	set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`), item)
-	udpateLastModifiedDate(potlukId)
+	set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`), cleansedItem(item))
+	updateLastModified(potlukId)
 }
 
 const deleteItemFromDatabase = (potlukId: string, item: Item): void => {
 	remove(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`))
-	udpateLastModifiedDate(potlukId)
+	updateLastModified(potlukId)
 }
 
 const bringOrUnbringItemInDatabase = (potlukId: string, item: Item, username: string, bring: boolean): void => {
-	set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}/broughtByUser`), bring ? username : null)
-	udpateLastModifiedDate(potlukId)
+	set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}/broughtBy`), bring ? username : null)
+	updateLastModified(potlukId)
 }
 
 const changeItemNameInDatabase = (potlukId: string, item: Item, name: string): void => {
 	set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}/name`), name)
-	udpateLastModifiedDate(potlukId)
+	updateLastModified(potlukId)
 }
 
 export {
 	signIntoFirebase,
 	subscribeToUpdates,
+	createPotlukInDatabase,
+	getPotlukFromDatabase,
 	publishItemEvent,
 	addItemToDatabase,
 	getPotlukJson,

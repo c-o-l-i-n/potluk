@@ -1,5 +1,5 @@
 export enum ItemEventType {
-  ADD = 'create',
+  ADD = 'add',
   CHANGE_NAME = 'change-name',
   BRING = 'bring',
   UNBRING = 'unbring',

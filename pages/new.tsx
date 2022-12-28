@@ -10,27 +10,26 @@ import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 import Head from 'next/head'
+import { createPotlukInDatabase, signIntoFirebase } from '../firebase/firebase'
 
 const New: NextPage = () => {
-	const defaultCategories = [
-		// indeces will be set automatically when creating Potluk
-		new Category(0, 'Appetizers'),
-		new Category(0, 'Main Dishes'),
-		new Category(0, 'Side Dishes'),
-		new Category(0, 'Desserts'),
-		new Category(0, 'Drinks'),
-	]
 
-	const defaultDate = new Date(
-		`${new Date().getFullYear()}-${(new Date().getMonth() + 1)
-			.toString()
-			.padStart(2, '0')}-${new Date().getDate().toString().padStart(2, '0')}`
-	)
-
+	// default date is today in the format yyyy-mm-dd
+	const [eventDateString, setEventDateString] = useState<string>(() =>
+		new Date().toLocaleDateString('fr-CA', {
+			year: 'numeric',
+			month:'2-digit',
+			day:'2-digit'
+		}))
 	const [eventName, setEventName] = useState<string>('')
-	const [eventDate, setEventDate] = useState<Date>(defaultDate)
 	const [username, setUsername] = useState<string>('')
-	const [categories, setCategories] = useState<Category[]>(defaultCategories)
+	const [categories, setCategories] = useState<Category[]>(() => [
+			new Category(0, 'Appetizers'),
+			new Category(0, 'Main Dishes'),
+			new Category(0, 'Side Dishes'),
+			new Category(0, 'Desserts'),
+			new Category(0, 'Drinks'),
+		])
 	const [isLoading, setIsLoading] = useState(false)
 
 	const addCategory = () => {
@@ -45,11 +44,12 @@ const New: NextPage = () => {
 
 	const createPotluk = async () => {
 		setIsLoading(true)
-		const potluk = new Potluk(eventName, eventDate, categories)
-		await fetch('/api/v1/potluk', {
-			method: 'POST',
-			body: JSON.stringify(potluk)
-		})
+
+		const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
+
+		await signIntoFirebase()
+		await createPotlukInDatabase(potluk)
+		
 		router.push(`/${potluk.id}?u=${username}`)
 	}
 
@@ -64,26 +64,21 @@ const New: NextPage = () => {
 				label='Event Name'
 				placeholder='House Warming Party'
 				onChange={setEventName}
-				onEnterKeyPressed={() => {}}
 				disabled={isLoading}
-				swapBold={false}
 			/>
 			<InputField
 				type='date'
 				label='Event Date'
-				onChange={setEventDate}
-				onEnterKeyPressed={() => {}}
+				onChange={setEventDateString}
 				disabled={isLoading}
-				swapBold={false}
+				defaultValue={eventDateString}
 			/>
 			<InputField
 				type='text'
 				label='Your Name'
 				placeholder='Colin'
 				onChange={setUsername}
-				onEnterKeyPressed={() => {}}
 				disabled={isLoading}
-				swapBold={false}
 			/>
 
 			<br />
@@ -114,7 +109,7 @@ const New: NextPage = () => {
 					disabled={
 						!(
 							eventName &&
-							eventDate &&
+							eventDateString &&
 							categories.length &&
 							categories.every((c) => !!c.name)
 						)

@@ -2,65 +2,46 @@ import Category from './category'
 import UniqueID from './uniqueId'
 
 export default class Potluk extends UniqueID {
-	public createdDate: Date
-	public lastModifiedDate: Date
-	public eventName: string
-	public eventDate: Date
+	public lastModified: Date
+	public name: string
+	public date: Date
 	public categories: Category[]
 
-	// cache the initial value so it doesn't parse a new value every single state change
-	private static initialValueFromJson: Potluk;
-
 	constructor(
-		eventName: string,
-		eventDate: Date,
+		name: string,
+		date: Date,
 		categories: Category[],
 		id?: string,
-		createdDate?: Date,
-		lastModifiedDate?: Date
+		lastModified?: Date
 	) {
 		super(id)
-		const now = new Date()
-		this.eventName = eventName
-		this.eventDate = eventDate
+		this.name = name
+		this.date = date
 		this.categories = categories
-		this.createdDate = createdDate || now
-		this.lastModifiedDate = lastModifiedDate || now
+		this.lastModified = lastModified || new Date()
 	}
 
-	public static createFromJson = (json: any): Potluk => {
-		// if rendering in client and already cached for this potluk, return cached value
-		if (typeof window !== 'undefined' && Potluk.initialValueFromJson?.id === json.id) return Potluk.initialValueFromJson
+	public static createFromJson = (id: string, json: Potluk): Potluk => {
+		console.log('Creating Potluk from JSON:', json);
+		
+		const { name } = json
+		const date = new Date(json.date)
+		const lastModified = new Date(json.lastModified)
 
-		const { id, eventName } = json
-		const eventDate = new Date(json.eventDate)
-		const createdDate = new Date(json.createdDate)
-		const lastModifiedDate = new Date(json.lastModifiedDate)
-
-		const categories = Object.values(json.categories).map((categoryJson) =>
-			Category.createFromJson(categoryJson as Category)
+		const categories = Object.values(json.categories).map((categoryJson, index) =>
+			Category.createFromJson(index, categoryJson)
 		)
 
-		Potluk.initialValueFromJson = new Potluk(
-			eventName,
-			eventDate,
-			categories,
-			id,
-			createdDate,
-			lastModifiedDate
-		)
-
-		return Potluk.initialValueFromJson
+		return new Potluk(name, date, categories, id, lastModified)
 	}
 
 	public copy(): Potluk {
 		return new Potluk(
-			this.eventName,
-			this.eventDate,
+			this.name,
+			this.date,
 			this.categories,
 			this.id,
-			this.createdDate,
-			this.lastModifiedDate
+			this.lastModified
 		)
 	}
 }

@@ -29,12 +29,12 @@ const BoxItem = ({
 		<div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
 			<span
 				className={`icon is-size-4 mr-4 ${
-					item.broughtByUser ? 'has-text-primary' : 'has-text-grey'
+					item.broughtBy ? 'has-text-primary' : 'has-text-grey'
 				}`}
 			>
-				<FontAwesomeIcon icon={item.broughtByUser ? faCheckCircle : faCircle} />
+				<FontAwesomeIcon icon={item.broughtBy ? faCheckCircle : faCircle} />
 			</span>
-			{username && username === item.createdByUser && !item.broughtByUser ? (
+			{username && username === item.createdByUser && !item.broughtBy ? (
 				<input
 					className={'input'}
 					type='text'
@@ -44,8 +44,8 @@ const BoxItem = ({
 			) : (
 				<div className='mr-auto'>
 					<p className='mb-0 has-text-weight-bold'>{item.name}</p>
-					{item.broughtByUser ? (
-						<p className='is-size-7'>{item.broughtByUser} is bringing</p>
+					{item.broughtBy ? (
+						<p className='is-size-7'>{item.broughtBy} is bringing</p>
 					) : (
 						<></>
 					)}
@@ -54,7 +54,7 @@ const BoxItem = ({
 
 			{username ? (
 				<>
-					{!item.broughtByUser ? (
+					{!item.broughtBy ? (
 						<button
 							type='button'
 							className='button is-dark is-size-7 ml-3 has-text-weight-bold'
@@ -64,7 +64,7 @@ const BoxItem = ({
 						</button>
 					) : (
 						<>
-							{username === item.broughtByUser ? (
+							{username === item.broughtBy ? (
 								<button
 									type='button'
 									className='button is-dark is-size-7 ml-3 has-text-weight-bold'
@@ -81,7 +81,7 @@ const BoxItem = ({
 			) : (
 				<></>
 			)}
-			{username === item.createdByUser && !item.broughtByUser ? (
+			{username === item.createdByUser && !item.broughtBy ? (
 				<button
 					type='button'
 					className='button is-danger ml-3'

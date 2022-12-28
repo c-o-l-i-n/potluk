@@ -1,5 +1,6 @@
 export default class UniqueID {
-	public static readonly ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'
+	// 64-character alphabet based on how Firebase alphabetizes keys
+	public static readonly ALPHABET = '0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
 	public static readonly RADIX = UniqueID.ALPHABET.length
 
 	public readonly id: string
@@ -10,7 +11,7 @@ export default class UniqueID {
 
 	/**
 	 * Create a unique ID by converting the current Unix time to string and
-	 * adding a random character at the end in the off change of multiple IDs
+	 * adding a random character at the end in the off chance of multiple IDs
 	 * being created during the same millisecond.
 	 * 
 	 * This doesn't 100% guarantee that all IDs will be unique, but in order for
@@ -18,10 +19,10 @@ export default class UniqueID {
 	 * millisecond, and then there is a 1 in 64 (1.6%) chance of them both
 	 * getting the same random character. I am willing to take that risk.
 	 */
-	public static generateUniqueId() {
+	public static generateUniqueId(): string {
 		let unixTime = new Date().getTime()
     let id = ''
-		let remainder
+		let remainder: number
 
 		// convert current Unix time to base-64 string
     while (unixTime) {
