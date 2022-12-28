@@ -4,7 +4,7 @@ import Category from '../models/category'
 
 type Props = {
 	category: Category
-	onDelete: (categoryIndex: number) => unknown
+	onDelete: () => unknown
 	onChange: (name: string) => unknown
 	disabled: boolean
 }
@@ -22,7 +22,7 @@ const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props) => {
 			<button
 				type='button'
 				className={`button is-danger ${disabled ? 'disabled' : ''}`}
-				onClick={() => onDelete(category.index)}
+				onClick={onDelete}
 			>
 				<span className='icon is-small'>
 					<FontAwesomeIcon icon={faTrashCan} />
