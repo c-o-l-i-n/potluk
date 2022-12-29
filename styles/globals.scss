@@ -27,6 +27,18 @@ body {
 	@extend .is-flex-direction-column;
 }
 
+.navbar-item {
+	img {
+		max-height: unset;
+		width: 2.25rem;
+	}
+}
+
+#logo {
+	height: 2.25rem;
+	width: 2.25rem;
+}
+
 main {
 	@extend .p-5;
 	@extend .mb-0;
@@ -40,15 +52,15 @@ main {
 	@extend .w-100;
 
 	.box-item {
-		padding: 0.75rem 0;
+		@extend .py-3;
 		border-bottom: solid #f5f5f5 2px;
 
 		&:first-child {
-			padding-top: 0;
+			@extend .pt-0;
 		}
 
 		&:last-child {
-			padding-bottom: 0;
+			@extend .pb-0;
 			border-bottom: none;
 		}
 	}
@@ -64,9 +76,10 @@ button.disabled {
 }
 
 .loader {
-	margin: auto;
-	height: 80px;
-	width: 80px;
+	@extend .m-auto;
+
+	height: 5rem;
+	width: 5rem;
 	border-width: 0.5rem;
 	border-right-color: transparent;
 	border-top-color: transparent;

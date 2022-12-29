@@ -18,11 +18,10 @@ const Home: NextPage = () => {
 				is-align-items-center
 				is-justify-content-space-between'
 			>
-				<Image
+				<img
 					src='/images/family-meal.svg'
 					alt='People eating a meal'
-					width={300}
-					height={230}
+					width={305}
 				/>
 
 				<p className='has-text-centered is-size-4 mt-6 mb-3'>
