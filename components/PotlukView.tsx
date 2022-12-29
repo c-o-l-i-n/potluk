@@ -174,7 +174,7 @@ export default function PotlukView({initialPotluk, initialUsername}: Props): Rea
 	function generateListString(potluk: Potluk): string {
 		let text = `👉 ${potluk.name}\n📆 ${customDateString(
 			potluk.date
-		)}\n🔗 ${window.location.href}\n`
+		)}\n🔗 ${window.location.href.split('://').at(-1)}\n`
 
 		for (const category of potluk.categories) {
 			text += '\n' + category.name.toUpperCase() + '\n'
