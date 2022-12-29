@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faArrowUpRightFromSquare,
 	faList,
+	faQrcode,
 } from '@fortawesome/free-solid-svg-icons'
 import copy from 'copy-to-clipboard'
 import Box from './Box'
@@ -23,6 +24,7 @@ import {
 	subscribeToUpdates
 } from '../firebase/firebase'
 import ItemEvent, { ItemEventType } from '../models/itemEvent'
+import QrCode from './QrCode'
 
 type Props = {
 	initialPotluk: Potluk
@@ -33,6 +35,7 @@ export default function PotlukView({initialPotluk, initialUsername}: Props): Rea
 	const [potluk, setPotluk] = useState<Potluk>(initialPotluk)
 	const [username, setUsername] = useState(initialUsername)
 	const [loginFieldValue, setLoginFieldValue] = useState('')
+	const [showingQrCode, setShowingQrCode] = useState(false)
 
 	// get realtime updates
 	useEffect(() =>
@@ -219,6 +222,15 @@ export default function PotlukView({initialPotluk, initialUsername}: Props): Rea
 				<title>{potluk.name}</title>
 			</Head>
 
+			{
+				showingQrCode &&
+				<QrCode
+					url={window.location.href}
+					bottomText={potluk.name}
+					onClick={() => setShowingQrCode(false)}
+				/>
+			}
+
 			<h2 className='mb-1'>{potluk.name}</h2>
 			<p className='is-uppercase has-text-grey has-text-weight-bold'>
 				{customDateString(potluk.date)}
@@ -298,6 +310,16 @@ export default function PotlukView({initialPotluk, initialUsername}: Props): Rea
 					<span>Share Link</span>
 					<span className='icon'>
 						<FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+					</span>
+				</button>
+				<button
+					type='button'
+					className='button is-primary'
+					onClick={() => setShowingQrCode(true)}
+				>
+					<span>QR Code</span>
+					<span className='icon'>
+						<FontAwesomeIcon icon={faQrcode} />
 					</span>
 				</button>
 			</div>
