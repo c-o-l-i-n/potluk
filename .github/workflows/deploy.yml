@@ -8,7 +8,7 @@ on:
       - '**.md'
 
 jobs:
-  deployment:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
       - name: Build 🛠
         run: npm run build
 
-      - name: Export ↗️
+      - name: Export ✈️
         run: npm run export
 
       - name: Deploy to Github Pages 🚀
