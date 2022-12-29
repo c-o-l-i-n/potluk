@@ -4,9 +4,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 
 const Feedback: NextPage = () => {
-	const [state, handleSubmit] = useForm(
-		process.env.NEXT_PUBLIC_FEEDBACK_FORM_ID || ''
-	)
+	const [state, handleSubmit] = useForm('mzbokqkv')
 
 	const router = useRouter()
 
