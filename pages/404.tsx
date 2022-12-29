@@ -17,7 +17,7 @@ const ForwardToPotluk = () => {
 	const router = useRouter()
 
   useEffect(() => {
-    router.push(router.asPath.split('/')[1])
+    router.replace(router.asPath.split('/')[1])
   }, [])
 }
 
