@@ -34,7 +34,7 @@ const BoxItem = ({
 			>
 				<FontAwesomeIcon icon={item.broughtBy ? faCheckCircle : faCircle} />
 			</span>
-			{username && username === item.createdByUser && !item.broughtBy ? (
+			{username && username === item.createdBy && !item.broughtBy ? (
 				<input
 					className={'input'}
 					type='text'
@@ -81,7 +81,7 @@ const BoxItem = ({
 			) : (
 				<></>
 			)}
-			{username === item.createdByUser && !item.broughtBy ? (
+			{username === item.createdBy && !item.broughtBy ? (
 				<button
 					type='button'
 					className='button is-danger ml-3'
