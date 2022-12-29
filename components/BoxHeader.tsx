@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
-type Props = {
-	text: string
+interface Props {
+  text: string
 }
 
-const BoxHeader = ({ text }: Props) => {
-	return (
-		<div className='box-item is-size-5 has-text-centered has-text-weight-bold'>
-			{text}
-		</div>
-	)
+const BoxHeader = ({ text }: Props): ReactElement => {
+  return (
+    <div className='box-item is-size-5 has-text-centered has-text-weight-bold'>
+      {text}
+    </div>
+  )
 }
 
 export default BoxHeader

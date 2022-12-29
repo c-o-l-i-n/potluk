@@ -1,9 +1,11 @@
-type Props = {
-	children: React.ReactNode
+import { ReactElement } from 'react'
+
+interface Props {
+  children: React.ReactNode
 }
 
-const Box = ({ children }: Props) => {
-	return <div className='box'>{children}</div>
+const Box = ({ children }: Props): ReactElement => {
+  return <div className='box'>{children}</div>
 }
 
 export default Box

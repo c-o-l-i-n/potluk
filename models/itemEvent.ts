@@ -7,9 +7,9 @@ export enum ItemEventType {
 }
 
 export default interface ItemEvent {
-  type: ItemEventType;
-  categoryIndex: number;
-  itemId: string;
-  user: string;
+  type: ItemEventType
+  categoryIndex: number
+  itemId: string
+  user: string
   name?: string
 }

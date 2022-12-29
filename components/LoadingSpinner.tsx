@@ -1,3 +1,5 @@
-const LoadingSpinner = () => <div className='loader is-loading' />
+import { ReactElement } from 'react'
+
+const LoadingSpinner = (): ReactElement => <div className='loader is-loading' />
 
 export default LoadingSpinner
