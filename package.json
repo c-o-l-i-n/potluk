@@ -10,9 +10,11 @@
 		"lint": "ts-standard",
 		"lint-fix": "ts-standard --fix"
 	},
-	"eslintIgnore": [
-		"next-env.d.ts"
-	],
+	"ts-standard": {
+		"ignore": [
+			"next-env.d.ts"
+		]
+	},
 	"dependencies": {
 		"@formspree/react": "^2.2.4",
 		"@fortawesome/fontawesome-svg-core": "^6.1.1",
