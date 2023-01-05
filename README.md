@@ -22,7 +22,7 @@
 
 ## About
 
-Potluk is the website that makes coordinating food at your event easy. Simply create a new Potluk, share the link with attendees, and everyone fills out what they're bringing. No sign-ups, no data mining, no ads, and no cost.
+Potluk is the website that makes coordinating food at your event easy. Simply create a new Potluk, share the link with attendees, and everyone fills out what they're bringing. No sign-ups, no ads, no data mining, no cost.
 
 ### Technology Stack
 
@@ -35,7 +35,7 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 <a href="https://www.typescriptlang.org/" target="_blank">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" />
 </a>
-<a href="https://github.com/features/actions" target="_blank">
+<a href="https://pages.github.com/" target="_blank">
   <img alt="Github Pages" src="https://img.shields.io/badge/Github%20Pages-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white" />
 </a>
 
