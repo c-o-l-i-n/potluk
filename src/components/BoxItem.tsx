@@ -12,13 +12,13 @@ interface Props {
   username: string
 }
 
-const BoxItem = ({
+export default function BoxItem ({
   initialItem,
   onChangeItemName,
   onBringOrUnbring,
   onDelete,
   username
-}: Props): ReactElement => {
+}: Props): ReactElement {
   const [item, setItem] = useState(initialItem)
 
   useEffect(() => {
@@ -109,5 +109,3 @@ const BoxItem = ({
     </div>
   )
 }
-
-export default BoxItem

@@ -7,7 +7,7 @@ interface Props {
   onClick: () => unknown
 }
 
-const QrCode = ({ url, bottomText, onClick }: Props): ReactElement => {
+export default function QrCode ({ url, bottomText, onClick }: Props): ReactElement {
   return (
     <div className='modal is-active' onClick={onClick}>
       <div className='modal-background' />
@@ -29,5 +29,3 @@ const QrCode = ({ url, bottomText, onClick }: Props): ReactElement => {
     </div>
   )
 }
-
-export default QrCode

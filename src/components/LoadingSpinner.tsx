@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
 
-const LoadingSpinner = (): ReactElement => <div className='loader is-loading' />
-
-export default LoadingSpinner
+export default function LoadingSpinner (): ReactElement {
+  return <div className='loader is-loading' />
+}

@@ -10,7 +10,7 @@ interface Props {
   disabled: boolean
 }
 
-const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props): ReactElement => {
+export default function BoxCategoryItem ({ category, onDelete, onChange, disabled }: Props): ReactElement {
   return (
     <div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
       <input
@@ -32,5 +32,3 @@ const BoxCategoryItem = ({ category, onDelete, onChange, disabled }: Props): Rea
     </div>
   )
 }
-
-export default BoxCategoryItem

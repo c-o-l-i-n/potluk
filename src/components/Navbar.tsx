@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react'
+import { ReactElement } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const Navbar: FunctionComponent = () => {
+export default function Navbar (): ReactElement {
   return (
     <nav
       className='navbar is-primary'
@@ -27,5 +27,3 @@ const Navbar: FunctionComponent = () => {
     </nav>
   )
 }
-
-export default Navbar

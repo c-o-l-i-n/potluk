@@ -12,10 +12,10 @@ const font = Montserrat({
   variable: '--app-font'
 })
 
-const MyApp = ({
+export default function MyApp ({
   Component,
   pageProps
-}: AppProps): ReactElement => {
+}: AppProps): ReactElement {
   return (
     <>
       <style jsx global>{`
@@ -30,5 +30,3 @@ const MyApp = ({
     </>
   )
 }
-
-export default MyApp

@@ -3,7 +3,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import { ReactElement } from 'react'
 
-const Footer = (): ReactElement => {
+export default function Footer (): ReactElement {
   return (
     <footer className='footer has-text-centered'>
       <p>
@@ -26,5 +26,3 @@ const Footer = (): ReactElement => {
     </footer>
   )
 }
-
-export default Footer

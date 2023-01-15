@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { ReactElement } from 'react'
 
-const Feedback = (): ReactElement => {
+export default function Feedback (): ReactElement {
   const [state, handleSubmit] = useForm('mzbokqkv')
 
   const router = useRouter()
@@ -123,5 +123,3 @@ const Feedback = (): ReactElement => {
     </>
   )
 }
-
-export default Feedback

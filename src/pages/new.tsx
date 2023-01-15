@@ -11,7 +11,7 @@ import Box from '../components/Box'
 import Head from 'next/head'
 import { createPotlukInDatabase, signIntoFirebase } from '../firebase/firebase'
 
-const New = (): ReactElement => {
+export default function New (): ReactElement {
   // default date is today in the format yyyy-mm-dd
   const [eventDateString, setEventDateString] = useState<string>(() =>
     new Date().toLocaleDateString('fr-CA', {
@@ -117,5 +117,3 @@ const New = (): ReactElement => {
     </>
   )
 }
-
-export default New

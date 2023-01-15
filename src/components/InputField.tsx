@@ -11,7 +11,7 @@ interface Props {
   defaultValue?: string
 }
 
-const InputField = ({
+export default function InputField ({
   type,
   label,
   placeholder,
@@ -20,7 +20,7 @@ const InputField = ({
   onEnterKeyPressed = () => {},
   swapBold = false,
   defaultValue = ''
-}: Props): ReactElement => {
+}: Props): ReactElement {
   const kebabCase = (text: string): string => text.toLowerCase().replace(/ /g, '-')
   const fieldName = kebabCase(label)
 
@@ -53,5 +53,3 @@ const InputField = ({
     </div>
   )
 }
-
-export default InputField

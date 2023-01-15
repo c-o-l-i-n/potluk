@@ -13,12 +13,10 @@ import { useEffect } from 'react'
  * Next.js router. It works becuase Next.js router.push() uses an all-JS SPA
  * approach to change pages rather than making a new HTTP request.
  */
-const ForwardToPotluk = (): void => {
+export default function ForwardToPotluk (): void {
   const router = useRouter()
 
   useEffect(() => {
     void router.replace(router.asPath.split('/')[1])
   }, [])
 }
-
-export default ForwardToPotluk

@@ -6,7 +6,7 @@ interface Props {
   disabled: boolean
 }
 
-const CreateButton = ({ onClick, isLoading, disabled }: Props): ReactElement => {
+export default function CreateButton ({ onClick, isLoading, disabled }: Props): ReactElement {
   return (
     <button
       type='button'
@@ -19,5 +19,3 @@ const CreateButton = ({ onClick, isLoading, disabled }: Props): ReactElement => 
     </button>
   )
 }
-
-export default CreateButton

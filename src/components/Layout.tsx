@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode
 }
 
-const Layout = ({ children }: Props): ReactElement => {
+export default function Layout ({ children }: Props): ReactElement {
   return (
     <>
       <Navbar />
@@ -17,5 +17,3 @@ const Layout = ({ children }: Props): ReactElement => {
     </>
   )
 }
-
-export default Layout

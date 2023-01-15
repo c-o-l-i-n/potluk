@@ -7,7 +7,7 @@ interface Props {
   disabled?: boolean
 }
 
-const AddItemButton = ({ onClick, disabled = false }: Props): ReactElement => {
+export default function AddItemButton ({ onClick, disabled = false }: Props): ReactElement {
   return (
     <div className='box-item is-flex is-justify-content-center is-align-items-center'>
       <button
@@ -25,5 +25,3 @@ const AddItemButton = ({ onClick, disabled = false }: Props): ReactElement => {
     </div>
   )
 }
-
-export default AddItemButton

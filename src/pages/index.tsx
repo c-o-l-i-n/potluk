@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ReactElement } from 'react'
 import Image from 'next/image'
 
-const Home = (): ReactElement => {
+export default function Home (): ReactElement {
   return (
     <>
       <Head>
@@ -46,5 +46,3 @@ const Home = (): ReactElement => {
     </>
   )
 }
-
-export default Home
