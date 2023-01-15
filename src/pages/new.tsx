@@ -9,7 +9,7 @@ import AddItemButton from '../components/AddItemButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 import Head from 'next/head'
-import { createPotlukInDatabase, signIntoFirebase } from '../firebase/firebase'
+import { createPotlukInDatabase } from '../firebase/firebase'
 
 export default function New (): ReactElement {
   // default date is today in the format yyyy-mm-dd
@@ -45,7 +45,6 @@ export default function New (): ReactElement {
 
     const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
 
-    await signIntoFirebase()
     await createPotlukInDatabase(potluk)
 
     void router.push(`/${potluk.id}?u=${username}`)

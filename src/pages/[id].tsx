@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Potluk from '../types/potluk'
 import { ReactElement, useEffect, useRef, useState } from 'react'
-import { getPotlukFromDatabase, signIntoFirebase } from '../firebase/firebase'
+import { getPotlukFromDatabase } from '../firebase/firebase'
 import PotlukView from '../components/PotlukView'
 import LoadingSpinner from '../components/LoadingSpinner'
 import Head from 'next/head'
@@ -10,11 +10,6 @@ export default function Main (): ReactElement {
   const router = useRouter()
   const [potluk, setPotluk] = useState<Potluk>()
   const username = useRef('')
-
-  // sign into db
-  useEffect(() => {
-    void signIntoFirebase()
-  }, [])
 
   // set initial username and get potluk from db
   useEffect(() => {

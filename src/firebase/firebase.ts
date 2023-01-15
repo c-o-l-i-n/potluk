@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
 import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, remove, DatabaseReference } from 'firebase/database'
-import { getAuth, signInAnonymously } from 'firebase/auth'
 import ItemEvent from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
@@ -24,13 +23,8 @@ typeof window === 'object' && initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true
 })
 
-const auth = getAuth(app)
 const db = getDatabase(app)
 const eventsRef = (potlukId: string): DatabaseReference => ref(db, `potluks/${potlukId}/events`)
-
-const signIntoFirebase = async (): Promise<void> => {
-  await signInAnonymously(auth)
-}
 
 const subscribeToUpdates = (
   potlukId: string,
@@ -110,7 +104,6 @@ const changeItemNameInDatabase = (potlukId: string, item: Item, name: string): v
 }
 
 export {
-  signIntoFirebase,
   subscribeToUpdates,
   createPotlukInDatabase,
   getPotlukFromDatabase,
