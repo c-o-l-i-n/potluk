@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
-import Item from '../models/item'
+import Item from '../types/item'
 import { ReactElement, useEffect, useState } from 'react'
 
 interface Props {

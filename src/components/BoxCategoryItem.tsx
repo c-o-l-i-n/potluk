@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
-import Category from '../models/category'
+import Category from '../types/category'
 import { ReactElement } from 'react'
 
 interface Props {

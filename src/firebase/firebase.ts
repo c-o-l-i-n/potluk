@@ -2,9 +2,9 @@ import { initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
 import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, remove, DatabaseReference } from 'firebase/database'
 import { getAuth, signInAnonymously } from 'firebase/auth'
-import ItemEvent from '../models/itemEvent'
-import Item from '../models/item'
-import Potluk from '../models/potluk'
+import ItemEvent from '../types/itemEvent'
+import Item from '../types/item'
+import Potluk from '../types/potluk'
 
 // Initialize Firebase
 const app = initializeApp({

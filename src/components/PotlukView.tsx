@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Potluk from '../models/potluk'
+import Potluk from '../types/potluk'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowUpRightFromSquare,
@@ -9,12 +9,12 @@ import {
 import copy from 'copy-to-clipboard'
 import Box from './Box'
 import BoxItem from './BoxItem'
-import Item from '../models/item'
+import Item from '../types/item'
 import AddItemButton from './AddItemButton'
 import BoxHeader from './BoxHeader'
 import React, { ReactElement, useEffect, useState } from 'react'
 import InputField from './InputField'
-import UniqueID from '../models/uniqueId'
+import UniqueID from '../types/uniqueId'
 import {
   addItemToDatabase,
   bringOrUnbringItemInDatabase,
@@ -23,7 +23,7 @@ import {
   publishItemEvent,
   subscribeToUpdates
 } from '../firebase/firebase'
-import ItemEvent, { ItemEventType } from '../models/itemEvent'
+import ItemEvent, { ItemEventType } from '../types/itemEvent'
 import QrCode from './QrCode'
 
 interface Props {

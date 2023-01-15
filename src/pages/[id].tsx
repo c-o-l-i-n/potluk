@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import Potluk from '../models/potluk'
+import Potluk from '../types/potluk'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { getPotlukFromDatabase, signIntoFirebase } from '../firebase/firebase'
 import PotlukView from '../components/PotlukView'
