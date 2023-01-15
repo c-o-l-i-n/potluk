@@ -249,8 +249,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
             <>
               <InputField
                 type='text'
-                label='Enter your name to edit'
-                placeholder='Name'
+                placeholder='Enter your name to edit'
                 onChange={setLoginFieldValue}
                 onEnterKeyPressed={login}
                 swapBold

@@ -2,7 +2,7 @@ import { ReactElement } from 'react'
 
 interface Props {
   type: string
-  label: string
+  label?: string
   placeholder?: string
   onChange: Function
   disabled?: boolean
@@ -13,7 +13,7 @@ interface Props {
 
 export default function InputField ({
   type,
-  label,
+  label = '',
   placeholder,
   onChange,
   disabled = false,
@@ -24,14 +24,18 @@ export default function InputField ({
   const kebabCase = (text: string): string => text.toLowerCase().replace(/ /g, '-')
   const fieldName = kebabCase(label)
 
+  const labelElement = (
+    <label
+      className={`label ${swapBold ? 'has-text-weight-normal' : ''}`}
+      htmlFor={fieldName}
+    >
+      {label}
+    </label>
+  )
+
   return (
     <div className='field w-100'>
-      <label
-        className={`label ${swapBold ? 'has-text-weight-normal' : ''}`}
-        htmlFor={fieldName}
-      >
-        {label}
-      </label>
+      {label === undefined ? <></> : labelElement}
       <div className='control'>
         <input
           className={`input ${swapBold ? 'has-text-weight-bold' : ''}`}
