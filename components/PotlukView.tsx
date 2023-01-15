@@ -12,7 +12,7 @@ import BoxItem from './BoxItem'
 import Item from '../models/item'
 import AddItemButton from './AddItemButton'
 import BoxHeader from './BoxHeader'
-import { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import InputField from './InputField'
 import UniqueID from '../models/uniqueId'
 import {
@@ -271,7 +271,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
           <BoxHeader text={category.name} />
           {Object.values(category.items).map(item => (
             item.name === '' && item.createdBy !== username
-              ? <></>
+              ? <React.Fragment key={item.id} />
               : (
                 <BoxItem
                   key={item.id}

@@ -20,7 +20,7 @@ const Footer = (): ReactElement => {
       </p>
       <p>
         <Link href='/feedback'>
-          <a>Submit Feedback</a>
+          Submit Feedback
         </Link>
       </p>
     </footer>

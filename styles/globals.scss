@@ -3,7 +3,7 @@
 $primary: #37c54e;
 $link: $primary;
 
-$family-primary: 'Montserrat';
+$family-primary: var(--app-font);
 
 $box-shadow: 0px 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
 
@@ -16,92 +16,86 @@ $container-max-width: 700px;
 // ------------------ Custom Styles ------------------
 
 body {
-	@extend .has-background-primary;
+  @extend .has-background-primary;
 }
 
 #__next {
-	min-height: 100vh;
+  min-height: 100vh;
 
-	@extend .is-flex;
-	@extend .is-flex-grow-1;
-	@extend .is-flex-direction-column;
+  @extend .is-flex;
+  @extend .is-flex-grow-1;
+  @extend .is-flex-direction-column;
 }
 
 .navbar-item {
 	img {
 		max-height: unset;
-		width: 2.25rem;
 	}
-}
-
-#logo {
-	height: 2.25rem;
-	width: 2.25rem;
 }
 
 main {
-	@extend .p-5;
-	@extend .mb-0;
-	@extend .is-flex-grow-1;
-	@extend .has-background-white;
-	@extend .content;
+  @extend .p-5;
+  @extend .mb-0;
+  @extend .is-flex-grow-1;
+  @extend .has-background-white;
+  @extend .content;
 }
 
 .box {
-	@extend .mb-5;
-	@extend .w-100;
+  @extend .mb-5;
+  @extend .w-100;
 
-	.box-item {
-		@extend .py-3;
-		border-bottom: solid #f5f5f5 2px;
+  .box-item {
+    @extend .py-3;
+    border-bottom: solid #f5f5f5 2px;
 
-		&:first-child {
-			@extend .pt-0;
-		}
+    &:first-child {
+      @extend .pt-0;
+    }
 
-		&:last-child {
-			@extend .pb-0;
-			border-bottom: none;
-		}
-	}
+    &:last-child {
+      @extend .pb-0;
+      border-bottom: none;
+    }
+  }
 }
 
 .w-100 {
-	width: 100%;
+  width: 100%;
 }
 
 button.disabled {
-	background-color: rgba($grey-light, 0.5) !important;
-	pointer-events: none;
+  background-color: rgba($grey-light, 0.5) !important;
+  pointer-events: none;
 }
 
 .loader {
-	@extend .m-auto;
+  @extend .m-auto;
 
-	height: 5rem;
-	width: 5rem;
-	border-width: 0.5rem;
-	border-right-color: transparent;
-	border-top-color: transparent;
+  height: 5rem;
+  width: 5rem;
+  border-width: 0.5rem;
+  border-right-color: transparent;
+  border-top-color: transparent;
 }
 
 .modal-background {
-	background-color: $primary;
+  background-color: $primary;
 }
 
 .qr-overlay {
-	$size: 5rem;
+  $size: 5rem;
 
-	position: absolute;
-	border-radius: 100%;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	height: $size;
-	width: $size;
-	background-color: $primary;
-	background-image: url('/images/logo.svg');
-	background-position: center;
-	background-size: $size * 0.6;
-	background-repeat: no-repeat;
+  position: absolute;
+  border-radius: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: $size;
+  width: $size;
+  background-color: $primary;
+  background-image: url('/images/logo.svg');
+  background-position: center;
+  background-size: $size * 0.6;
+  background-repeat: no-repeat;
 }
