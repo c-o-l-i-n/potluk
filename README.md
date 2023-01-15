@@ -44,7 +44,7 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) v12.22.0 or higher
+- [Node.js](https://nodejs.org/) v16.8 or higher
 - A JavaScript package manager like [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
 ### Install
