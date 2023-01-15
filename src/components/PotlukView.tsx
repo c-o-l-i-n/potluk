@@ -229,13 +229,10 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
       <p className='is-uppercase has-text-grey has-text-weight-bold'>
         {customDateString(potluk.date)}
       </p>
-      <div className='is-flex is-justify-content-space-between is-align-items-center mb-5 w-100'>
+      <div className='is-flex is-flex-direction-row-reverse is-justify-content-space-between is-align-items-center mb-5 w-100'>
         {username !== ''
           ? (
             <>
-              <p className='mb-0'>
-                Logged in as: <strong>{username}</strong>
-              </p>
               <button
                 type='button'
                 className='button is-primary ml-3'
@@ -243,10 +240,20 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
               >
                 Log Out
               </button>
+              <p className='mb-0'>
+                Logged in as: <strong>{username}</strong>
+              </p>
             </>
             )
           : (
             <>
+              <button
+                type='button'
+                className='button is-primary ml-3 is-align-self-flex-end'
+                onClick={login}
+              >
+                Log In
+              </button>
               <InputField
                 type='text'
                 placeholder='Enter your name to edit'
@@ -254,13 +261,6 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
                 onEnterKeyPressed={login}
                 swapBold
               />
-              <button
-                type='button'
-                className='button is-primary mb-3 ml-3 is-align-self-flex-end'
-                onClick={login}
-              >
-                Log In
-              </button>
             </>
             )}
       </div>

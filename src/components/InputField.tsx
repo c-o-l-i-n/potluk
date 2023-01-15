@@ -35,7 +35,7 @@ export default function InputField ({
 
   return (
     <div className='field w-100'>
-      {label === undefined ? <></> : labelElement}
+      {label === '' ? <></> : labelElement}
       <div className='control'>
         <input
           className={`input ${swapBold ? 'has-text-weight-bold' : ''}`}
