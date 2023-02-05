@@ -22,16 +22,16 @@ export default function New (): ReactElement {
   const [eventName, setEventName] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [categories, setCategories] = useState<Category[]>(() => [
-    new Category(0, 'Appetizers'),
-    new Category(0, 'Main Dishes'),
-    new Category(0, 'Side Dishes'),
-    new Category(0, 'Desserts'),
-    new Category(0, 'Drinks')
+    new Category({ name: 'Appetizers', key: '0' }),
+    new Category({ name: 'Main Dishes', key: '1' }),
+    new Category({ name: 'Side Dishes', key: '2' }),
+    new Category({ name: 'Desserts', key: '3' }),
+    new Category({ name: 'Drinks', key: '4' })
   ])
   const [isLoading, setIsLoading] = useState(false)
 
   const addCategory = (): void => {
-    const category = new Category(0, '')
+    const category = new Category()
     setCategories([...categories, category])
   }
 
@@ -85,7 +85,7 @@ export default function New (): ReactElement {
 
         {categories.map((category, index) => (
           <BoxCategoryItem
-            key={index}
+            key={category.getKey()}
             category={category}
             onDelete={() => deleteCategory(index)}
             onChange={(name) => {
