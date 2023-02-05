@@ -10,13 +10,13 @@ export default function Footer (): ReactElement {
         &copy;
         {` ${new Date().getFullYear()} `}
         Colin A. Williams &nbsp;
-        <a
+        <Link
           href='https://github.com/c-o-l-i-n/potluk'
           target='_blank'
           rel='noreferrer'
         >
           <FontAwesomeIcon icon={faGithub} />
-        </a>
+        </Link>
       </p>
       <p className='mt-1'>
         <Link href='/feedback'>
@@ -24,7 +24,11 @@ export default function Footer (): ReactElement {
         </Link>
       </p>
       <p className='mt-1'>
-        <Link href='https://www.buymeacoffee.com/colinw' target='_blank' rel='noreferrer'>
+        <Link
+          href='https://www.buymeacoffee.com/colinw'
+          target='_blank'
+          rel='noreferrer'
+        >
           ☕️ Buy Me a Coffee
         </Link>
       </p>
