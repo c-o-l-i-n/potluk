@@ -5,10 +5,12 @@ import { getPotlukFromDatabase } from '../firebase/firebase'
 import PotlukView from '../components/PotlukView'
 import LoadingSpinner from '../components/LoadingSpinner'
 import Head from 'next/head'
+import NotFound from '../components/NotFound'
 
 export default function Main (): ReactElement {
   const router = useRouter()
   const [potluk, setPotluk] = useState<Potluk>()
+  const [notFound, setNotFound] = useState(false)
   const username = useRef('')
 
   // set initial username and get potluk from db
@@ -36,10 +38,14 @@ export default function Main (): ReactElement {
       console.log('Potluk Parsed from DB:', response)
 
       setPotluk(response)
-    })
+    }).catch(() => setNotFound(true))
   }, [router.isReady])
 
-  if (router.isFallback || !router.isReady || (potluk == null)) {
+  if (notFound) {
+    return <NotFound potlukId={typeof router.query.id === 'string' ? router.query.id : ''} />
+  }
+
+  if (router.isFallback || !router.isReady || potluk === undefined) {
     return (
       <>
         <Head>
