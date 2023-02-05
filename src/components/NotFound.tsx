@@ -13,7 +13,7 @@ export default function NotFound ({ potlukId }: Props): ReactElement {
       <Head>
         <title>404 - Potluk Not Found</title>
       </Head>
-      <center>
+      <div className='has-text-centered'>
         <Image
           src='/images/404.svg'
           alt='Page Not Found'
@@ -23,10 +23,13 @@ export default function NotFound ({ potlukId }: Props): ReactElement {
         />
         <p>Potluk with ID &quot;{potlukId}&quot; not found.</p>
         <p><strong>Tip:</strong> Make sure the full link was copied exactly right.</p>
-        <Link href='/' className='button is-primary has-text-weight-bold mt-5'>
+        <Link
+          href='/'
+          className='button is-primary has-text-weight-bold mt-5'
+        >
           Home
         </Link>
-      </center>
+      </div>
     </>
   )
 }
