@@ -20,8 +20,22 @@ export default class Item extends UniqueID {
     this.categoryIndex = categoryIndex
   }
 
-  public static createFromJson = (id: string, categoryIndex: number, json: Item): Item => {
+  public static createFromJson (id: string, categoryIndex: number, json: Item): Item {
     const { name, createdBy, broughtBy } = json
     return new Item(name, createdBy, broughtBy, categoryIndex, id)
   }
+
+  public toDatabaseEntry (): ItemDatabaseEntry {
+    return {
+      name: this.name,
+      createdBy: this.createdBy,
+      broughtBy: this.broughtBy ?? null
+    }
+  }
+}
+
+interface ItemDatabaseEntry {
+  name: string
+  createdBy: string
+  broughtBy: string | null
 }

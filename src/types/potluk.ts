@@ -21,7 +21,7 @@ export default class Potluk extends UniqueID {
     this.lastModified = lastModified ?? new Date()
   }
 
-  public static createFromJson = (id: string, json: Potluk): Potluk => {
+  public static createFromJson (id: string, json: Potluk): Potluk {
     console.log('Creating Potluk from JSON:', json)
 
     const { name } = json

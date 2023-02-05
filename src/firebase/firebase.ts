@@ -26,10 +26,7 @@ typeof window === 'object' && initializeAppCheck(app, {
 const db = getDatabase(app)
 const eventsRef = (potlukId: string): DatabaseReference => ref(db, `potluks/${potlukId}/events`)
 
-const subscribeToUpdates = (
-  potlukId: string,
-  callbackFn: (snapshot: DataSnapshot) => void
-): Unsubscribe => {
+function subscribeToUpdates (potlukId: string, callbackFn: (snapshot: DataSnapshot) => void): Unsubscribe {
   let initialDataLoaded = false
   const unsub = onValue(eventsRef(potlukId), () => { initialDataLoaded = true })
   return onChildAdded(eventsRef(potlukId), (snapshot) => {
@@ -40,7 +37,7 @@ const subscribeToUpdates = (
   })
 }
 
-const createPotlukInDatabase = async (potluk: Potluk): Promise<void> => {
+async function createPotlukInDatabase (potluk: Potluk): Promise<void> {
   const serializedPotluk = JSON.parse(JSON.stringify(potluk))
   delete serializedPotluk.id
   serializedPotluk.date = potluk.date.toLocaleDateString('fr-CA', {
@@ -52,7 +49,7 @@ const createPotlukInDatabase = async (potluk: Potluk): Promise<void> => {
   return await set(ref(db, `potluks/${potluk.id}`), serializedPotluk)
 }
 
-const getPotlukFromDatabase = async (potlukId: string): Promise<Potluk> => {
+async function getPotlukFromDatabase (potlukId: string): Promise<Potluk> {
   const data = await (await get(ref(db, `potluks/${potlukId}`))).val()
   if (data === null) {
     throw new Error(`Cannot find Potluk with ID "${potlukId}"`)
@@ -60,45 +57,30 @@ const getPotlukFromDatabase = async (potlukId: string): Promise<Potluk> => {
   return Potluk.createFromJson(potlukId, data)
 }
 
-const updateLastModified = (potlukId: string): void => {
+function updateLastModified (potlukId: string): void {
   void set(ref(db, `potluks/${potlukId}/lastModified`), new Date().toISOString())
 }
 
-const publishItemEvent = (potlukId: string, event: ItemEvent): void => {
+function publishItemEvent (potlukId: string, event: ItemEvent): void {
   void set(push(eventsRef(potlukId)), event)
 }
 
-const getPotlukJson = async (potlukId: string): Promise<object | null> => {
-  const potlukRef = ref(db, `potluks/${potlukId}`)
-  return (await get(potlukRef)).toJSON()
-}
-
-const cleansedItem = (item: Item): Object => (
-  JSON.parse(
-    JSON.stringify({
-      ...item,
-      id: undefined,
-      categoryIndex: undefined
-    })
-  )
-)
-
-const addItemToDatabase = (potlukId: string, item: Item): void => {
-  void set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`), cleansedItem(item))
+function addItemToDatabase (potlukId: string, item: Item): void {
+  void set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`), item.toDatabaseEntry())
   updateLastModified(potlukId)
 }
 
-const deleteItemFromDatabase = (potlukId: string, item: Item): void => {
+function deleteItemFromDatabase (potlukId: string, item: Item): void {
   void remove(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`))
   updateLastModified(potlukId)
 }
 
-const bringOrUnbringItemInDatabase = (potlukId: string, item: Item, username: string, bring: boolean): void => {
+function bringOrUnbringItemInDatabase (potlukId: string, item: Item, username: string, bring: boolean): void {
   void set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}/broughtBy`), bring ? username : null)
   updateLastModified(potlukId)
 }
 
-const changeItemNameInDatabase = (potlukId: string, item: Item, name: string): void => {
+function changeItemNameInDatabase (potlukId: string, item: Item, name: string): void {
   void set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}/name`), name)
   updateLastModified(potlukId)
 }
@@ -109,7 +91,6 @@ export {
   getPotlukFromDatabase,
   publishItemEvent,
   addItemToDatabase,
-  getPotlukJson,
   deleteItemFromDatabase,
   bringOrUnbringItemInDatabase,
   changeItemNameInDatabase
