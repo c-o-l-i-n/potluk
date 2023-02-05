@@ -18,9 +18,14 @@ export default function Footer (): ReactElement {
           <FontAwesomeIcon icon={faGithub} />
         </a>
       </p>
-      <p>
+      <p className='mt-1'>
         <Link href='/feedback'>
           Submit Feedback
+        </Link>
+      </p>
+      <p className='mt-1'>
+        <Link href='https://www.buymeacoffee.com/colinw' target='_blank' rel='noreferrer'>
+          ☕️ Buy Me a Coffee
         </Link>
       </p>
     </footer>
