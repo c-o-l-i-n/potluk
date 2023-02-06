@@ -28,10 +28,12 @@ const eventsRef = (potlukId: string): DatabaseReference => ref(db, `potluks/${po
 
 function subscribeToUpdates (potlukId: string, callbackFn: (snapshot: DataSnapshot) => void): Unsubscribe {
   let initialDataLoaded = false
-  const unsub = onValue(eventsRef(potlukId), () => { initialDataLoaded = true })
+  const unsub = onValue(eventsRef(potlukId), () => {
+    initialDataLoaded = true
+    unsub()
+  })
   return onChildAdded(eventsRef(potlukId), (snapshot) => {
     if (initialDataLoaded) {
-      unsub()
       callbackFn(snapshot)
     }
   })

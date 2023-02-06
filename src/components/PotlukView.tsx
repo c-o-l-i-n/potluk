@@ -20,6 +20,7 @@ import {
   bringOrUnbringItemInDatabase,
   changeItemNameInDatabase,
   deleteItemFromDatabase,
+  getPotlukFromDatabase,
   publishItemEvent,
   subscribeToUpdates
 } from '../firebase/firebase'
@@ -41,7 +42,12 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   useEffect(() =>
     subscribeToUpdates(initialPotluk.id, (snapshot) => {
       const event: ItemEvent = snapshot.val()
-      eventHandlers[event.type](event)
+      try {
+        eventHandlers[event.type](event)
+      } catch (err) {
+        console.error('Unexpected error while processing event. Pulling all Potluk data.', event, err)
+        void setEntirePotlukFromDatabase()
+      }
     }), [])
 
   const eventHandlers: Record<ItemEventType, Function> = {
@@ -138,6 +144,10 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
     item.name = changeNameEvent.name as string
     console.log('Change Item Name', item)
     setPotluk(potluk.copy())
+  }
+
+  async function setEntirePotlukFromDatabase (): Promise<void> {
+    setPotluk(await getPotlukFromDatabase(potluk.id))
   }
 
   interface ShareData {
