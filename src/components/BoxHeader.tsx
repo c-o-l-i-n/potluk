@@ -1,13 +1,15 @@
 import React, { ReactElement } from 'react'
 
 interface Props {
-  text: string
+  title: string
+  subtitle?: string
 }
 
-export default function BoxHeader ({ text }: Props): ReactElement {
+export default function BoxHeader ({ title, subtitle }: Props): ReactElement {
   return (
-    <div className='box-item is-size-5 has-text-centered has-text-weight-bold'>
-      {text}
+    <div className='box-item has-text-centered'>
+      <p className='is-size-5 has-text-weight-bold mb-0'>{title}</p>
+      {subtitle === undefined ? <></> : <p className='has-text-grey'>{subtitle}</p>}
     </div>
   )
 }

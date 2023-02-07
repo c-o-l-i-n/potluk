@@ -277,7 +277,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
 
       {potluk.categories.map((category, categoryIndex) => (
         <Box key={categoryIndex}>
-          <BoxHeader text={category.name} />
+          <BoxHeader title={category.name} />
           {Object.values(category.items).map(item => (
             item.name === '' && item.createdBy !== username
               ? <React.Fragment key={item.id} />

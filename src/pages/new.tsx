@@ -81,7 +81,7 @@ export default function New (): ReactElement {
       <br />
 
       <Box>
-        <BoxHeader text='Categories' />
+        <BoxHeader title='Categories' subtitle='The different courses or types of food' />
 
         {categories.map((category, index) => (
           <BoxCategoryItem
