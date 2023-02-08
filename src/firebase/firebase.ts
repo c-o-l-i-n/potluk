@@ -4,6 +4,7 @@ import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, 
 import ItemEvent from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
+import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
 
 // Initialize Firebase
 const app = initializeApp({
@@ -54,7 +55,7 @@ async function createPotlukInDatabase (potluk: Potluk): Promise<void> {
 async function getPotlukFromDatabase (potlukId: string): Promise<Potluk> {
   const data = await (await get(ref(db, `potluks/${potlukId}`))).val()
   if (data === null) {
-    throw new Error(`Cannot find Potluk with ID "${potlukId}"`)
+    throw new PotlukNotFoundError(potlukId)
   }
   return Potluk.createFromDatabaseEntry(potlukId, data)
 }

@@ -6,11 +6,14 @@ import PotlukView from '../components/PotlukView'
 import LoadingSpinner from '../components/LoadingSpinner'
 import Head from 'next/head'
 import NotFound from '../components/NotFound'
+import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
+import UnexpectedError from '../components/UnexpectedError'
 
 export default function Main (): ReactElement {
   const router = useRouter()
   const [potluk, setPotluk] = useState<Potluk>()
   const [notFound, setNotFound] = useState(false)
+  const [unexpectedErrorOccurred, setUnexpectedErrorOccurred] = useState(false)
   const username = useRef('')
 
   // set initial username and get potluk from db
@@ -36,10 +39,20 @@ export default function Main (): ReactElement {
     // get initial potluk from db
     void getPotlukFromDatabase(router.query.id).then(response => {
       console.log('Potluk Parsed from DB:', response)
-
       setPotluk(response)
-    }).catch(() => setNotFound(true))
+    }).catch((err) => {
+      if (err instanceof PotlukNotFoundError) {
+        setNotFound(true)
+      } else {
+        console.error(err)
+        setUnexpectedErrorOccurred(true)
+      }
+    })
   }, [router.isReady])
+
+  if (unexpectedErrorOccurred) {
+    return <UnexpectedError />
+  }
 
   if (notFound) {
     return <NotFound potlukId={typeof router.query.id === 'string' ? router.query.id : ''} />
