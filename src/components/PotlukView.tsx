@@ -297,6 +297,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
                 : (
                   <BoxItem
                     key={item.id}
+                    categoryName={category.name}
                     initialItem={item}
                     onChangeItemName={changeItemName}
                     onBringOrUnbring={bringOrUnbringItem}

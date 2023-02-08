@@ -3,8 +3,10 @@ import { faCheckCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from '@fortawesome/free-regular-svg-icons'
 import Item from '../types/item'
 import { ReactElement, useEffect, useState } from 'react'
+import { singular } from 'pluralize'
 
 interface Props {
+  categoryName: string
   initialItem: Item
   onChangeItemName: (item: Item, name: string) => unknown
   onBringOrUnbring: (item: Item, bring: boolean) => unknown
@@ -13,6 +15,7 @@ interface Props {
 }
 
 export default function BoxItem ({
+  categoryName,
   initialItem,
   onChangeItemName,
   onBringOrUnbring,
@@ -37,6 +40,7 @@ export default function BoxItem ({
           <input
             className='input'
             type='text'
+            placeholder={singular(categoryName)}
             defaultValue={item.name}
             onBlur={(e) => onChangeItemName(item, (e.target as HTMLInputElement).value.trim())}
           />
