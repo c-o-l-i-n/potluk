@@ -72,7 +72,7 @@ export default function New (): ReactElement {
       />
       <InputField
         type='text'
-        label='Your Name'
+        label='Your Name (Optional)'
         placeholder='Colin'
         onChange={setUsername}
         disabled={isLoading}
