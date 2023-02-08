@@ -193,12 +193,16 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
     for (const category of potluk.categories) {
       text += '\n' + category.name.toUpperCase() + '\n'
 
-      for (const item of Object.values(category.items)) {
-        text += item.broughtBy === undefined ? '⬜️ ' : '✅ '
-        text +=
-          item.name +
-          (item.broughtBy === undefined ? '' : ` (${item.broughtBy})`) +
-          '\n'
+      const items = Object.values(category.items)
+
+      if (items.length === 0) {
+        text += '(nothing yet)\n'
+        continue
+      }
+
+      for (const item of items) {
+        text += item.broughtBy === undefined ? '🔲 ' : '✅ '
+        text += item.name + ` (${item.broughtBy ?? 'up for grabs'})\n`
       }
     }
     return text
