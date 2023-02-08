@@ -146,6 +146,12 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
     setPotluk(potluk.copy())
   }
 
+  function deleteBlankItemsCreatedByCurrentUser (): void {
+    potluk.categories.forEach(category =>
+      Object.values(category.items).forEach(item =>
+        item.name === '' && item.createdBy === username && deleteItem(item)))
+  }
+
   async function setEntirePotlukFromDatabase (): Promise<void> {
     setPotluk(await getPotlukFromDatabase(potluk.id))
   }
@@ -205,6 +211,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   }
 
   function logout (): void {
+    deleteBlankItemsCreatedByCurrentUser()
     setUsername('')
     setLoginFieldValue('')
   }
