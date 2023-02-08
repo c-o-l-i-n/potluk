@@ -48,13 +48,11 @@ export default function BoxItem ({
         : (
           <div className='mr-auto'>
             <p className='mb-0 has-text-weight-bold'>{item.name}</p>
-            {item.broughtBy !== undefined
-              ? (
-                <p className='is-size-7'>{item.broughtBy} is bringing</p>
-                )
-              : (
-                <></>
-                )}
+            <p className='is-size-7'>
+              {item.broughtBy === undefined
+                ? 'Up for grabs'
+                : `${item.broughtBy} is bringing`}
+            </p>
           </div>
           )}
 
