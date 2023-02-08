@@ -56,7 +56,7 @@ async function getPotlukFromDatabase (potlukId: string): Promise<Potluk> {
   if (data === null) {
     throw new Error(`Cannot find Potluk with ID "${potlukId}"`)
   }
-  return Potluk.createFromJson(potlukId, data)
+  return Potluk.createFromDatabaseEntry(potlukId, data)
 }
 
 function updateLastModified (potlukId: string): void {

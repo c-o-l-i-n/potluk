@@ -1,4 +1,4 @@
-import Category from './category'
+import Category, { CategoryDatabaseEntry } from './category'
 import UniqueID from './uniqueId'
 
 export default class Potluk extends UniqueID {
@@ -21,15 +21,15 @@ export default class Potluk extends UniqueID {
     this.lastModified = lastModified ?? new Date()
   }
 
-  public static createFromJson (id: string, json: Potluk): Potluk {
-    console.log('Creating Potluk from JSON:', json)
+  public static createFromDatabaseEntry (id: string, json: PotlukDatabaseEntry): Potluk {
+    console.log('Creating Potluk from Database Entry:', JSON.parse(JSON.stringify(json)))
 
     const { name } = json
     const date = new Date(json.date)
     const lastModified = new Date(json.lastModified)
 
     const categories = Object.values(json.categories).map((categoryJson, index) =>
-      Category.createFromJson(index, categoryJson)
+      Category.createFromDatabaseEntry(index, categoryJson)
     )
 
     return new Potluk(name, date, categories, id, lastModified)
@@ -44,4 +44,11 @@ export default class Potluk extends UniqueID {
       this.lastModified
     )
   }
+}
+
+export interface PotlukDatabaseEntry {
+  name: string
+  date: string
+  categories: CategoryDatabaseEntry[]
+  lastModified: string
 }

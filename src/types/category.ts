@@ -1,4 +1,4 @@
-import Item from './item'
+import Item, { ItemDatabaseEntry } from './item'
 import UniqueID from './uniqueId'
 
 export default class Category {
@@ -12,17 +12,23 @@ export default class Category {
     this.#key = obj.key ?? UniqueID.generateUniqueId()
   }
 
-  public static createFromJson (index: number, json: Category): Category {
+  public static createFromDatabaseEntry (index: number, json: CategoryDatabaseEntry): Category {
     const { name, items } = json
+    const parsedItems: Record<string, Item> = {}
 
     items !== undefined && Object.entries(items).forEach(([itemId, itemJson]) => {
-      items[itemId] = Item.createFromJson(itemId, index, itemJson)
+      parsedItems[itemId] = Item.createFromDatabaseEntry(itemId, index, itemJson)
     })
 
-    return new Category({ name, items })
+    return new Category({ name, items: parsedItems })
   }
 
   public getKey (): string {
     return this.#key
   }
+}
+
+export interface CategoryDatabaseEntry {
+  name: string
+  items: Record<string, ItemDatabaseEntry> | undefined
 }
