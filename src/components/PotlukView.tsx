@@ -60,7 +60,6 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
 
   function addItem (categoryIndex: number): void {
     const itemId = UniqueID.generateUniqueId()
-    console.log(potluk)
 
     publishItemEvent(potluk.id, {
       type: ItemEventType.ADD,
@@ -73,8 +72,6 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   }
 
   function onAddEvent (addEvent: ItemEvent): void {
-    console.log(potluk)
-
     const category = potluk.categories[addEvent.categoryIndex]
 
     const item = new Item('', addEvent.user, undefined, addEvent.categoryIndex, addEvent.itemId)
