@@ -285,21 +285,26 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
       {potluk.categories.map((category, categoryIndex) => (
         <Box key={categoryIndex}>
           <BoxHeader title={category.name} />
-          {Object.values(category.items).map(item => (
-            item.name === '' && item.createdBy !== username
-              ? <React.Fragment key={item.id} />
-              : (
-                <BoxItem
-                  key={item.id}
-                  initialItem={item}
-                  onChangeItemName={changeItemName}
-                  onBringOrUnbring={bringOrUnbringItem}
-                  onDelete={deleteItem}
-                  username={username}
-                />
-                )
-          )
-          )}
+          {Object.values(category.items).find(i => i.name !== '' || i.createdBy === username) === undefined
+            ? (
+              <p className='has-text-grey has-text-centered is-italic mb-0 mt-3'>
+                {username === '' ? <>Nothing yet!<br />Log in to add an item</> : <>Tap the <strong>+</strong> button to add an item</>}
+              </p>
+              )
+            : Object.values(category.items).map(item => (
+              item.name === '' && item.createdBy !== username
+                ? <React.Fragment key={item.id} />
+                : (
+                  <BoxItem
+                    key={item.id}
+                    initialItem={item}
+                    onChangeItemName={changeItemName}
+                    onBringOrUnbring={bringOrUnbringItem}
+                    onDelete={deleteItem}
+                    username={username}
+                  />
+                  )
+            ))}
           {username !== ''
             ? (
               <AddItemButton onClick={() => addItem(categoryIndex)} />
