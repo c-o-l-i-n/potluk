@@ -62,7 +62,7 @@ export default function BoxItem ({
                 <button
                   type='button'
                   className='button is-dark is-size-7 ml-3 has-text-weight-bold'
-                  onClick={() => onBringOrUnbring(item, true)}
+                  onClick={() => item.name !== '' && onBringOrUnbring(item, true)}
                 >
                   Bring
                 </button>
