@@ -1,3 +1,4 @@
+import { serverTimestamp } from 'firebase/database'
 import Category, { CategoryDatabaseEntry } from './category'
 import UniqueID from './uniqueId'
 
@@ -35,6 +36,19 @@ export default class Potluk extends UniqueID {
     return new Potluk(name, date, categories, id, lastModified)
   }
 
+  public toDatabaseEntry (): PotlukDatabaseEntry {
+    return {
+      name: this.name,
+      date: this.date.toLocaleDateString('fr-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }),
+      categories: this.categories.map(category => category.toDatabaseEntry()),
+      lastModified: serverTimestamp() as any
+    }
+  }
+
   public copy (): Potluk {
     return new Potluk(
       this.name,
@@ -50,5 +64,5 @@ export interface PotlukDatabaseEntry {
   name: string
   date: string
   categories: CategoryDatabaseEntry[]
-  lastModified: string
+  lastModified: number
 }

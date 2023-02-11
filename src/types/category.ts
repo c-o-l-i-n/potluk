@@ -16,11 +16,24 @@ export default class Category {
     const { name, items } = categoryDatabaseEntry
     const parsedItems: Record<string, Item> = {}
 
-    items !== undefined && Object.entries(items).forEach(([itemId, itemJson]) => {
+    items !== undefined && items !== null && Object.entries(items).forEach(([itemId, itemJson]) => {
       parsedItems[itemId] = Item.createFromDatabaseEntry(itemId, index, itemJson)
     })
 
     return new Category({ name, items: parsedItems })
+  }
+
+  public toDatabaseEntry (): CategoryDatabaseEntry {
+    const itemDatabaseEntries: Record<string, ItemDatabaseEntry> = {}
+    const itemEntries = Object.entries(this.items)
+    itemEntries.forEach(([itemId, item]) => {
+      itemDatabaseEntries[itemId] = item.toDatabaseEntry()
+    })
+
+    return {
+      name: this.name,
+      items: itemEntries.length > 0 ? itemDatabaseEntries : null
+    }
   }
 
   public getKey (): string {
@@ -30,5 +43,5 @@ export default class Category {
 
 export interface CategoryDatabaseEntry {
   name: string
-  items: Record<string, ItemDatabaseEntry> | undefined
+  items: Record<string, ItemDatabaseEntry> | null
 }

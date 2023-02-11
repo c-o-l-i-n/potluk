@@ -67,15 +67,7 @@ function subscribeToUpdates (
 }
 
 async function createPotlukInDatabase (potluk: Potluk): Promise<void> {
-  const serializedPotluk = JSON.parse(JSON.stringify(potluk))
-  delete serializedPotluk.id
-  serializedPotluk.date = potluk.date.toLocaleDateString('fr-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  })
-
-  return await set(ref(db, `potluks/${potluk.id}`), serializedPotluk)
+  return await set(ref(db, `potluks/${potluk.id}`), potluk.toDatabaseEntry())
 }
 
 async function getPotlukFromDatabase (potlukId: string): Promise<Potluk> {
