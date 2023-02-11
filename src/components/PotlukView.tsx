@@ -12,7 +12,7 @@ import BoxItem from './BoxItem'
 import Item from '../types/item'
 import AddItemButton from './AddItemButton'
 import BoxHeader from './BoxHeader'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import InputField from './InputField'
 import {
   addItemToDatabase,
@@ -23,6 +23,7 @@ import {
 } from '../firebase/firebase'
 import ItemEvent from '../types/itemEvent'
 import QrCode from './QrCode'
+import { toast, Toaster } from 'react-hot-toast'
 
 interface Props {
   initialPotluk: Potluk
@@ -34,6 +35,8 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   const [username, setUsername] = useState(initialUsername)
   const [loginFieldValue, setLoginFieldValue] = useState('')
   const [showingQrCode, setShowingQrCode] = useState(false)
+  const [online, setOnline] = useState(true)
+  const initiallyConnected = useRef(false)
 
   // get realtime updates
   useEffect(() =>
@@ -42,9 +45,25 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
       potluk.categories.length,
       onAddEvent,
       onChangeEvent,
-      onDeleteEvent
+      onDeleteEvent,
+      onConnectedStatusChange
     ), []
   )
+
+  function onConnectedStatusChange (connected: boolean): void {
+    if (!initiallyConnected.current) {
+      initiallyConnected.current = true
+      return
+    }
+
+    setOnline(connected)
+
+    if (connected) {
+      toast.success("You're back online!")
+    } else {
+      toast.error("You're offline")
+    }
+  }
 
   function addItem (categoryIndex: number): void {
     addItemToDatabase(potluk.id, new Item({ createdBy: username, categoryIndex }))
@@ -193,41 +212,44 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
       <p className='is-uppercase has-text-grey has-text-weight-bold'>
         {customDateString(potluk.date)}
       </p>
-      <div className='is-flex is-flex-direction-row-reverse is-justify-content-space-between is-align-items-center mb-5 w-100'>
-        {username !== ''
-          ? (
-            <>
-              <button
-                type='button'
-                className='button is-primary ml-3'
-                onClick={logout}
-              >
-                Log Out
-              </button>
-              <p className='mb-0'>
-                Logged in as: <strong>{username}</strong>
-              </p>
-            </>
-            )
-          : (
-            <>
-              <button
-                type='button'
-                className='button is-primary ml-3 is-align-self-flex-end'
-                onClick={login}
-              >
-                Log In
-              </button>
-              <InputField
-                type='text'
-                placeholder='Enter your name to edit'
-                onChange={setLoginFieldValue}
-                onEnterKeyPressed={login}
-                swapBold
-              />
-            </>
-            )}
-      </div>
+      {online
+        ? (
+          <div className='is-flex is-flex-direction-row-reverse is-justify-content-space-between is-align-items-center mb-5 w-100'>
+            {username !== ''
+              ? (
+                <>
+                  <button
+                    type='button'
+                    className='button is-primary ml-3'
+                    onClick={logout}
+                  >
+                    Log Out
+                  </button>
+                  <p className='mb-0'>
+                    Logged in as: <strong>{username}</strong>
+                  </p>
+                </>
+                )
+              : (
+                <>
+                  <button
+                    type='button'
+                    className='button is-primary ml-3 is-align-self-flex-end'
+                    onClick={login}
+                  >
+                    Log In
+                  </button>
+                  <InputField
+                    type='text'
+                    placeholder='Enter your name to edit'
+                    onChange={setLoginFieldValue}
+                    onEnterKeyPressed={login}
+                    swapBold
+                  />
+                </>
+                )}
+          </div>)
+        : <></>}
 
       {potluk.categories.map((category, categoryIndex) => (
         <Box key={categoryIndex}>
@@ -249,11 +271,11 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
                     onChangeItemName={changeItemName}
                     onBringOrUnbring={bringOrUnbringItem}
                     onDelete={deleteItem}
-                    username={username}
+                    username={online ? username : ''}
                   />
                   )
             ))}
-          {username !== ''
+          {online && username !== ''
             ? (
               <AddItemButton onClick={() => addItem(categoryIndex)} />
               )
@@ -295,6 +317,8 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
           </span>
         </button>
       </div>
+
+      <Toaster />
     </>
   )
 }

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
-import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp } from 'firebase/database'
+import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp, onValue, onDisconnect } from 'firebase/database'
 import { EventFunctions, ItemEventListener, ItemEventType } from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
@@ -31,7 +31,8 @@ function subscribeToUpdates (
   numberOfCategories: number,
   onAdd: ItemEventListener = console.log,
   onChange: ItemEventListener = console.log,
-  onDelete: ItemEventListener = console.log
+  onDelete: ItemEventListener = console.log,
+  onConnectedStatusChange: (connected: boolean) => unknown
 ): () => void {
   const unsubs: Unsubscribe[] = []
 
@@ -62,6 +63,8 @@ function subscribeToUpdates (
       })))
     })
   }
+
+  unsubs.push(onValue(ref(db, '.info/connected'), snapshot => onConnectedStatusChange(snapshot.val())))
 
   return () => unsubs.forEach(unsub => unsub())
 }
