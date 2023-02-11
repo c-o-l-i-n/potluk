@@ -14,17 +14,14 @@ import AddItemButton from './AddItemButton'
 import BoxHeader from './BoxHeader'
 import React, { ReactElement, useEffect, useState } from 'react'
 import InputField from './InputField'
-import UniqueID from '../types/uniqueId'
 import {
   addItemToDatabase,
   bringOrUnbringItemInDatabase,
   changeItemNameInDatabase,
   deleteItemFromDatabase,
-  getPotlukFromDatabase,
-  publishItemEvent,
   subscribeToUpdates
 } from '../firebase/firebase'
-import ItemEvent, { ItemEventType } from '../types/itemEvent'
+import ItemEvent from '../types/itemEvent'
 import QrCode from './QrCode'
 
 interface Props {
@@ -40,41 +37,23 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
 
   // get realtime updates
   useEffect(() =>
-    subscribeToUpdates(initialPotluk.id, (snapshot) => {
-      const event: ItemEvent = snapshot.val()
-      try {
-        eventHandlers[event.type](event)
-      } catch (err) {
-        console.error('Unexpected error while processing event. Pulling all Potluk data.', event, err)
-        void setEntirePotlukFromDatabase()
-      }
-    }), [])
-
-  const eventHandlers: Record<ItemEventType, Function> = {
-    [ItemEventType.ADD]: onAddEvent,
-    [ItemEventType.CHANGE_NAME]: onChangeItemNameEvent,
-    [ItemEventType.BRING]: onBringOrUnbringEvent,
-    [ItemEventType.UNBRING]: onBringOrUnbringEvent,
-    [ItemEventType.DELETE]: onDeleteEvent
-  }
+    subscribeToUpdates(
+      initialPotluk.id,
+      potluk.categories.length,
+      onAddEvent,
+      onChangeEvent,
+      onDeleteEvent
+    ), []
+  )
 
   function addItem (categoryIndex: number): void {
-    const itemId = UniqueID.generateUniqueId()
-
-    publishItemEvent(potluk.id, {
-      type: ItemEventType.ADD,
-      categoryIndex,
-      itemId,
-      user: username
-    })
-
-    addItemToDatabase(potluk.id, new Item('', username, undefined, categoryIndex, itemId))
+    addItemToDatabase(potluk.id, new Item({ createdBy: username, categoryIndex }))
   }
 
   function onAddEvent (addEvent: ItemEvent): void {
     const category = potluk.categories[addEvent.categoryIndex]
 
-    const item = new Item('', addEvent.user, undefined, addEvent.categoryIndex, addEvent.itemId)
+    const item = Item.createFromDatabaseEntry(addEvent.itemId, addEvent.categoryIndex, addEvent.itemDatabaseEntry)
     console.log('Add Item', item)
 
     category.items[item.id] = item
@@ -84,13 +63,6 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   }
 
   function deleteItem (item: Item): void {
-    publishItemEvent(potluk.id, {
-      type: ItemEventType.DELETE,
-      categoryIndex: item.categoryIndex,
-      itemId: item.id,
-      user: username
-    })
-
     deleteItemFromDatabase(potluk.id, item)
   }
 
@@ -106,40 +78,18 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   }
 
   function bringOrUnbringItem (item: Item, bring: boolean): void {
-    publishItemEvent(potluk.id, {
-      type: bring ? ItemEventType.BRING : ItemEventType.UNBRING,
-      categoryIndex: item.categoryIndex,
-      itemId: item.id,
-      user: username
-    })
-
     bringOrUnbringItemInDatabase(potluk.id, item, username, bring)
   }
 
-  function onBringOrUnbringEvent (bringEvent: ItemEvent): void {
-    const bring = bringEvent.type === ItemEventType.BRING
-    const item = potluk.categories[bringEvent.categoryIndex].items[bringEvent.itemId]
-    item.broughtBy = bring ? bringEvent.user : undefined
-    console.log(bring ? 'Bring Item' : 'Unbring Item', item)
-    setPotluk(potluk.copy())
-  }
-
   function changeItemName (item: Item, name: string): void {
-    publishItemEvent(potluk.id, {
-      type: ItemEventType.CHANGE_NAME,
-      categoryIndex: item.categoryIndex,
-      itemId: item.id,
-      user: username,
-      name
-    })
-
+    if (item.name === name) return
     changeItemNameInDatabase(potluk.id, item, name)
   }
 
-  function onChangeItemNameEvent (changeNameEvent: ItemEvent): void {
-    const item = potluk.categories[changeNameEvent.categoryIndex].items[changeNameEvent.itemId]
-    item.name = changeNameEvent.name as string
-    console.log('Change Item Name', item)
+  function onChangeEvent (changeEvent: ItemEvent): void {
+    const item = Item.createFromDatabaseEntry(changeEvent.itemId, changeEvent.categoryIndex, changeEvent.itemDatabaseEntry)
+    potluk.categories[changeEvent.categoryIndex].items[changeEvent.itemId] = item
+    console.log('Change Item', item)
     setPotluk(potluk.copy())
   }
 
@@ -147,10 +97,6 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
     potluk.categories.forEach(category =>
       Object.values(category.items).forEach(item =>
         item.name === '' && item.createdBy === username && deleteItem(item)))
-  }
-
-  async function setEntirePotlukFromDatabase (): Promise<void> {
-    setPotluk(await getPotlukFromDatabase(potluk.id))
   }
 
   interface ShareData {

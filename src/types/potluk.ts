@@ -21,14 +21,14 @@ export default class Potluk extends UniqueID {
     this.lastModified = lastModified ?? new Date()
   }
 
-  public static createFromDatabaseEntry (id: string, json: PotlukDatabaseEntry): Potluk {
-    console.log('Creating Potluk from Database Entry:', JSON.parse(JSON.stringify(json)))
+  public static createFromDatabaseEntry (id: string, potlukDatabaseEntry: PotlukDatabaseEntry): Potluk {
+    console.log('Creating Potluk from Database Entry:', JSON.parse(JSON.stringify(potlukDatabaseEntry)))
 
-    const { name } = json
-    const date = new Date(json.date)
-    const lastModified = new Date(json.lastModified)
+    const { name } = potlukDatabaseEntry
+    const date = new Date(potlukDatabaseEntry.date)
+    const lastModified = new Date(potlukDatabaseEntry.lastModified)
 
-    const categories = Object.values(json.categories).map((categoryJson, index) =>
+    const categories = Object.values(potlukDatabaseEntry.categories).map((categoryJson, index) =>
       Category.createFromDatabaseEntry(index, categoryJson)
     )
 

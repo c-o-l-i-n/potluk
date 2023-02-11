@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
-import { getDatabase, ref, DataSnapshot, push, set, onChildAdded, get, onValue, remove, DatabaseReference } from 'firebase/database'
-import ItemEvent from '../types/itemEvent'
+import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved } from 'firebase/database'
+import { EventFunctions, ItemEventListener, ItemEventType } from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
 import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
@@ -25,19 +25,45 @@ typeof window === 'object' && initializeAppCheck(app, {
 })
 
 const db = getDatabase(app)
-const eventsRef = (potlukId: string): DatabaseReference => ref(db, `potluks/${potlukId}/events`)
 
-function subscribeToUpdates (potlukId: string, callbackFn: (snapshot: DataSnapshot) => void): Unsubscribe {
-  let initialDataLoaded = false
-  const unsub = onValue(eventsRef(potlukId), () => {
-    initialDataLoaded = true
-    unsub()
-  })
-  return onChildAdded(eventsRef(potlukId), (snapshot) => {
-    if (initialDataLoaded) {
-      callbackFn(snapshot)
+function subscribeToUpdates (
+  potlukId: string,
+  numberOfCategories: number,
+  onAdd: ItemEventListener = console.log,
+  onChange: ItemEventListener = console.log,
+  onDelete: ItemEventListener = console.log
+): () => void {
+  const unsubs: Unsubscribe[] = []
+
+  const eventFunctions: Record<ItemEventType, EventFunctions> = {
+    [ItemEventType.ADD]: {
+      firebaseEvent: onChildAdded,
+      itemEventListener: onAdd
+    },
+    [ItemEventType.CHANGE]: {
+      firebaseEvent: onChildChanged,
+      itemEventListener: onChange
+    },
+    [ItemEventType.DELETE]: {
+      firebaseEvent: onChildRemoved,
+      itemEventListener: onDelete
     }
-  })
+  }
+
+  for (let categoryIndex = 0; categoryIndex < numberOfCategories; categoryIndex++) {
+    const itemsRef = ref(db, `potluks/${potlukId}/categories/${categoryIndex}/items`)
+
+    Object.entries(eventFunctions).forEach(([itemEventType, { firebaseEvent, itemEventListener }]) => {
+      unsubs.push(firebaseEvent(itemsRef, snapshot => itemEventListener({
+        type: itemEventType as ItemEventType,
+        categoryIndex,
+        itemId: snapshot.key ?? 'no-key',
+        itemDatabaseEntry: snapshot.val()
+      })))
+    })
+  }
+
+  return () => unsubs.forEach(unsub => unsub())
 }
 
 async function createPotlukInDatabase (potluk: Potluk): Promise<void> {
@@ -64,12 +90,8 @@ function updateLastModified (potlukId: string): void {
   void set(ref(db, `potluks/${potlukId}/lastModified`), new Date().toISOString())
 }
 
-function publishItemEvent (potlukId: string, event: ItemEvent): void {
-  void set(push(eventsRef(potlukId)), event)
-}
-
 function addItemToDatabase (potlukId: string, item: Item): void {
-  void set(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items/${item.id}`), item.toDatabaseEntry())
+  void push(ref(db, `potluks/${potlukId}/categories/${item.categoryIndex}/items`), item.toDatabaseEntry())
   updateLastModified(potlukId)
 }
 
@@ -92,7 +114,6 @@ export {
   subscribeToUpdates,
   createPotlukInDatabase,
   getPotlukFromDatabase,
-  publishItemEvent,
   addItemToDatabase,
   deleteItemFromDatabase,
   bringOrUnbringItemInDatabase,
