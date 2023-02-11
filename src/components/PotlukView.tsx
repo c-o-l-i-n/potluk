@@ -36,6 +36,8 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
   const [loginFieldValue, setLoginFieldValue] = useState('')
   const [showingQrCode, setShowingQrCode] = useState(false)
   const [online, setOnline] = useState(true)
+  const onlineRef = useRef(true)
+  const inOfflineGracePeriod = useRef(false)
   const initiallyConnected = useRef(false)
 
   // get realtime updates
@@ -50,18 +52,30 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
     ), []
   )
 
+  // disable controls and show toast if user goes offline
+  // allow for 200 ms "grace priod" to avoid simultaneous on and offline toasts when switching back to the browswer
   function onConnectedStatusChange (connected: boolean): void {
-    if (!initiallyConnected.current) {
+    onlineRef.current = connected
+
+    if (!initiallyConnected.current || inOfflineGracePeriod.current) {
       initiallyConnected.current = true
       return
     }
 
-    setOnline(connected)
-
     if (connected) {
       toast.success("You're back online!")
+      setOnline(true)
     } else {
-      toast.error("You're offline")
+      inOfflineGracePeriod.current = true
+      setTimeout(() => {
+        inOfflineGracePeriod.current = false
+
+        // if still offline after the 200 ms grace period, change state and show toast
+        if (!onlineRef.current) {
+          toast.error("You're offline")
+          setOnline(false)
+        }
+      }, 200)
     }
   }
 
