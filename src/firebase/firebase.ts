@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
-import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved } from 'firebase/database'
+import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp } from 'firebase/database'
 import { EventFunctions, ItemEventListener, ItemEventType } from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
@@ -87,7 +87,7 @@ async function getPotlukFromDatabase (potlukId: string): Promise<Potluk> {
 }
 
 function updateLastModified (potlukId: string): void {
-  void set(ref(db, `potluks/${potlukId}/lastModified`), new Date().toISOString())
+  void set(ref(db, `potluks/${potlukId}/lastModified`), serverTimestamp())
 }
 
 function addItemToDatabase (potlukId: string, item: Item): void {
