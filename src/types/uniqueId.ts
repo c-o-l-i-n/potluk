@@ -1,7 +1,7 @@
 export default class UniqueID {
   // 64-character alphabet based on how Firebase alphabetizes keys
-  public static readonly ALPHABET = '0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
-  public static readonly RADIX = UniqueID.ALPHABET.length
+  private static readonly ALPHABET = '0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
+  private static readonly RADIX = UniqueID.ALPHABET.length
 
   public readonly id: string
 
