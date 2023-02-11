@@ -28,6 +28,10 @@ export default function BoxItem ({
     setItem(initialItem)
   }, [initialItem])
 
+  function itemWasCreatedByUser (): boolean {
+    return username.toLocaleLowerCase() === item.createdBy.toLocaleLowerCase()
+  }
+
   return (
     <div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
       <span
@@ -35,7 +39,7 @@ export default function BoxItem ({
       >
         <FontAwesomeIcon icon={item.broughtBy === undefined ? faCircle : faCheckCircle} />
       </span>
-      {username !== '' && username === item.createdBy && item.broughtBy === undefined
+      {username !== '' && itemWasCreatedByUser() && item.broughtBy === undefined
         ? (
           <input
             className='input'
@@ -71,7 +75,7 @@ export default function BoxItem ({
                 )
               : (
                 <>
-                  {username === item.broughtBy
+                  {itemWasCreatedByUser()
                     ? (
                       <button
                         type='button'
@@ -91,7 +95,7 @@ export default function BoxItem ({
         : (
           <></>
           )}
-      {username === item.createdBy && item.broughtBy === undefined
+      {itemWasCreatedByUser() && item.broughtBy === undefined
         ? (
           <button
             type='button'
