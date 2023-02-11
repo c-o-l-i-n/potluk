@@ -25,7 +25,7 @@ export default function NotFound ({ potlukId }: Props): ReactElement {
         <p><strong>Tip:</strong> Make sure the full link was copied exactly right.</p>
         <Link
           href='/'
-          className='button is-primary has-text-weight-bold mt-5'
+          className='button is-primary has-text-weight-bold mt-5 mb-6'
         >
           Home
         </Link>
