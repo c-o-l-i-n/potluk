@@ -13,12 +13,7 @@ import { createPotlukInDatabase } from '../firebase/firebase'
 
 export default function New (): ReactElement {
   // default date is today in the format yyyy-mm-dd
-  const [eventDateString, setEventDateString] = useState<string>(() =>
-    new Date().toLocaleDateString('fr-CA', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    }))
+  const [eventDateString, setEventDateString] = useState<string>(Potluk.formatEventDate)
   const [eventName, setEventName] = useState<string>('')
   const [username, setUsername] = useState<string>('')
   const [categories, setCategories] = useState<Category[]>(() => [

@@ -22,6 +22,14 @@ export default class Potluk extends UniqueID {
     this.lastModified = lastModified ?? new Date()
   }
 
+  public static formatEventDate (date = new Date()): string {
+    return date.toLocaleDateString('fr-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    })
+  }
+
   public static createFromDatabaseEntry (id: string, potlukDatabaseEntry: PotlukDatabaseEntry): Potluk {
     console.log('Creating Potluk from Database Entry:', JSON.parse(JSON.stringify(potlukDatabaseEntry)))
 
@@ -39,11 +47,7 @@ export default class Potluk extends UniqueID {
   public toDatabaseEntry (): PotlukDatabaseEntry {
     return {
       name: this.name,
-      date: this.date.toLocaleDateString('fr-CA', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }),
+      date: Potluk.formatEventDate(this.date),
       categories: this.categories.map(category => category.toDatabaseEntry()),
       lastModified: serverTimestamp() as any
     }
