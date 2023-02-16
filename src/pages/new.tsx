@@ -11,6 +11,9 @@ import Box from '../components/Box'
 import Head from 'next/head'
 import { createPotlukInDatabase } from '../firebase/firebase'
 
+const MAX_CATEGORIES = 8
+const MAX_TITLE_LENGTH = 60
+
 export default function New (): ReactElement {
   // default date is today in the format yyyy-mm-dd
   const [eventDateString, setEventDateString] = useState<string>(Potluk.formatEventDate)
@@ -38,11 +41,11 @@ export default function New (): ReactElement {
   const createPotluk = async (): Promise<void> => {
     setIsLoading(true)
 
-    const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
+      const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
 
-    await createPotlukInDatabase(potluk)
+      await createPotlukInDatabase(potluk)
 
-    void router.push(`/${potluk.id}?u=${username}`)
+      void router.push(`/${potluk.id}?u=${username}`)
   }
 
   return (
@@ -57,6 +60,7 @@ export default function New (): ReactElement {
         placeholder='House Warming Party'
         onChange={setEventName}
         disabled={isLoading}
+        maxLength={MAX_TITLE_LENGTH}
       />
       <InputField
         type='date'
@@ -91,7 +95,11 @@ export default function New (): ReactElement {
           />
         ))}
 
-        <AddItemButton onClick={addCategory} disabled={isLoading} />
+        {
+          categories.length < MAX_CATEGORIES
+            ? <AddItemButton onClick={addCategory} disabled={isLoading} />
+            : <></>
+        }
       </Box>
 
       <div className='is-flex is-justify-content-center mb-3'>
@@ -108,6 +116,8 @@ export default function New (): ReactElement {
             }
         />
       </div>
+
+      <Toaster />
     </>
   )
 }

@@ -9,6 +9,7 @@ interface Props {
   onEnterKeyPressed?: Function
   swapBold?: boolean
   defaultValue?: string
+  maxLength?: number
 }
 
 export default function InputField ({
@@ -19,7 +20,8 @@ export default function InputField ({
   disabled = false,
   onEnterKeyPressed = () => {},
   swapBold = false,
-  defaultValue = ''
+  defaultValue = '',
+  maxLength = 32
 }: Props): ReactElement {
   const kebabCase = (text: string): string => text.toLowerCase().replace(/ /g, '-')
   const fieldName = kebabCase(label)
@@ -43,6 +45,7 @@ export default function InputField ({
           name={fieldName}
           placeholder={placeholder}
           defaultValue={defaultValue}
+          maxLength={maxLength}
           onChange={(e) => {
             onChange((e.target as HTMLInputElement).value.trim())
           }}
