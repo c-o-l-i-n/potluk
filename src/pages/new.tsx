@@ -10,6 +10,7 @@ import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 import Head from 'next/head'
 import { createPotlukInDatabase } from '../firebase/firebase'
+import { toast, Toaster } from 'react-hot-toast'
 
 const MAX_CATEGORIES = 8
 const MAX_TITLE_LENGTH = 60
@@ -41,11 +42,17 @@ export default function New (): ReactElement {
   const createPotluk = async (): Promise<void> => {
     setIsLoading(true)
 
+    try {
       const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
 
       await createPotlukInDatabase(potluk)
 
       void router.push(`/${potluk.id}?u=${username}`)
+    } catch (err) {
+      console.error(err)
+      toast.error('Error. Please try again later.')
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -108,9 +115,9 @@ export default function New (): ReactElement {
           isLoading={isLoading}
           disabled={
             !(
-              eventName !== '' &&
+              eventName.trim() !== '' &&
               eventDateString !== '' &&
-              (categories.length > 0) &&
+              categories.length > 0 &&
               categories.every((c) => c.name !== '')
             )
             }
