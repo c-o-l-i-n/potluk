@@ -102,3 +102,7 @@ button.disabled {
   background-size: $size * 0.6;
   background-repeat: no-repeat;
 }
+
+.no-wrap {
+  white-space: nowrap;
+}

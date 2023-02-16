@@ -240,7 +240,7 @@ export default function PotlukView ({ initialPotluk, initialUsername }: Props): 
                     Log Out
                   </button>
                   <p className='mb-0'>
-                    Logged in as: <strong>{username}</strong>
+                    Logged in as: <strong className='no-wrap'>{username}</strong>
                   </p>
                 </>
                 )
