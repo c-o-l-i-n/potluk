@@ -18,12 +18,11 @@ export default function UnexpectedError (): ReactElement {
       </div>
 
       <p>An unexpected error occurred while trying to load your Potluk. Please try again later.</p>
-      <p>If this issue persists, please use the <Link href='/feedback'>Submit Feedback</Link> form to report the error.</p>
 
       <div className='w-100 is-flex is-justify-content-center'>
         <Link
           href='/'
-          className='button is-primary has-text-weight-bold mt-2'
+          className='button is-primary has-text-weight-bold my-2'
         >
           Home
         </Link>
