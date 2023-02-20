@@ -4,13 +4,13 @@ import Category from '../types/category'
 import InputField from '../components/InputField'
 import Potluk from '../types/potluk'
 import router from 'next/router'
-import BoxCategoryItem from '../components/BoxCategoryItem'
-import AddItemButton from '../components/AddItemButton'
+import CategoryRow from '../components/CategoryRow'
+import AddButton from '../components/AddButton'
 import BoxHeader from '../components/BoxHeader'
 import Box from '../components/Box'
 import Head from 'next/head'
-import { createPotlukInDatabase } from '../firebase/firebase'
-import { toast, Toaster } from 'react-hot-toast'
+import FirebaseService from '../services/firebase'
+import { Toaster } from 'react-hot-toast'
 
 const MAX_CATEGORIES = 8
 const MAX_TITLE_LENGTH = 60
@@ -29,6 +29,13 @@ export default function New (): ReactElement {
   ])
   const [isLoading, setIsLoading] = useState(false)
 
+  const createButtonDisabled =
+    eventName.trim() === '' ||
+    eventDateString === '' ||
+    categories.length === 0 ||
+    categories.length > MAX_CATEGORIES ||
+    !categories.every((c) => c.name !== '')
+
   const addCategory = (): void => {
     const category = new Category()
     setCategories([...categories, category])
@@ -42,17 +49,16 @@ export default function New (): ReactElement {
   const createPotluk = async (): Promise<void> => {
     setIsLoading(true)
 
+    const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
+
     try {
-      const potluk = new Potluk(eventName, new Date(eventDateString + 'T00:00:00.000'), categories)
-
-      await createPotlukInDatabase(potluk)
-
-      void router.push(`/${potluk.id}?u=${username}`)
+      await FirebaseService.createPotlukInDatabase(potluk)
     } catch (err) {
-      console.error(err)
-      toast.error('Error. Please try again later.')
       setIsLoading(false)
+      return
     }
+
+    void router.push(`/${potluk.id}?u=${username}`)
   }
 
   return (
@@ -90,7 +96,7 @@ export default function New (): ReactElement {
         <BoxHeader title='Categories' subtitle='The different courses or types of food' />
 
         {categories.map((category, index) => (
-          <BoxCategoryItem
+          <CategoryRow
             key={category.getKey()}
             category={category}
             onDelete={() => deleteCategory(index)}
@@ -104,7 +110,7 @@ export default function New (): ReactElement {
 
         {
           categories.length < MAX_CATEGORIES
-            ? <AddItemButton onClick={addCategory} disabled={isLoading} />
+            ? <AddButton onClick={addCategory} disabled={isLoading} />
             : <></>
         }
       </Box>
@@ -113,14 +119,7 @@ export default function New (): ReactElement {
         <CreateButton
           onClick={createPotluk}
           isLoading={isLoading}
-          disabled={
-            !(
-              eventName.trim() !== '' &&
-              eventDateString !== '' &&
-              categories.length > 0 &&
-              categories.every((c) => c.name !== '')
-            )
-            }
+          disabled={createButtonDisabled}
         />
       </div>
 

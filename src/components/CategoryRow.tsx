@@ -10,9 +10,9 @@ interface Props {
   disabled: boolean
 }
 
-export default function BoxCategoryItem ({ category, onDelete, onChange, disabled }: Props): ReactElement {
+export default function CategoryRow ({ category, onDelete, onChange, disabled }: Props): ReactElement {
   return (
-    <div className='box-item is-flex is-justify-content-space-between is-align-items-center'>
+    <div className='box-row is-flex is-justify-content-space-between is-align-items-center'>
       <input
         className='input mr-4'
         type='text'

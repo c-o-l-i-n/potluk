@@ -30,14 +30,25 @@ export default class Potluk extends UniqueID {
     })
   }
 
+  public static formatEventDateForDisplay (date: Date): string {
+    const correctedDate = new Date(new Date(date).toISOString().slice(0, -1))
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+    return correctedDate.toLocaleDateString('en-US', options)
+  }
+
   public static createFromDatabaseEntry (id: string, potlukDatabaseEntry: PotlukDatabaseEntry): Potluk {
     console.log('Creating Potluk from Database Entry:', JSON.parse(JSON.stringify(potlukDatabaseEntry)))
 
-    const { name } = potlukDatabaseEntry
-    const date = new Date(potlukDatabaseEntry.date)
-    const lastModified = new Date(potlukDatabaseEntry.lastModified)
+    const { n: name } = potlukDatabaseEntry
+    const date = new Date(potlukDatabaseEntry.d)
+    const lastModified = new Date(potlukDatabaseEntry.m)
 
-    const categories = Object.values(potlukDatabaseEntry.categories).map((categoryJson, index) =>
+    const categories = Object.values(potlukDatabaseEntry.c).map((categoryJson, index) =>
       Category.createFromDatabaseEntry(index, categoryJson)
     )
 
@@ -46,10 +57,10 @@ export default class Potluk extends UniqueID {
 
   public toDatabaseEntry (): PotlukDatabaseEntry {
     return {
-      name: this.name,
-      date: Potluk.formatEventDate(this.date),
-      categories: this.categories.map(category => category.toDatabaseEntry()),
-      lastModified: serverTimestamp() as any
+      n: this.name,
+      d: Potluk.formatEventDate(this.date),
+      c: this.categories.map(category => category.toDatabaseEntry()),
+      m: serverTimestamp() as any
     }
   }
 
@@ -62,11 +73,36 @@ export default class Potluk extends UniqueID {
       this.lastModified
     )
   }
+
+  public toListString (): string {
+    let text = `👉 ${this.name}\n`
+    text += `📆 ${Potluk.formatEventDateForDisplay(this.date)}\n`
+    text += `🔗 ${window.location.href.split('://').at(-1) ?? 'Link Unavailable'}\n`
+
+    for (const category of this.categories) {
+      text += '\n' + category.name.toUpperCase() + '\n'
+
+      const items = Object.values(category.items)
+
+      // if there are no items with names, continue to next category
+      if (items.find(i => i.name !== '') === undefined) {
+        text += '(nothing yet)\n'
+        continue
+      }
+
+      for (const item of items) {
+        if (item.name === '') continue
+        text += item.broughtBy === undefined ? '🔲 ' : '✅ '
+        text += item.name + ` (${item.broughtBy ?? 'Up for grabs'})\n`
+      }
+    }
+    return text
+  }
 }
 
 export interface PotlukDatabaseEntry {
-  name: string
-  date: string
-  categories: CategoryDatabaseEntry[]
-  lastModified: number
+  n: string // name
+  d: string // date
+  c: CategoryDatabaseEntry[] // categories
+  m: number // lastModified
 }

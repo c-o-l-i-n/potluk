@@ -5,8 +5,8 @@ import { useEffect } from 'react'
  * This page is a hack to achieve the "illusion" of dynamic routing in a static
  * site hosted on Github Pages.
  *
- * Since Potluk IDs are not in the list of pre-built static routes, Github
- * Pages shows the 404.html page when a user navigates to a Potluk page,
+ * Since dynamic Potluk IDs are not in the list of pre-built static routes,
+ * Github Pages shows the 404.html page when a user navigates to a Potluk page,
  * which loads this component.
  *
  * This component then pushes the user to the normal Potluk page using the

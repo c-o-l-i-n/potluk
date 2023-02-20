@@ -13,7 +13,7 @@ export default class Category {
   }
 
   public static createFromDatabaseEntry (index: number, categoryDatabaseEntry: CategoryDatabaseEntry): Category {
-    const { name, items } = categoryDatabaseEntry
+    const { n: name, i: items } = categoryDatabaseEntry
     const parsedItems: Record<string, Item> = {}
 
     items !== undefined && items !== null && Object.entries(items).forEach(([itemId, itemJson]) => {
@@ -31,8 +31,8 @@ export default class Category {
     })
 
     return {
-      name: this.name,
-      items: itemEntries.length > 0 ? itemDatabaseEntries : null
+      n: this.name,
+      i: itemEntries.length > 0 ? itemDatabaseEntries : null
     }
   }
 
@@ -42,6 +42,6 @@ export default class Category {
 }
 
 export interface CategoryDatabaseEntry {
-  name: string
-  items: Record<string, ItemDatabaseEntry> | null
+  n: string // name
+  i: Record<string, ItemDatabaseEntry> | null // items
 }

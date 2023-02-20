@@ -4,10 +4,10 @@ import QRCode from 'react-qr-code'
 interface Props {
   url: string
   bottomText: string
-  onClick: () => unknown
+  onClick: () => void
 }
 
-export default function QrCode ({ url, bottomText, onClick }: Props): ReactElement {
+export default function QrCodeOverlay ({ url, bottomText, onClick }: Props): ReactElement {
   return (
     <div className='modal is-active' onClick={onClick}>
       <div className='modal-background' />

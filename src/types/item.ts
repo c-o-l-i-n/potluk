@@ -16,21 +16,21 @@ export default class Item {
   }
 
   public static createFromDatabaseEntry (id: string, categoryIndex: number, itemDatabaseEntry: ItemDatabaseEntry): Item {
-    const { name, createdBy, broughtBy } = itemDatabaseEntry
+    const { n: name, c: createdBy, b: broughtBy } = itemDatabaseEntry
     return new Item({ name, createdBy, broughtBy: broughtBy ?? undefined, categoryIndex, id })
   }
 
   public toDatabaseEntry (): ItemDatabaseEntry {
     return {
-      name: this.name,
-      createdBy: this.createdBy,
-      broughtBy: this.broughtBy ?? null
+      n: this.name,
+      c: this.createdBy,
+      b: this.broughtBy ?? null
     }
   }
 }
 
 export interface ItemDatabaseEntry {
-  name: string
-  createdBy: string
-  broughtBy: string | null
+  n: string // name
+  c: string // createdBy
+  b: string | null // broughtBy
 }

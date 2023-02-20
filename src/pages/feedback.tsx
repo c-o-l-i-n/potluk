@@ -16,16 +16,12 @@ export default function Feedback (): ReactElement {
         </Head>
 
         <h2>Thank you for your feedback!</h2>
-        <p>
-          We will review your message and take it into consideration for our
-          next update.
-        </p>
+        <p>We will review your message and take it into consideration for our next update.</p>
+
         <button
           type='button'
           className='button is-primary'
-          onClick={() => {
-            router.back()
-          }}
+          onClick={() => router.back()}
         >
           Back
         </button>
@@ -111,8 +107,9 @@ export default function Feedback (): ReactElement {
           <div className='control'>
             <button
               type='submit'
+              disabled={state.submitting}
               className={`button is-primary ${
-                state.submitting ? 'disabled is-loading' : ''
+                state.submitting ? 'is-loading' : ''
               }`}
             >
               Submit

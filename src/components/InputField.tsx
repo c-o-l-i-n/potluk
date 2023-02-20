@@ -1,5 +1,7 @@
 import { ReactElement } from 'react'
 
+export const STANDARD_INPUT_MAX_LENGTH = 32
+
 interface Props {
   type: string
   label?: string
@@ -21,7 +23,7 @@ export default function InputField ({
   onEnterKeyPressed = () => {},
   swapBold = false,
   defaultValue = '',
-  maxLength = 32
+  maxLength = STANDARD_INPUT_MAX_LENGTH
 }: Props): ReactElement {
   const kebabCase = (text: string): string => text.toLowerCase().replace(/ /g, '-')
   const fieldName = kebabCase(label)

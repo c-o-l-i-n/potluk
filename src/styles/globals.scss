@@ -48,7 +48,7 @@ main {
   @extend .mb-5;
   @extend .w-100;
 
-  .box-item {
+  .box-row {
     @extend .py-3;
     border-bottom: solid #f5f5f5 2px;
 
@@ -65,11 +65,6 @@ main {
 
 .w-100 {
   width: 100%;
-}
-
-button.disabled {
-  background-color: rgba($grey-light, 0.5) !important;
-  pointer-events: none;
 }
 
 .loader {

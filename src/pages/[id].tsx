@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router'
 import Potluk from '../types/potluk'
 import { ReactElement, useEffect, useRef, useState } from 'react'
-import { getPotlukFromDatabase } from '../firebase/firebase'
-import PotlukView from '../components/PotlukView'
+import FirebaseService from '../services/firebase'
+import PotlukPage from '../components/PotlukPage'
 import LoadingSpinner from '../components/LoadingSpinner'
 import Head from 'next/head'
 import NotFound from '../components/NotFound'
@@ -18,13 +18,17 @@ export default function Main (): ReactElement {
 
   // set initial username and get potluk from db
   useEffect(() => {
+    // assert router is ready
     if (!router.isReady) return
 
+    // assert Potluk ID is a string
     if (typeof router.query.id !== 'string') {
       console.error('Unexpected error: typeof router.query.id is is not "string"', router)
+      setUnexpectedErrorOccurred(true)
       return
     }
 
+    // get username from query string
     if (typeof router.query.u === 'string') {
       username.current = router.query.u
     }
@@ -36,15 +40,15 @@ export default function Main (): ReactElement {
       void router.replace({ pathname: purePath }, undefined, { shallow: true })
     }
 
-    // get initial potluk from db
-    void getPotlukFromDatabase(router.query.id).then(response => {
+    // get initial Potluk from db
+    void FirebaseService.getPotlukFromDatabase(router.query.id).then(response => {
       console.log('Potluk Parsed from DB:', response)
       setPotluk(response)
     }).catch((err) => {
       if (err instanceof PotlukNotFoundError) {
         setNotFound(true)
       } else {
-        console.error(err)
+        console.error('Unexpected error:', err)
         setUnexpectedErrorOccurred(true)
       }
     })
@@ -69,5 +73,5 @@ export default function Main (): ReactElement {
     )
   }
 
-  return <PotlukView initialPotluk={potluk} initialUsername={username.current} />
+  return <PotlukPage initialPotluk={potluk} initialUsername={username.current} />
 }
