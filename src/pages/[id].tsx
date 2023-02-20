@@ -3,11 +3,10 @@ import Potluk from '../types/potluk'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import FirebaseService from '../services/firebase'
 import PotlukPage from '../components/PotlukPage'
-import LoadingSpinner from '../components/LoadingSpinner'
-import Head from 'next/head'
 import NotFound from '../components/NotFound'
 import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
 import UnexpectedError from '../components/UnexpectedError'
+import SkeletonPage from '../components/SkeletonPage'
 
 export default function Main (): ReactElement {
   const router = useRouter()
@@ -63,14 +62,7 @@ export default function Main (): ReactElement {
   }
 
   if (router.isFallback || !router.isReady || potluk === undefined) {
-    return (
-      <>
-        <Head>
-          <title>Potluk</title>
-        </Head>
-        <LoadingSpinner />
-      </>
-    )
+    return <SkeletonPage />
   }
 
   return <PotlukPage initialPotluk={potluk} initialUsername={username.current} />

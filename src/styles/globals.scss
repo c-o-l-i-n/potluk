@@ -67,16 +67,6 @@ main {
   width: 100%;
 }
 
-.loader {
-  @extend .m-auto;
-
-  height: 5rem;
-  width: 5rem;
-  border-width: 0.5rem;
-  border-right-color: transparent;
-  border-top-color: transparent;
-}
-
 .modal-background {
   background-color: $primary;
 }
@@ -111,4 +101,39 @@ main {
 
 .no-wrap {
   white-space: nowrap;
+}
+
+#skeleton {
+  $dark: #eee;
+  $light: #f8f8f8;
+
+  h2, p, input, button, .box {
+    color: transparent;
+    box-shadow: none;
+    border: none;
+    pointer-events: none;
+    user-select: none;
+
+    animation: shimmer 2.2s ease infinite;
+    background: 0 0/300% 300% linear-gradient(-60deg, $dark 40%, $light 50%, $dark 60%);
+    background-color: $dark;
+  }
+
+  h2, p {
+    border-radius: 0.25rem;
+  }
+
+  .box {
+    height: 15rem;
+  }
+
+  @keyframes shimmer {
+    from {
+        background-position: 100% 50%
+    }
+
+    to {
+        background-position: 0 50%
+    }
+  }
 }
