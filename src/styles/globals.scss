@@ -86,21 +86,32 @@ button.disabled {
   background-color: $primary;
 }
 
-.qr-overlay {
+.qr-logo-background {
   $size: 5rem;
-
+  
   position: absolute;
-  border-radius: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   height: $size;
   width: $size;
-  background-color: $primary;
-  background-image: url('/images/logo.svg');
-  background-position: center;
-  background-size: $size * 0.6;
-  background-repeat: no-repeat;
+  background-color: white;
+
+  .qr-logo {
+    position: inherit;
+    top: inherit;
+    left: inherit;
+    transform: inherit;
+    height: inherit;
+    width: inherit;
+    
+    border-radius: $size * 0.3;
+    background-color: $primary;
+    background-image: url('/images/logo.svg');
+    background-position: center;
+    background-size: $size * 0.6;
+    background-repeat: no-repeat;
+  }
 }
 
 .no-wrap {

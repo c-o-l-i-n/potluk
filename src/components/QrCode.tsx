@@ -20,7 +20,9 @@ export default function QrCode ({ url, bottomText, onClick }: Props): ReactEleme
               bgColor='transparent'
               level='Q'
             />
-            <div className='qr-overlay' />
+            <div className='qr-logo-background'>
+              <div className='qr-logo' />
+            </div>
           </div>
           <h1 className='has-text-centered has-text-white'>{bottomText}</h1>
         </div>
