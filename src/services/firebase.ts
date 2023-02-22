@@ -1,6 +1,6 @@
 import { FirebaseApp, FirebaseOptions, initializeApp } from 'firebase/app'
 import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
-import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp, onValue, Database } from 'firebase/database'
+import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp, onValue, Database, onDisconnect } from 'firebase/database'
 import { EventFunctions, ItemEventListener, ItemEventType } from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
@@ -81,7 +81,12 @@ class FirebaseService {
 
   public addItemToDatabase (potlukId: string, item: Item): void {
     void push(ref(this.db, `potluks/${potlukId}/c/${item.categoryIndex}/i`), item.toDatabaseEntry())
-      .then(() => this.updateLastModified(potlukId))
+      .then((itemRef) => {
+        this.updateLastModified(potlukId)
+
+        // remove item on disconnect (if it is blank)
+        void onDisconnect(itemRef).remove()
+      })
       .catch(this.handleError)
   }
 
@@ -98,8 +103,21 @@ class FirebaseService {
   }
 
   public changeItemNameInDatabase (potlukId: string, item: Item, name: string): void {
-    void set(ref(this.db, `potluks/${potlukId}/c/${item.categoryIndex}/i/${item.id}/n`), name)
-      .then(() => this.updateLastModified(potlukId))
+    const itemNameRef = ref(this.db, `potluks/${potlukId}/c/${item.categoryIndex}/i/${item.id}/n`)
+    const itemRef = itemNameRef.parent
+
+    void set(itemNameRef, name)
+      .then(() => {
+        this.updateLastModified(potlukId)
+
+        if (itemRef === null) {
+          console.error(itemNameRef)
+          throw new Error('Unexpected error: item name parent is null (should be the item itself)')
+        }
+
+        // if blank, remove on disconnect. else, cancel removal on disconnect
+        void onDisconnect(itemRef)[name === '' ? 'remove' : 'cancel']()
+      })
       .catch(this.handleError)
   }
 
