@@ -28,3 +28,4 @@ class SharingService {
 }
 
 export default new SharingService()
+export { SharingService as _SharingServiceClassForTestingOnly }
