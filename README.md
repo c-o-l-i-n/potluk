@@ -6,6 +6,9 @@
   <a href="https://github.com/c-o-l-i-n/potluk/deployments">
     <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?logo=github&logoWidth=12">
   </a>
+  <a href="https://codecov.io/gh/c-o-l-i-n/potluk" > 
+    <img alt="Test Coverage" src="https://img.shields.io/codecov/c/github/c-o-l-i-n/potluk?logo=codecov&logoWidth=12&logoColor=white"/> 
+  </a>
   <a href="https://codeclimate.com/github/c-o-l-i-n/potluk">
     <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/c-o-l-i-n/potluk?logo=codeclimate&logoWidth=12">
   </a>
@@ -37,6 +40,9 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 </a>
 <a href="https://firebase.google.com/" target="_blank">
   <img alt="Next.js" src="https://img.shields.io/badge/Firebase-%23039BE5.svg?style=for-the-badge&logo=firebase" />
+</a>
+<a href="https://jestjs.io/" target="_blank">
+  <img alt="Jest" src="https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white" />
 </a>
 <a href="https://www.typescriptlang.org/" target="_blank">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" />
