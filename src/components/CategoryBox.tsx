@@ -9,7 +9,7 @@ import Item from '../types/item'
 import ItemRow from './ItemRow'
 
 function noRowsToShow (category: Category, username: string): boolean {
-  return Object.values(category.items).find(i => i.name !== '' || i.createdBy === username) === undefined
+  return !Object.values(category.items).some(i => i.name !== '' || i.createdBy === username)
 }
 
 function noRowsMessage (username: string): ReactElement {

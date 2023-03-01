@@ -85,7 +85,7 @@ export default class Potluk extends UniqueID {
       const items = Object.values(category.items)
 
       // if there are no items with names, continue to next category
-      if (items.find(i => i.name !== '') === undefined) {
+      if (!items.some(i => i.name !== '')) {
         text += '(nothing yet)\n'
         continue
       }
