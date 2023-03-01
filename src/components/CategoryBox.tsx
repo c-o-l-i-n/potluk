@@ -8,6 +8,8 @@ import FirebaseService from '../services/firebase'
 import Item from '../types/item'
 import ItemRow from './ItemRow'
 
+const MAX_ITEMS_PER_CATEGORY = 20
+
 function noRowsToShow (category: Category, username: string): boolean {
   return !Object.values(category.items).some(i => i.name !== '' || i.createdBy === username)
 }
@@ -22,8 +24,12 @@ function noRowsMessage (username: string): ReactElement {
   )
 }
 
-function shouldShowAddButton (online: boolean, username: string): boolean {
+function isOnlineAndLoggedIn (online: boolean, username: string): boolean {
   return online && username !== ''
+}
+
+function shouldShowAddButton (online: boolean, username: string, items: Record<string, Item>): boolean {
+  return isOnlineAndLoggedIn(online, username) && Object.keys(items).length < MAX_ITEMS_PER_CATEGORY
 }
 
 interface Props {
@@ -53,14 +59,20 @@ export default function CategoryBox ({ potluk, category, categoryIndex, username
           />)}
 
       {/* Add Item Buttom */}
-      {shouldShowAddButton(online, username)
+      {shouldShowAddButton(online, username, category.items)
         ? (
           <AddButton
             onClick={() =>
               FirebaseService.addItemToDatabase(potluk.id, new Item({ createdBy: username, categoryIndex }))}
           />
           )
-        : <></>}
+        : isOnlineAndLoggedIn(online, username)
+          ? (
+            <p className='has-text-centered is-italic mt-4 has-text-grey'>
+              Maximum reached ({MAX_ITEMS_PER_CATEGORY})
+            </p>
+            )
+          : <></>}
     </Box>
   )
 }
