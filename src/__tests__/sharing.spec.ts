@@ -46,6 +46,7 @@ describe('sharing', () => {
   describe('browser cannot share', () => {
     beforeEach(() => {
       global.navigator.canShare = () => false
+      jest.spyOn(console, 'error').mockImplementation()
       jest.spyOn(window, 'alert').mockImplementation()
     })
 
@@ -79,6 +80,7 @@ describe('sharing', () => {
       const func = (): void => sharingService.shareText(number)
 
       expect(func).toThrowError()
+      expect(console.error).toHaveBeenCalledTimes(1)
     })
   })
 })
