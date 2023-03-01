@@ -4,7 +4,13 @@
 
 <div align="center">
   <a href="https://github.com/c-o-l-i-n/potluk/deployments">
-    <img alt="Github deployment" src="https://img.shields.io/github/deployments/c-o-l-i-n/potluk/github-pages">
+    <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?logo=github&logoWidth=12">
+  </a>
+  <a href="https://codeclimate.com/github/c-o-l-i-n/potluk">
+    <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/c-o-l-i-n/potluk?logo=codeclimate&logoWidth=12">
+  </a>
+  <a href="https://potl.uk">
+    <img alt="Website Monitoring Status" src="https://img.shields.io/website?url=https%3A%2F%2Fpotl.uk">
   </a>
   <a href="LICENSE">
     <img alt="License" src="https://img.shields.io/github/license/c-o-l-i-n/potluk" />
@@ -22,7 +28,7 @@
 
 ## About
 
-Potluk is the website that makes coordinating food at your event easy. Simply create a new Potluk, share the link with attendees, and everyone fills out what they're bringing. No sign-ups, no ads, no data mining, no cost.
+Potluk is the website that makes coordinating food at your event easy. Simply create a new Potluk, share the link with attendees, and everyone fills out what they're bringing. No sign-ups, no ads, no personal data mining, no cost.
 
 ### Technology Stack
 
@@ -45,7 +51,6 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/) v16.8 or higher
-- A JavaScript package manager like [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
 ### Install
 
@@ -81,4 +86,4 @@ Contributions, issues, and feature requests are welcome!<br />Feel free to check
 
 ## License
 
-Copyright © 2022 [Colin A. Williams](https://github.com/c-o-l-i-n).<br /> This project is [MIT](LICENSE) licensed.
+Copyright © 2023 [Colin A. Williams](https://github.com/c-o-l-i-n).<br /> This project is [MIT](LICENSE) licensed.
