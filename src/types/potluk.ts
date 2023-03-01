@@ -76,7 +76,7 @@ export default class Potluk extends UniqueID {
 
   public toListString (): string {
     let text = `👉 ${this.name}\n`
-    text += `📆 ${Potluk.formatEventDateForDisplay(this.date)}\n`
+    text += `🗓 ${Potluk.formatEventDateForDisplay(this.date)}\n`
     text += `🔗 ${window.location.href.split('://').at(-1) ?? 'Link Unavailable'}\n`
 
     for (const category of this.categories) {
