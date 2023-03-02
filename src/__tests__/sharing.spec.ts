@@ -1,4 +1,4 @@
-import { _SharingServiceClassForTestingOnly } from '../services/sharing'
+import SharingService, { _SharingServiceClassForTestingOnly } from '../services/sharing'
 import copy from 'copy-to-clipboard'
 
 jest.mock('copy-to-clipboard')
@@ -14,6 +14,10 @@ describe('sharing', () => {
 
   it('should create', () => {
     expect(sharingService).toBeTruthy()
+  })
+
+  it('should create a singleton service', () => {
+    expect(SharingService instanceof _SharingServiceClassForTestingOnly).toBe(true)
   })
 
   describe('browser can share', () => {
