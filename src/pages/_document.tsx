@@ -1,7 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ReactElement } from 'react'
 
-class MyDocument extends Document {
+class PotlukDocument extends Document {
   render (): ReactElement {
     return (
       <Html>
@@ -47,4 +47,4 @@ class MyDocument extends Document {
   }
 }
 
-export default MyDocument
+export default PotlukDocument
