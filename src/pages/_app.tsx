@@ -12,7 +12,7 @@ const font = Montserrat({
   variable: '--app-font'
 })
 
-export default function MyApp ({ Component, pageProps }: AppProps): ReactElement {
+export default function PotlukApp ({ Component, pageProps }: AppProps): ReactElement {
   return (
     <>
       <style jsx global>{`
