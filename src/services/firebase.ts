@@ -1,6 +1,6 @@
 import { FirebaseApp, FirebaseOptions, initializeApp } from 'firebase/app'
-import { initializeAppCheck, ReCaptchaV3Provider, Unsubscribe } from 'firebase/app-check'
-import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp, onValue, Database, onDisconnect } from 'firebase/database'
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
+import { getDatabase, ref, push, set, onChildAdded, get, remove, onChildChanged, onChildRemoved, serverTimestamp, onValue, Database, onDisconnect, Unsubscribe } from 'firebase/database'
 import { EventFunctions, ItemEventListener, ItemEventType } from '../types/itemEvent'
 import Item from '../types/item'
 import Potluk from '../types/potluk'
@@ -143,3 +143,4 @@ export default new FirebaseService({
   appId: '1:209562255019:web:4df88c5e816b6c865581ee',
   measurementId: 'G-5NDQE97HZ9'
 }, '6LcvdtQfAAAAAKbmKpb68MIZt5GXZYubca1YLV-5')
+export { FirebaseService as _FirebaseServiceClassForTestingOnly }
