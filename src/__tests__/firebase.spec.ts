@@ -6,29 +6,9 @@ import Potluk, { PotlukDatabaseEntry } from '../types/potluk'
 import Item, { ItemDatabaseEntry } from '../types/item'
 import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
 
-jest.mock('firebase/app', () => ({
-  initializeApp: jest.fn().mockReturnValue({})
-}))
-
-jest.genMockFromModule('firebase/database')
-
-jest.mock('firebase/database', () => ({
-  getDatabase: jest.fn().mockReturnValue({}),
-  ref: jest.fn().mockReturnValue({}),
-  get: jest.fn().mockReturnValue({}),
-  set: jest.fn().mockReturnValue({}),
-  push: jest.fn().mockReturnValue({}),
-  remove: jest.fn().mockReturnValue({}),
-  onDisconnect: jest.fn().mockReturnValue({}),
-  serverTimestamp: jest.fn().mockReturnValue({}),
-  onChildAdded: jest.fn().mockReturnValue({}),
-  onChildChanged: jest.fn().mockReturnValue({}),
-  onChildRemoved: jest.fn().mockReturnValue({}),
-  onValue: jest.fn().mockReturnValue({})
-}))
-
+jest.mock('firebase/app')
+jest.mock('firebase/database')
 jest.mock('firebase/app-check')
-
 jest.mock('../types/potluk')
 
 describe('firebase', () => {
@@ -39,15 +19,12 @@ describe('firebase', () => {
   let potlukId: string
   let potluk: Potluk
   let potlukDatabaseEntry: PotlukDatabaseEntry
-  let potlukSnapshot: DataSnapshot
-  let nullSnapshot: DataSnapshot
   let potlukRef: DatabaseReference
   let itemId: string
   let itemCategoryIndex: number
   let item: Item
   let itemDatabaseEntry: ItemDatabaseEntry
   let itemRef: DatabaseReference
-  let itemsRef: DatabaseReference
   let itemOnDisconnect: OnDisconnect
   let lastModifiedRef: DatabaseReference
   let serverTimestampVal: number
@@ -59,15 +36,12 @@ describe('firebase', () => {
     potlukId = 'PotlukID'
     potluk = { id: potlukId, toDatabaseEntry: () => potlukDatabaseEntry } as any
     potlukDatabaseEntry = { potlukDatabaseEntry: 1 } as any
-    potlukSnapshot = { val: () => potlukDatabaseEntry } as any
-    nullSnapshot = { val: () => null } as any
     potlukRef = { potlukRef: 1 } as any
     itemId = 'ItemID'
     itemCategoryIndex = 3
     itemDatabaseEntry = { itemDatabaseEntry: 1 } as any
     item = { id: itemId, categoryIndex: itemCategoryIndex, toDatabaseEntry: () => itemDatabaseEntry } as any
     itemRef = { itemRef: 1 } as any
-    itemsRef = { itemsRef: 1 } as any
     itemOnDisconnect = { remove: () => {}, cancel: () => {} } as any
     lastModifiedRef = { lastModifiedRef: 1 } as any
     serverTimestampVal = 1234
@@ -92,6 +66,7 @@ describe('firebase', () => {
     let numCategories: number
     let unsubs: Record<string, () => void>
     let unsubAll: () => void
+    let itemsRef: DatabaseReference
 
     beforeEach(() => {
       unsubs = {
@@ -113,6 +88,7 @@ describe('firebase', () => {
       jest.spyOn(FirebaseDatabase, 'ref').mockReturnValue(itemsRef)
 
       numCategories = 4
+      itemsRef = { itemsRef: 1 } as any
 
       unsubAll = firebaseService.subscribeToUpdates(potlukId, numCategories, undefined, undefined, undefined, () => {})
     })
@@ -176,9 +152,11 @@ describe('firebase', () => {
     })
 
     describe('potluk with given id exists', () => {
+      let potlukSnapshot: DataSnapshot
       let returnedPotluk: Potluk
 
       beforeEach(async () => {
+        potlukSnapshot = { val: () => potlukDatabaseEntry } as any
         jest.spyOn(FirebaseDatabase, 'get').mockResolvedValue(potlukSnapshot)
 
         jest.spyOn(Potluk, 'createFromDatabaseEntry').mockImplementation(
@@ -203,9 +181,11 @@ describe('firebase', () => {
     })
 
     describe('potluk with given id does NOT exist', () => {
+      let nullSnapshot: DataSnapshot
       let errorThrown: unknown
 
       beforeEach(async () => {
+        nullSnapshot = { val: () => null } as any
         jest.spyOn(FirebaseDatabase, 'get').mockResolvedValue(nullSnapshot)
 
         try {
