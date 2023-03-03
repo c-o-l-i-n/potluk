@@ -326,84 +326,6 @@ describe('firebase', () => {
     })
   })
 
-  describe('bringOrUnbringItemInDatabase', () => {
-    let username: string
-    let bring: boolean
-
-    beforeEach(() => {
-      username = 'Colin Williams'
-
-      jest.spyOn(FirebaseDatabase, 'ref').mockReturnValueOnce(itemRef)
-      jest.spyOn(FirebaseDatabase, 'ref').mockReturnValueOnce(lastModifiedRef)
-    })
-
-    describe('success', () => {
-      beforeEach(async () => {
-        jest.spyOn(FirebaseDatabase, 'set').mockResolvedValue()
-        jest.spyOn(FirebaseDatabase, 'serverTimestamp').mockReturnValue(serverTimestampVal as any)
-      })
-
-      describe('bring', () => {
-        beforeEach(() => {
-          bring = true
-
-          firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
-        })
-
-        it('should set user as bringing item in database', async () => {
-          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/c/${itemCategoryIndex}/i/${itemId}/b`)
-          expect(set).toHaveBeenCalledWith(itemRef, username)
-        })
-
-        it('should update last modified in database', async () => {
-          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
-          expect(set).toHaveBeenCalledTimes(2)
-          expect(set).toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
-        })
-      })
-
-      describe('unbring', () => {
-        beforeEach(() => {
-          bring = false
-
-          firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
-        })
-
-        it('should set user bringing item to null in database', async () => {
-          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/c/${itemCategoryIndex}/i/${itemId}/b`)
-          expect(set).toHaveBeenCalledWith(itemRef, null)
-        })
-
-        it('should update last modified in database', async () => {
-          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
-          expect(set).toHaveBeenCalledTimes(2)
-          expect(set).toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
-        })
-      })
-    })
-
-    describe('fail', () => {
-      let expectedError: string
-
-      beforeEach(async () => {
-        expectedError = 'error :('
-        jest.spyOn(FirebaseDatabase, 'set').mockRejectedValue(expectedError)
-
-        firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
-      })
-
-      it('should handle error', async () => {
-        expect(console.error).toHaveBeenCalledTimes(1)
-        expect(console.error).toHaveBeenCalledWith(expectedError)
-      })
-
-      it('should NOT update last modified in database', async () => {
-        expect(ref).not.toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
-        expect(set).not.toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
-      })
-    })
-  })
-
   describe('changeItemNameInDatabase', () => {
     let itemName: string
     let itemNameRef: DatabaseReference
@@ -481,7 +403,8 @@ describe('firebase', () => {
 
           firebaseService.changeItemNameInDatabase(potlukId, item, itemName)
 
-          // TODO: expect function to throw error. I cannot get this expect statement to work after an hour or 2
+          // TODO: expect function to throw error. I couldn't get this expect statement to work after an hour or 2 of trial and error.
+          // The "if (itemRef === null)" section is covered by this code, but I believe there is a Prmomise timing issue witht he expect statement
           // expect(() => {
           //   firebaseService.changeItemNameInDatabase(potlukId, item, itemName)
           // }).toThrowError('Unexpected error: item name parent is null (should be the item itself)')
@@ -497,6 +420,84 @@ describe('firebase', () => {
         jest.spyOn(FirebaseDatabase, 'set').mockRejectedValue(expectedError)
 
         firebaseService.changeItemNameInDatabase(potlukId, item, itemName)
+      })
+
+      it('should handle error', async () => {
+        expect(console.error).toHaveBeenCalledTimes(1)
+        expect(console.error).toHaveBeenCalledWith(expectedError)
+      })
+
+      it('should NOT update last modified in database', async () => {
+        expect(ref).not.toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
+        expect(set).not.toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
+      })
+    })
+  })
+
+  describe('bringOrUnbringItemInDatabase', () => {
+    let username: string
+    let bring: boolean
+
+    beforeEach(() => {
+      username = 'Colin Williams'
+
+      jest.spyOn(FirebaseDatabase, 'ref').mockReturnValueOnce(itemRef)
+      jest.spyOn(FirebaseDatabase, 'ref').mockReturnValueOnce(lastModifiedRef)
+    })
+
+    describe('success', () => {
+      beforeEach(async () => {
+        jest.spyOn(FirebaseDatabase, 'set').mockResolvedValue()
+        jest.spyOn(FirebaseDatabase, 'serverTimestamp').mockReturnValue(serverTimestampVal as any)
+      })
+
+      describe('bring', () => {
+        beforeEach(() => {
+          bring = true
+
+          firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
+        })
+
+        it('should set user as bringing item in database', async () => {
+          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/c/${itemCategoryIndex}/i/${itemId}/b`)
+          expect(set).toHaveBeenCalledWith(itemRef, username)
+        })
+
+        it('should update last modified in database', async () => {
+          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
+          expect(set).toHaveBeenCalledTimes(2)
+          expect(set).toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
+        })
+      })
+
+      describe('unbring', () => {
+        beforeEach(() => {
+          bring = false
+
+          firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
+        })
+
+        it('should set user bringing item to null in database', async () => {
+          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/c/${itemCategoryIndex}/i/${itemId}/b`)
+          expect(set).toHaveBeenCalledWith(itemRef, null)
+        })
+
+        it('should update last modified in database', async () => {
+          expect(ref).toHaveBeenCalledWith(db, `potluks/${potlukId}/m`)
+          expect(set).toHaveBeenCalledTimes(2)
+          expect(set).toHaveBeenCalledWith(lastModifiedRef, serverTimestampVal)
+        })
+      })
+    })
+
+    describe('fail', () => {
+      let expectedError: string
+
+      beforeEach(async () => {
+        expectedError = 'error :('
+        jest.spyOn(FirebaseDatabase, 'set').mockRejectedValue(expectedError)
+
+        firebaseService.bringOrUnbringItemInDatabase(potlukId, item, username, bring)
       })
 
       it('should handle error', async () => {
