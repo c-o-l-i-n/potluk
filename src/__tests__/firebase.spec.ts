@@ -89,8 +89,12 @@ describe('firebase', () => {
   })
 
   describe('subscribeToUpdates', () => {
-    it('should subscribe to updates', () => {
-      const unsubs = {
+    let numCategories: number
+    let unsubs: Record<string, () => void>
+    let unsubAll: () => void
+
+    beforeEach(() => {
+      unsubs = {
         onChildAddedUnsub: (): void => {},
         onChildChangedUnsub: (): void => {},
         onChildRemovedUnsub: (): void => {},
@@ -108,17 +112,21 @@ describe('firebase', () => {
       jest.spyOn(FirebaseDatabase, 'onValue').mockReturnValue(unsubs.onValueUnsub)
       jest.spyOn(FirebaseDatabase, 'ref').mockReturnValue(itemsRef)
 
-      const numCategories = 4
+      numCategories = 4
 
-      const unsubAll = firebaseService.subscribeToUpdates(potlukId, numCategories, undefined, undefined, undefined, () => {})
+      unsubAll = firebaseService.subscribeToUpdates(potlukId, numCategories, undefined, undefined, undefined, () => {})
+    })
 
+    it('should subscribe to updates', () => {
       expect(ref).toHaveBeenCalledTimes(numCategories + 1)
 
       expect(onChildAdded).toHaveBeenCalledTimes(numCategories)
       expect(onChildChanged).toHaveBeenCalledTimes(numCategories)
       expect(onChildRemoved).toHaveBeenCalledTimes(numCategories)
       expect(onValue).toHaveBeenCalledTimes(1)
+    })
 
+    it('should unsubscribe from updates when running returned unsubAll function', () => {
       unsubAll()
 
       expect(unsubs.onChildAddedUnsub).toBeCalledTimes(numCategories)
