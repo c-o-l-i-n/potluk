@@ -36,7 +36,7 @@ jobs:
       - name: Build 🛠
         run: npm run build
 
-      - name: Export ✈️
+      - name: Export Static Site ✈️
         run: npm run export
 
       - name: Deploy to Github Pages 🚀

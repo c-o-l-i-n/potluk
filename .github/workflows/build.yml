@@ -35,3 +35,6 @@ jobs:
 
       - name: Build 🛠
         run: npm run build
+
+      - name: Export Static Site ✈️
+        run: npm run export
