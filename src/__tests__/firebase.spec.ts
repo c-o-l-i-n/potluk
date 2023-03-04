@@ -216,8 +216,8 @@ describe('firebase', () => {
       beforeEach(async () => {
         jest.spyOn(FirebaseDatabase, 'push').mockResolvedValue(itemRef)
         jest.spyOn(FirebaseDatabase, 'set').mockResolvedValue()
+        jest.spyOn(itemOnDisconnect, 'remove').mockResolvedValue()
         jest.spyOn(FirebaseDatabase, 'onDisconnect').mockReturnValue(itemOnDisconnect)
-        jest.spyOn(itemOnDisconnect, 'remove').mockReturnValue(Promise.resolve())
         jest.spyOn(FirebaseDatabase, 'serverTimestamp').mockReturnValue(serverTimestampVal as any)
 
         firebaseService.addItemToDatabase(potlukId, item)
@@ -328,9 +328,9 @@ describe('firebase', () => {
     describe('success', () => {
       beforeEach(() => {
         jest.spyOn(FirebaseDatabase, 'set').mockResolvedValue()
+        jest.spyOn(itemOnDisconnect, 'remove').mockResolvedValue()
+        jest.spyOn(itemOnDisconnect, 'cancel').mockResolvedValue()
         jest.spyOn(FirebaseDatabase, 'onDisconnect').mockReturnValue(itemOnDisconnect)
-        jest.spyOn(itemOnDisconnect, 'remove').mockReturnValue(Promise.resolve())
-        jest.spyOn(itemOnDisconnect, 'cancel').mockReturnValue(Promise.resolve())
         jest.spyOn(FirebaseDatabase, 'serverTimestamp').mockReturnValue(serverTimestampVal as any)
       })
 
