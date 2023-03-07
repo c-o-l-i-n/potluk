@@ -40,17 +40,19 @@ export default function Main (): ReactElement {
     }
 
     // get initial Potluk from db
-    void FirebaseService.getPotlukFromDatabase(router.query.id).then(response => {
-      console.log('Potluk Parsed from DB:', response)
-      setPotluk(response)
-    }).catch((err) => {
-      if (err instanceof PotlukNotFoundError) {
-        setNotFound(true)
-      } else {
-        console.error('Unexpected error:', err)
-        setUnexpectedErrorOccurred(true)
-      }
-    })
+    void FirebaseService.getPotlukFromDatabase(router.query.id)
+      .then(response => {
+        console.log('Potluk Parsed from DB:', response)
+        setPotluk(response)
+      })
+      .catch((err) => {
+        if (err instanceof PotlukNotFoundError) {
+          setNotFound(true)
+        } else {
+          console.error('Unexpected error:', err)
+          setUnexpectedErrorOccurred(true)
+        }
+      })
   }, [router.isReady])
 
   if (unexpectedErrorOccurred) {
@@ -58,10 +60,10 @@ export default function Main (): ReactElement {
   }
 
   if (notFound) {
-    return <NotFound potlukId={typeof router.query.id === 'string' ? router.query.id : ''} />
+    return <NotFound potlukId={router.query.id as string} />
   }
 
-  if (router.isFallback || !router.isReady || potluk === undefined) {
+  if (potluk === undefined) {
     return <SkeletonPage />
   }
 

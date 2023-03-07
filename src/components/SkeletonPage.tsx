@@ -10,7 +10,7 @@ export default function SkeletonPage (): ReactElement {
         <title>Potluk</title>
       </Head>
 
-      <div id='skeleton'>
+      <div id='skeleton' data-testid='skeleton'>
         <h2 className='mb-1'>Name</h2>
         <p className='is-uppercase has-text-weight-bold'>Date</p>
 
