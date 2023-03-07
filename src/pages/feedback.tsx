@@ -39,9 +39,11 @@ export default function Feedback (): ReactElement {
       {head}
 
       <h2>Submit Feedback</h2>
-      <form onSubmit={(e) => {
-        void handleSubmit(e)
-      }}
+      <form
+        aria-label='form'
+        onSubmit={(e) => {
+          void handleSubmit(e)
+        }}
       >
         <FormspreeField state={state} name='Name' />
         <FormspreeField state={state} name='Email' type='email' placeholder='you@website.com' />
