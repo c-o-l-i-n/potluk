@@ -6,13 +6,13 @@
   <a href="https://github.com/c-o-l-i-n/potluk/deployments">
     <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?logo=github&logoWidth=12">
   </a>
-  <a href="https://codecov.io/gh/c-o-l-i-n/potluk" > 
+  <a href="https://codecov.io/gh/c-o-l-i-n/potluk" target="_blank"> 
     <img alt="Test Coverage" src="https://img.shields.io/codecov/c/github/c-o-l-i-n/potluk?logo=codecov&logoWidth=12&logoColor=white"/> 
   </a>
-  <a href="https://codeclimate.com/github/c-o-l-i-n/potluk">
+  <a href="https://codeclimate.com/github/c-o-l-i-n/potluk" target="_blank">
     <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/c-o-l-i-n/potluk?logo=codeclimate&logoWidth=12">
   </a>
-  <a href="https://potl.uk">
+  <a href="https://potl.uk" target="_blank">
     <img alt="Website Monitoring Status" src="https://img.shields.io/website?url=https%3A%2F%2Fpotl.uk">
   </a>
   <a href="LICENSE">
