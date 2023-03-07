@@ -41,14 +41,17 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 <a href="https://firebase.google.com/" target="_blank">
   <img alt="Next.js" src="https://img.shields.io/badge/Firebase-%23039BE5.svg?style=for-the-badge&logo=firebase" />
 </a>
-<a href="https://jestjs.io/" target="_blank">
-  <img alt="Jest" src="https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white" />
+<a href="https://pages.github.com/" target="_blank">
+  <img alt="Github Pages" src="https://img.shields.io/badge/Github%20Pages-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white" />
 </a>
 <a href="https://www.typescriptlang.org/" target="_blank">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" />
 </a>
-<a href="https://pages.github.com/" target="_blank">
-  <img alt="Github Pages" src="https://img.shields.io/badge/Github%20Pages-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white" />
+<a href="https://jestjs.io/" target="_blank">
+  <img alt="Jest" src="https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white" />
+</a>
+<a href="https://testing-library.com/" target="_blank">
+  <img alt="React Testing Library" src="https://img.shields.io/badge/Testing%20Library-%23E33332?style=for-the-badge&logo=testing-library&logoColor=white" />
 </a>
 
 ## Getting Started
