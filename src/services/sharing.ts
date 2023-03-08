@@ -1,6 +1,6 @@
 import copy from 'copy-to-clipboard'
 
-class SharingService {
+class _SharingService {
   public shareLink (title: string, url: string): void {
     this.share({ title, url })
   }
@@ -27,5 +27,7 @@ class SharingService {
   }
 }
 
-export default new SharingService()
-export { SharingService as _SharingServiceClassForTestingOnly }
+const SharingService = new _SharingService()
+
+export default SharingService
+export { _SharingService as _SharingServiceClassForTestingOnly }

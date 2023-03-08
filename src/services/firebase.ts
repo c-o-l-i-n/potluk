@@ -7,7 +7,7 @@ import Potluk from '../types/potluk'
 import PotlukNotFoundError from '../types/errors/potlukNotFoundError'
 import { toast } from 'react-hot-toast'
 
-class FirebaseService {
+class _FirebaseService {
   private readonly app: FirebaseApp
   private readonly db: Database
 
@@ -133,7 +133,7 @@ class FirebaseService {
   }
 }
 
-export default new FirebaseService({
+const FirebaseService = new _FirebaseService({
   apiKey: 'AIzaSyAMyXwyJZUup4zi-ENY5q2Y8ze_79Ck_vg',
   authDomain: 'potluk-app.firebaseapp.com',
   databaseURL: 'https://potluk-app-default-rtdb.firebaseio.com',
@@ -143,4 +143,6 @@ export default new FirebaseService({
   appId: '1:209562255019:web:4df88c5e816b6c865581ee',
   measurementId: 'G-5NDQE97HZ9'
 }, '6LcvdtQfAAAAAKbmKpb68MIZt5GXZYubca1YLV-5')
-export { FirebaseService as _FirebaseServiceClassForTestingOnly }
+
+export default FirebaseService
+export { _FirebaseService as _FirebaseServiceClassForTestingOnly }
