@@ -3,7 +3,7 @@
 <p align="center">Coordinate who brings what to your potluck!</p>
 
 <div align="center">
-  <a href="https://github.com/c-o-l-i-n/potluk/deployments">
+  <a href="https://github.com/c-o-l-i-n/potluk/actions/workflows/deploy.yml">
     <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?logo=github&logoWidth=12">
   </a>
   <a href="https://codeclimate.com/github/c-o-l-i-n/potluk">
@@ -50,7 +50,7 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) v16.8 or higher
+- [Node.js](https://nodejs.org/) v14.6 or higher
 
 ### Install
 
@@ -87,3 +87,5 @@ Contributions, issues, and feature requests are welcome!<br />Feel free to check
 ## License
 
 Copyright © 2023 [Colin A. Williams](https://github.com/c-o-l-i-n).<br /> This project is [MIT](LICENSE) licensed.
+
+"[meal](https://thenounproject.com/icon/meal-1633691/)" icon by [David Khai](https://thenounproject.com/kaxgyatso/) from [Noun Project](https://thenounproject.com/)
