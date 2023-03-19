@@ -4,7 +4,7 @@
 
 <div align="center">
   <a href="https://github.com/c-o-l-i-n/potluk/actions/workflows/deploy.yml">
-    <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?logo=github&logoWidth=12">
+    <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?branch=main&logo=github&logoWidth=12">
   </a>
   <a href="https://codecov.io/gh/c-o-l-i-n/potluk"> 
     <img alt="Test Coverage" src="https://img.shields.io/codecov/c/github/c-o-l-i-n/potluk?logo=codecov&logoWidth=12&logoColor=white"/> 
