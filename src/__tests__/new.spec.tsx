@@ -146,7 +146,7 @@ describe('New Page', () => {
     })
 
     it('should be enabled when all requirements are met', () => {
-      expect(createButton.disabled).toBe(false)
+      expect(createButton).not.toBeDisabled()
     })
 
     it('should be disabled when event name is blank', async () => {
@@ -155,7 +155,7 @@ describe('New Page', () => {
       await user.clear(eventNameField)
       await user.tab()
 
-      expect(createButton.disabled).toBe(true)
+      expect(createButton).toBeDisabled()
     })
 
     it('should be disabled when date is blank', async () => {
@@ -164,7 +164,7 @@ describe('New Page', () => {
       await user.clear(eventDateField)
       await user.tab()
 
-      expect(createButton.disabled).toBe(true)
+      expect(createButton).toBeDisabled()
     })
 
     it('should be disabled when all categories are deleted', async () => {
@@ -176,7 +176,7 @@ describe('New Page', () => {
         await user.click(deleteButton)
       }
 
-      expect(createButton.disabled).toBe(true)
+      expect(createButton).toBeDisabled()
     })
 
     it('should be disabled when every category is blank', async () => {
@@ -187,7 +187,7 @@ describe('New Page', () => {
       }
       await user.tab()
 
-      expect(createButton.disabled).toBe(true)
+      expect(createButton).toBeDisabled()
     })
   })
 

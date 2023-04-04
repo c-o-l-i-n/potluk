@@ -10,7 +10,7 @@
 		"lint": "next lint && ts-standard",
 		"lint-fix": "ts-standard --fix",
 		"test": "jest",
-		"test-watch": "jest --watch"
+		"test:watch": "jest --watch"
 	},
 	"author": {
 		"name": "Colin A. Williams",
