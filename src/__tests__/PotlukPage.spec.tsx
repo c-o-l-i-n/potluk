@@ -138,7 +138,7 @@ describe('PotlukPage', () => {
     )
   })
 
-  describe('when logging in', () => {
+  describe('after logging in', () => {
     let username: string
     let loginField: HTMLInputElement
 
@@ -157,9 +157,31 @@ describe('PotlukPage', () => {
       expect(loginButton).not.toBeInTheDocument()
     })
 
-    it('should logout button', () => {
+    it('should show logout button', () => {
       const logoutButton = screen.getByRole('button', { name: /Log Out/i })
       expect(logoutButton).toBeInTheDocument()
+    })
+
+    it('should have inputs for each item created by user', () => {
+      const itemsCreatedByUser = categories.map(c =>
+        Object.values(c.items).filter(i => i.createdBy === username)
+      ).reduce((prev, next) => prev.concat(next))
+
+      itemsCreatedByUser.forEach(i => {
+        expect(screen.getByDisplayValue(i.name)).toBeInTheDocument()
+        expect(screen.queryByText(i.name)).not.toBeInTheDocument()
+      })
+    })
+
+    it('should have plain text for each item NOT created by user', () => {
+      const itemsNotCreatedByUser = categories.map(c =>
+        Object.values(c.items).filter(i => i.createdBy !== username)
+      ).reduce((prev, next) => prev.concat(next))
+
+      itemsNotCreatedByUser.forEach(i => {
+        expect(screen.queryByDisplayValue(i.name)).not.toBeInTheDocument()
+        expect(screen.getByText(i.name)).toBeInTheDocument()
+      })
     })
   })
 })
