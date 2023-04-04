@@ -47,7 +47,7 @@ Potluk is the website that makes coordinating food at your event easy. Simply cr
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) v16.8 or higher
+- [Node.js](https://nodejs.org/) v14.6 or higher
 
 ### Install
 
@@ -84,3 +84,5 @@ Contributions, issues, and feature requests are welcome!<br />Feel free to check
 ## License
 
 Copyright © 2023 [Colin A. Williams](https://github.com/c-o-l-i-n).<br /> This project is [MIT](LICENSE) licensed.
+
+"[meal](https://thenounproject.com/icon/meal-1633691/)" icon by [David Khai](https://thenounproject.com/kaxgyatso/) from [Noun Project](https://thenounproject.com/)
