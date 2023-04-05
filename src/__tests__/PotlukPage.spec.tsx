@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { RenderResult, render, screen } from '@testing-library/react'
+import { RenderResult, act, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { UserEvent } from '@testing-library/user-event/dist/types/setup/setup'
@@ -7,9 +7,84 @@ import PotlukPage from '../components/PotlukPage'
 import Potluk from '../types/potluk'
 import Category from '../types/category'
 import Item from '../types/item'
+import ItemEvent, { ItemEventListener, ItemEventType } from '../types/itemEvent'
+import FirebaseService from '../services/firebase'
 
-jest.mock('../services/firebase')
-jest.mock('firebase/app-check')
+jest.mock('../services/firebase', () => ({
+  subscribeToUpdates: mockSubscribeToUpdates,
+  addItemToDatabase: (potlukId: string, item: Item) => triggerAddBlankEvent(potlukId, item),
+  deleteItemFromDatabase: jest.fn()
+}))
+
+let triggerAddEvent: () => void
+let triggerChangeEvent: () => void
+let triggerDeleteEvent: () => void
+let triggerConnectEvent: () => void
+let triggerDisconnectEvent: () => void
+let triggerAddBlankEvent: (potlukId: string, item: Item) => void
+
+const mockAddEvent: ItemEvent = {
+  type: ItemEventType.ADD,
+  categoryIndex: 0,
+  itemId: 'newItem',
+  itemDatabaseEntry: {
+    n: 'New Item',
+    c: 'Molly',
+    b: null
+  }
+}
+
+const mockChangeEvent: ItemEvent = {
+  type: ItemEventType.CHANGE,
+  categoryIndex: 0,
+  itemId: 'newItem',
+  itemDatabaseEntry: {
+    n: 'Changed Item',
+    c: 'Molly',
+    b: null
+  }
+}
+
+const mockDeleteEvent: ItemEvent = {
+  type: ItemEventType.DELETE,
+  categoryIndex: 0,
+  itemId: 'newItem',
+  itemDatabaseEntry: {
+    n: 'Changed Item',
+    c: 'Molly',
+    b: null
+  }
+}
+
+const mockAddBlankEvent = (username: string): ItemEvent => ({
+  type: ItemEventType.ADD,
+  categoryIndex: 0,
+  itemId: 'newBlankItem',
+  itemDatabaseEntry: {
+    n: '',
+    c: username,
+    b: null
+  }
+})
+
+function mockSubscribeToUpdates (
+  potlukId: string,
+  numberOfCategories: number,
+  onAdd: ItemEventListener = console.log,
+  onChange: ItemEventListener = console.log,
+  onDelete: ItemEventListener = console.log,
+  onConnectedStatusChange: (connected: boolean) => unknown
+): () => void {
+  triggerAddEvent = () => onAdd(mockAddEvent)
+  triggerChangeEvent = () => onChange(mockChangeEvent)
+  triggerDeleteEvent = () => onDelete(mockDeleteEvent)
+  triggerConnectEvent = () => onConnectedStatusChange(true)
+  triggerDisconnectEvent = () => onConnectedStatusChange(false)
+
+  triggerAddBlankEvent = (potlukId: string, item: Item) => onAdd(mockAddBlankEvent(item.createdBy))
+
+  return () => { }
+}
 
 describe('PotlukPage', () => {
   let potlukId: string
@@ -24,7 +99,7 @@ describe('PotlukPage', () => {
   // let offlineGracePeriodMs: number
 
   beforeEach(() => {
-    jest.useFakeTimers()
+    // jest.useFakeTimers()
 
     potlukId = 'PotlukId'
     potlukName = 'Test Potluk'
@@ -76,6 +151,9 @@ describe('PotlukPage', () => {
     componentRender = render(component)
 
     user = userEvent.setup({ delay: null })
+
+    // silence expected console.logs
+    jest.spyOn(console, 'log').mockImplementation()
   })
 
   afterEach(jest.resetAllMocks)
@@ -101,7 +179,7 @@ describe('PotlukPage', () => {
 
   it('should have login area', () => {
     const loginField: HTMLInputElement = screen.getByRole('textbox')
-    const loginButton = screen.getByRole('button', { name: /Log In/i })
+    const loginButton = screen.getByRole('button', { name: 'Log In' })
 
     expect(loginField).toBeInTheDocument()
     expect(loginField.placeholder).toBe('Enter your name to edit')
@@ -109,7 +187,7 @@ describe('PotlukPage', () => {
   })
 
   it('should NOT have a logout button', () => {
-    const logoutButton = screen.queryByRole('button', { name: /Log Out/i })
+    const logoutButton = screen.queryByRole('button', { name: 'Log Out' })
     expect(logoutButton).not.toBeInTheDocument()
   })
 
@@ -138,6 +216,109 @@ describe('PotlukPage', () => {
     )
   })
 
+  describe('firebase events', () => {
+    describe('after disconnect', () => {
+      beforeAll(() => jest.useFakeTimers())
+
+      beforeEach(() => {
+        window.matchMedia = (() => { }) as any
+        jest.spyOn(window, 'matchMedia').mockImplementation()
+
+        // jest.useFakeTimers()
+
+        // always connects on startup
+        act(triggerConnectEvent)
+
+        // disconnect for tests
+        act(triggerDisconnectEvent)
+      })
+
+      afterEach(() => {
+        act(jest.runAllTimers)
+      })
+
+      it('should NOT show disconnected toast right away', () => {
+        const disconnectedToast = screen.queryByText("You're offline")
+        expect(disconnectedToast).not.toBeInTheDocument()
+      })
+
+      describe('after reconnect within 100ms', () => {
+        beforeEach(() => {
+          act(() => {
+            jest.advanceTimersByTime(100)
+            triggerConnectEvent()
+            jest.advanceTimersByTime(1000)
+          })
+        })
+
+        it('should NOT show reconnected toast', () => {
+          const reconnected = screen.queryByText("You're back online!")
+          expect(reconnected).not.toBeInTheDocument()
+        })
+
+        it('should NOT show disconnected toast', () => {
+          const disconnectedToast = screen.queryByText("You're offline")
+          expect(disconnectedToast).not.toBeInTheDocument()
+        })
+      })
+
+      describe('after stays disconnected for 200ms', () => {
+        beforeEach(() => {
+          act(() => jest.advanceTimersByTime(200))
+        })
+
+        it('should show disconnected toast', () => {
+          const disconnectedToast = screen.getByText("You're offline")
+          expect(disconnectedToast).toBeInTheDocument()
+        })
+
+        describe('after reconnects', () => {
+          beforeEach(() => act(triggerConnectEvent))
+
+          it('should show reconnected toast', () => {
+            const reconnected = screen.getByText("You're back online!")
+            expect(reconnected).toBeInTheDocument()
+          })
+        })
+      })
+    })
+
+    describe('after item added', () => {
+      beforeEach(() => {
+        act(triggerAddEvent)
+      })
+
+      it('should add new item', () => {
+        const newItem = screen.getByText(mockAddEvent.itemDatabaseEntry.n)
+        expect(newItem).toBeInTheDocument()
+      })
+
+      describe('after item changed', () => {
+        beforeEach(() => {
+          act(triggerChangeEvent)
+        })
+
+        it('should change new item', () => {
+          const newItem = screen.queryByText(mockAddEvent.itemDatabaseEntry.n)
+          const changedItem = screen.getByText(mockChangeEvent.itemDatabaseEntry.n)
+          expect(newItem).not.toBeInTheDocument()
+          expect(changedItem).toBeInTheDocument()
+        })
+
+        describe('after item deleted', () => {
+          beforeEach(() => {
+            act(triggerDeleteEvent)
+          })
+
+          it('should delete new item', () => {
+            const deletedItem = screen.queryByText(mockDeleteEvent.itemDatabaseEntry.n)
+            expect(deletedItem).not.toBeInTheDocument()
+          })
+        })
+      })
+    })
+  })
+
   describe('after logging in', () => {
     let username: string
     let loginField: HTMLInputElement
@@ -145,21 +326,23 @@ describe('PotlukPage', () => {
     beforeEach(async () => {
       username = 'Colin'
       loginField = screen.getByRole('textbox')
-      const loginButton = screen.getByRole('button', { name: /Log In/i })
+      const loginButton = screen.getByRole('button', { name: 'Log In' })
 
       await user.type(loginField, username)
       await user.click(loginButton)
     })
 
     it('should no longer show the login field or login button', () => {
-      const loginButton = screen.queryByRole('button', { name: /Log In/i })
+      const loginButton = screen.queryByRole('button', { name: 'Log In' })
       expect(loginField).not.toBeInTheDocument()
       expect(loginButton).not.toBeInTheDocument()
     })
 
-    it('should show logout button', () => {
-      const logoutButton = screen.getByRole('button', { name: /Log Out/i })
+    it('should show logout button and username', () => {
+      const logoutButton = screen.getByRole('button', { name: 'Log Out' })
+      const usernameText = screen.getByText(username)
       expect(logoutButton).toBeInTheDocument()
+      expect(usernameText).toBeInTheDocument()
     })
 
     it('should have inputs for each item created by user', () => {
@@ -181,6 +364,41 @@ describe('PotlukPage', () => {
       itemsNotCreatedByUser.forEach(i => {
         expect(screen.queryByDisplayValue(i.name)).not.toBeInTheDocument()
         expect(screen.getByText(i.name)).toBeInTheDocument()
+      })
+    })
+
+    describe('after adding blank item and logging out', () => {
+      beforeEach(async () => {
+        jest.spyOn(FirebaseService, 'deleteItemFromDatabase')
+
+        const addButton = screen.getAllByRole('button', { name: 'add' })[0]
+        const logoutButton = screen.getByRole('button', { name: 'Log Out' })
+
+        await user.click(addButton)
+        await user.click(logoutButton)
+      })
+
+      it('should have login area', () => {
+        const loginField: HTMLInputElement = screen.getByRole('textbox')
+        const loginButton = screen.getByRole('button', { name: 'Log In' })
+
+        expect(loginField).toBeInTheDocument()
+        expect(loginField.placeholder).toBe('Enter your name to edit')
+        expect(loginButton).toBeInTheDocument()
+      })
+
+      it('should NOT have a logout button or username', () => {
+        const logoutButton = screen.queryByRole('button', { name: 'Log Out' })
+        const usernameText = screen.queryByText(username)
+        expect(logoutButton).not.toBeInTheDocument()
+        expect(usernameText).not.toBeInTheDocument()
+      })
+
+      it('should delete blank item', () => {
+        const { itemId, categoryIndex, itemDatabaseEntry } = mockAddBlankEvent(username)
+
+        expect(FirebaseService.deleteItemFromDatabase).toHaveBeenCalledTimes(1)
+        expect(FirebaseService.deleteItemFromDatabase).toHaveBeenCalledWith(potlukId, Item.createFromDatabaseEntry(itemId, categoryIndex, itemDatabaseEntry))
       })
     })
   })
