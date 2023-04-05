@@ -96,11 +96,8 @@ describe('PotlukPage', () => {
   let component: ReactElement
   let componentRender: RenderResult
   let user: UserEvent
-  // let offlineGracePeriodMs: number
 
   beforeEach(() => {
-    // jest.useFakeTimers()
-
     potlukId = 'PotlukId'
     potlukName = 'Test Potluk'
     potlukDate = new Date('2023-01-01')
@@ -145,7 +142,6 @@ describe('PotlukPage', () => {
       })
     ]
     potluk = new Potluk(potlukName, potlukDate, categories, potlukId)
-    // offlineGracePeriodMs = 200
 
     component = <PotlukPage initialPotluk={potluk} initialUsername='' />
     componentRender = render(component)
@@ -218,13 +214,15 @@ describe('PotlukPage', () => {
 
   describe('firebase events', () => {
     describe('after disconnect', () => {
+      let offlineGracePeriodMs: number
+
       beforeAll(() => jest.useFakeTimers())
 
       beforeEach(() => {
+        offlineGracePeriodMs = 200
+
         window.matchMedia = (() => { }) as any
         jest.spyOn(window, 'matchMedia').mockImplementation()
-
-        // jest.useFakeTimers()
 
         // always connects on startup
         act(triggerConnectEvent)
@@ -242,7 +240,7 @@ describe('PotlukPage', () => {
         expect(disconnectedToast).not.toBeInTheDocument()
       })
 
-      describe('after reconnect within 100ms', () => {
+      describe('after reconnect within grace period', () => {
         beforeEach(() => {
           act(() => {
             jest.advanceTimersByTime(100)
@@ -262,9 +260,9 @@ describe('PotlukPage', () => {
         })
       })
 
-      describe('after stays disconnected for 200ms', () => {
+      describe('after stays disconnected longer than grace period', () => {
         beforeEach(() => {
-          act(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(offlineGracePeriodMs))
         })
 
         it('should show disconnected toast', () => {
