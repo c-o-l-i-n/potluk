@@ -19,6 +19,7 @@ export default function QrCodeOverlay ({ url, bottomText, onClick }: Props): Rea
               fgColor='white'
               bgColor='transparent'
               level='Q'
+              data-testid='qr-code'
             />
             <div className='qr-logo-background'>
               <div className='qr-logo' />

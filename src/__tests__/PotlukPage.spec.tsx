@@ -9,7 +9,9 @@ import Category from '../types/category'
 import Item from '../types/item'
 import ItemEvent, { ItemEventListener, ItemEventType } from '../types/itemEvent'
 import FirebaseService from '../services/firebase'
+import SharingService from '../services/sharing'
 
+jest.mock('../services/sharing')
 jest.mock('../services/firebase', () => ({
   subscribeToUpdates: mockSubscribeToUpdates,
   addItemToDatabase: (potlukId: string, item: Item) => triggerAddBlankEvent(potlukId, item),
@@ -93,6 +95,7 @@ describe('PotlukPage', () => {
   let potlukDatePretty: string
   let categories: Category[]
   let potluk: Potluk
+  let href: string
   let component: ReactElement
   let componentRender: RenderResult
   let user: UserEvent
@@ -142,6 +145,12 @@ describe('PotlukPage', () => {
       })
     ]
     potluk = new Potluk(potlukName, potlukDate, categories, potlukId)
+
+    href = `https://potl.uk/${potlukId}`
+    // @ts-expect-error
+    delete window.location
+    // @ts-expect-error
+    window.location = { href }
 
     component = <PotlukPage initialPotluk={potluk} initialUsername='' />
     componentRender = render(component)
@@ -210,6 +219,62 @@ describe('PotlukPage', () => {
         b.innerText === bb
       ))
     )
+  })
+
+  it('should share list', async () => {
+    const shareListButton = screen.getByRole('button', { name: 'Share List' })
+    jest.spyOn(SharingService, 'shareLink')
+    const expectedList = `👉 Test Potluk
+🗓 Sunday, January 1, 2023
+🔗 potl.uk/${potlukId}
+
+APPETIZERS
+🔲 Cheese Ball (Up for grabs)
+🔲 Nachos (Up for grabs)
+
+MAIN DISHES
+🔲 Pizza (Up for grabs)
+🔲 Steak (Up for grabs)
+
+SIDE DISHES
+(nothing yet)
+`
+
+    await user.click(shareListButton)
+
+    expect(SharingService.shareText).toHaveBeenCalledTimes(1)
+    expect(SharingService.shareText).toHaveBeenCalledWith(expectedList)
+  })
+
+  it('should share link', async () => {
+    const shareLinkButton = screen.getByRole('button', { name: 'Share Link' })
+    jest.spyOn(SharingService, 'shareLink')
+
+    await user.click(shareLinkButton)
+
+    expect(SharingService.shareLink).toHaveBeenCalledTimes(1)
+    expect(SharingService.shareLink).toHaveBeenCalledWith(potlukName, href)
+  })
+
+  describe('QR code', () => {
+    beforeEach(async () => {
+      const qrCodeButton = screen.getByRole('button', { name: 'QR Code' })
+      await user.click(qrCodeButton)
+    })
+
+    it('should show QR code', () => {
+      const qrCode = screen.getByTestId('qr-code')
+      expect(qrCode).toBeInTheDocument()
+    })
+
+    it('should NOT show QR code after closing QR code overlay', async () => {
+      const closeButton = screen.getByRole('button', { name: 'close' })
+      const qrCode = screen.queryByTestId('qr-code')
+
+      await user.click(closeButton)
+
+      expect(qrCode).not.toBeInTheDocument()
+    })
   })
 
   describe('firebase events', () => {
