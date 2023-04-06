@@ -15,7 +15,6 @@ jest.mock('firebase/app-check')
 jest.mock('next/router', () => ({ push: jest.fn() }))
 
 describe('New Page', () => {
-  // let router: Router
   let dateString: string
   let now: Date
   let component: ReactElement
@@ -92,9 +91,7 @@ describe('New Page', () => {
     const categoryToDelete = 'Side Dishes'
     const categoriesAfterDeletion: string[] = defaultCategories.filter(c => c !== categoryToDelete)
 
-    const deleteButton = screen.getAllByRole('button', {
-      name: 'delete'
-    })[defaultCategories.indexOf(categoryToDelete)]
+    const deleteButton = screen.getAllByRole('button', { name: 'delete' })[defaultCategories.indexOf(categoryToDelete)]
 
     await user.click(deleteButton)
 
@@ -106,9 +103,7 @@ describe('New Page', () => {
 
   it('should add a category on add button click', async () => {
     const categoriesAfterAddition = [...defaultCategories, '']
-    const addButton = screen.getByRole('button', {
-      name: 'add'
-    })
+    const addButton = screen.getByRole('button', { name: 'add' })
 
     await user.click(addButton)
 
@@ -119,9 +114,7 @@ describe('New Page', () => {
   })
 
   it('should only allow up to maximum categories', async () => {
-    const addButton = screen.getByRole('button', {
-      name: 'add'
-    })
+    const addButton = screen.getByRole('button', { name: 'add' })
 
     for (let i = 0; i < maxCategoriesAllowed + 5; i++) {
       await user.click(addButton)
@@ -136,9 +129,7 @@ describe('New Page', () => {
     let createButton: HTMLButtonElement
 
     beforeEach(async () => {
-      createButton = screen.getByRole('button', {
-        name: 'Create'
-      })
+      createButton = screen.getByRole('button', { name: 'Create' })
 
       // set up all requirements for "Create" button to be enabled
       const eventNameField: HTMLInputElement = screen.getByLabelText('Event Name')
@@ -168,9 +159,7 @@ describe('New Page', () => {
     })
 
     it('should be disabled when all categories are deleted', async () => {
-      const deleteButtons: HTMLButtonElement[] = screen.getAllByRole('button', {
-        name: 'delete'
-      })
+      const deleteButtons: HTMLButtonElement[] = screen.getAllByRole('button', { name: 'delete' })
 
       for (const deleteButton of deleteButtons) {
         await user.click(deleteButton)
@@ -200,7 +189,7 @@ describe('New Page', () => {
     const setupTests = async (firebaseOperationShouldSucceed = true): Promise<void> => {
       const eventName = "Hazel's First Birthday"
       const eventDateString = '2023-05-20'
-      const username = 'Hazel Bobazel'
+      const username = 'Hazel BoBazel'
 
       potlukId = 'PotlukID'
       usernameEncoded = encodeURIComponent(username)
@@ -232,15 +221,9 @@ describe('New Page', () => {
       const eventDateField: HTMLInputElement = screen.getByLabelText('Event Date')
       const yourNameField: HTMLInputElement = screen.getByLabelText('Your Name (Optional)')
       const categoryInputToChange = screen.getAllByPlaceholderText('Category')[categoryIndexToChange]
-      const deleteButton = screen.getAllByRole('button', {
-        name: 'delete'
-      })[categoryIndexToDelete]
-      const addButton = screen.getAllByRole('button', {
-        name: 'add'
-      })[categoryIndexToDelete]
-      const createButton = screen.getByRole('button', {
-        name: 'Create'
-      })
+      const deleteButton = screen.getAllByRole('button', { name: 'delete' })[categoryIndexToDelete]
+      const addButton = screen.getAllByRole('button', { name: 'add' })[categoryIndexToDelete]
+      const createButton = screen.getByRole('button', { name: 'Create' })
 
       // set event name
       await user.type(eventNameField, eventName)
