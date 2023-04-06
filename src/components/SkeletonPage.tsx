@@ -28,9 +28,9 @@ export default function SkeletonPage (): ReactElement {
         <div className='box' />
 
         <div className='buttons is-flex is-justify-content-center mt-6 mb-0'>
-          <BottomButton onClick={() => {}} text='Share List' icon={faSquare} />
-          <BottomButton onClick={() => {}} text='Share Link' icon={faSquare} />
-          <BottomButton onClick={() => {}} text='QR Code' icon={faSquare} />
+          <BottomButton text='Share List' icon={faSquare} />
+          <BottomButton text='Share Link' icon={faSquare} />
+          <BottomButton text='QR Code' icon={faSquare} />
         </div>
       </div>
     </>
