@@ -95,6 +95,7 @@ describe('PotlukPage', () => {
   let potlukDatePretty: string
   let categories: Category[]
   let potluk: Potluk
+  let domain: string
   let href: string
   let component: ReactElement
   let componentRender: RenderResult
@@ -146,7 +147,8 @@ describe('PotlukPage', () => {
     ]
     potluk = new Potluk(potlukName, potlukDate, categories, potlukId)
 
-    href = `https://potl.uk/${potlukId}`
+    domain = 'potl.uk'
+    href = `https://${domain}/${potlukId}`
     // @ts-expect-error
     delete window.location
     // @ts-expect-error
@@ -224,9 +226,9 @@ describe('PotlukPage', () => {
   it('should share list', async () => {
     const shareListButton = screen.getByRole('button', { name: 'Share List' })
     jest.spyOn(SharingService, 'shareLink')
-    const expectedList = `👉 Test Potluk
-🗓 Sunday, January 1, 2023
-🔗 potl.uk/${potlukId}
+    const expectedList = `👉 ${potlukName}
+🗓 ${potlukDatePretty}
+🔗 ${domain}/${potlukId}
 
 APPETIZERS
 🔲 Cheese Ball (Up for grabs)
