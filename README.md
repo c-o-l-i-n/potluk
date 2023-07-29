@@ -3,14 +3,11 @@
 <p align="center">Coordinate who brings what to your potluck!</p>
 
 <div align="center">
-  <a href="https://github.com/c-o-l-i-n/potluk/actions/workflows/deploy.yml">
-    <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/deploy.yml?branch=main&logo=github&logoWidth=12">
+  <a href="https://github.com/c-o-l-i-n/potluk/actions/workflows/build-and-deploy.yml">
+    <img alt="Github Build and Deployment Status" src="https://img.shields.io/github/actions/workflow/status/c-o-l-i-n/potluk/build-and-deploy.yml?branch=main&logo=github&logoWidth=12">
   </a>
   <a href="https://codecov.io/gh/c-o-l-i-n/potluk"> 
     <img alt="Test Coverage" src="https://img.shields.io/codecov/c/github/c-o-l-i-n/potluk?logo=codecov&logoWidth=12&logoColor=white"/> 
-  </a>
-  <a href="https://codeclimate.com/github/c-o-l-i-n/potluk">
-    <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/c-o-l-i-n/potluk?logo=codeclimate&logoWidth=12">
   </a>
   <a href="https://potl.uk">
     <img alt="Website Monitoring Status" src="https://img.shields.io/website?url=https%3A%2F%2Fpotl.uk">
