@@ -1,9 +1,9 @@
-const nextJest = require('next/jest')
+import type { Config } from 'jest'
+import nextJest from 'next/jest'
 
 const createJestConfig = nextJest({ dir: './' })
 
-/** @type {import('jest').Config} */
-const customJestConfig = {
+const customJestConfig: Config = {
   testEnvironment: 'jest-environment-jsdom',
   testRegex: 'src/__tests__/.*spec\\.tsx?$',
   collectCoverage: true,
@@ -13,4 +13,4 @@ const customJestConfig = {
   ]
 }
 
-module.exports = createJestConfig(customJestConfig)
+export default createJestConfig(customJestConfig)
