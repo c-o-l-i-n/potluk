@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { ReactElement } from 'react'
 
 interface Props {
-  onClick: () => void
+  onClick?: () => void
   text: string
   icon: IconDefinition
 }
 
-export default function BottomButton ({ onClick, text, icon }: Props): ReactElement {
+export default function BottomButton ({ onClick = () => {}, text, icon }: Props): ReactElement {
   return (
     <button
       type='button'

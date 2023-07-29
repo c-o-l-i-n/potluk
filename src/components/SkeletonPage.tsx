@@ -10,7 +10,7 @@ export default function SkeletonPage (): ReactElement {
         <title>Potluk</title>
       </Head>
 
-      <div id='skeleton'>
+      <div id='skeleton' data-testid='skeleton'>
         <h2 className='mb-1'>Name</h2>
         <p className='is-uppercase has-text-weight-bold'>Date</p>
 
@@ -28,9 +28,9 @@ export default function SkeletonPage (): ReactElement {
         <div className='box' />
 
         <div className='buttons is-flex is-justify-content-center mt-6 mb-0'>
-          <BottomButton onClick={() => {}} text='Share List' icon={faSquare} />
-          <BottomButton onClick={() => {}} text='Share Link' icon={faSquare} />
-          <BottomButton onClick={() => {}} text='QR Code' icon={faSquare} />
+          <BottomButton text='Share List' icon={faSquare} />
+          <BottomButton text='Share Link' icon={faSquare} />
+          <BottomButton text='QR Code' icon={faSquare} />
         </div>
       </div>
     </>

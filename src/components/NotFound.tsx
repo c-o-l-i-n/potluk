@@ -13,7 +13,7 @@ export default function NotFound ({ potlukId }: Props): ReactElement {
       <Head>
         <title>404 - Potluk Not Found</title>
       </Head>
-      <div className='has-text-centered'>
+      <div className='has-text-centered' data-testid='not-found-page'>
         <Image
           src='/images/404.svg'
           alt='Page Not Found'

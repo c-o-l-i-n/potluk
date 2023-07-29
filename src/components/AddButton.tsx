@@ -11,6 +11,7 @@ export default function AddButton ({ onClick, disabled = false }: Props): ReactE
   return (
     <div className='box-row is-flex is-justify-content-center is-align-items-center'>
       <button
+        aria-label='add'
         type='button'
         className='button is-medium is-ghost'
         disabled={disabled}

@@ -44,6 +44,7 @@ export default function InputField ({
         <input
           className={`input ${swapBold ? 'has-text-weight-bold' : ''}`}
           type={type}
+          id={fieldName}
           name={fieldName}
           placeholder={placeholder}
           defaultValue={defaultValue}

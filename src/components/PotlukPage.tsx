@@ -137,7 +137,8 @@ export default function PotlukPage ({ initialPotluk, initialUsername }: Props): 
           potluk={potluk}
           category={category}
           categoryIndex={categoryIndex}
-          username={username} online={online}
+          username={username}
+          online={online}
         />
       )}
 

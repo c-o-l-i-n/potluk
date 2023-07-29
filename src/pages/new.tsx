@@ -16,7 +16,6 @@ const MAX_CATEGORIES = 8
 const MAX_TITLE_LENGTH = 60
 
 export default function New (): ReactElement {
-  // default date is today in the format yyyy-mm-dd
   const [eventDateString, setEventDateString] = useState<string>(Potluk.formatEventDate)
   const [eventName, setEventName] = useState<string>('')
   const [username, setUsername] = useState<string>('')
@@ -30,6 +29,7 @@ export default function New (): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
 
   const createButtonDisabled =
+    isLoading ||
     eventName.trim() === '' ||
     eventDateString === '' ||
     categories.length === 0 ||
@@ -58,7 +58,7 @@ export default function New (): ReactElement {
       return
     }
 
-    void router.push(`/${potluk.id}?u=${username}`)
+    void router.push(`/${potluk.id}?u=${encodeURIComponent(username)}`)
   }
 
   return (

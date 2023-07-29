@@ -1,14 +1,15 @@
-name: Build and Deploy
+name: Build
 
 on:
   push:
-    branches:
+    branches-ignore:
       - main
     paths-ignore:
       - '**.md'
+  pull_request:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,14 +25,17 @@ jobs:
       - name: Install Dependencies 📦
         run: npm ci
 
+      - name: Run Linter 🔎
+        run: npm run lint
+
+      - name: Run Tests 🧪
+        run: npm test
+        
+      - name: Upload Coverage to Codecov ☂️
+        uses: codecov/codecov-action@v3
+
       - name: Build 🛠
         run: npm run build
 
-      - name: Export ✈️
+      - name: Export Static Site ✈️
         run: npm run export
-
-      - name: Deploy to Github Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: out
