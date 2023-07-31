@@ -20,9 +20,12 @@
   </a>
 </div>
 
+<br />
+<br />
+
 <p align="center">
   <a href="https://potl.uk">
-    <img alt="Potluk Logo" width="256" height="256" src="public/icons/android-chrome-512x512.png" />
+    <img alt="Potluk Logo" height="400" src="public/images/screenshot.webp" />
   </a>
 </p>
 
