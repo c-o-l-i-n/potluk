@@ -11,6 +11,9 @@ import Box from '../components/Box'
 import Head from 'next/head'
 import FirebaseService from '../services/firebase'
 import { Toaster } from 'react-hot-toast'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 const MAX_CATEGORIES = 8
 const MAX_TITLE_LENGTH = 60
@@ -66,6 +69,14 @@ export default function New (): ReactElement {
       <Head>
         <title>Create New Potluk</title>
       </Head>
+
+      <Link href='/' className='is-primary is-inverted has-text-weight-bold'>
+        <FontAwesomeIcon icon={faArrowLeft} />
+        <span className='ml-2'>Back</span>
+      </Link>
+
+      <h2 className='mt-4'>Create new Potluk</h2>
+      <p className='mb-6'>Fill out the fields to create a free custom sharable page for your event.</p>
 
       <InputField
         type='text'

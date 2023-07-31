@@ -11,37 +11,46 @@ export default function Home (): ReactElement {
       </Head>
 
       <main
-        className='section
-          content
+        className='
           is-flex
           is-flex-direction-column
           is-align-items-center
           is-justify-content-space-between'
       >
-        <Image
-          src='/images/family-meal.svg'
-          alt='People eating a meal'
-          width={300}
-          height={230}
-          priority
-        />
 
-        <p className='has-text-centered is-size-4 mt-6 mb-3'>
-          Who&apos;s bringing what?
-        </p>
-        <p className='has-text-centered is-size-4 mb-5'>
-          Coordinate with <strong>Potluk</strong>!
-        </p>
+        <div className='is-flex is-align-items-center landing-page'>
+          <Image
+            src='/images/screenshot.webp'
+            alt=''
+            width={400}
+            height={100}
+            priority
+            className='widescreen'
+          />
 
-        <Link href='/new' className='button is-primary is-size-4 is-large has-text-weight-bold mt-3 mb-5'>
-          Create New Potluk
-        </Link>
+          <div className='is-flex is-flex-direction-column is-align-items-center mb-6 max-width-500'>
+            <h1 className='is-size-2-widescreen is-size-3'>Coordinate who brings what to your potluck with a simple sharable link</h1>
 
-        <ol className='is-size-5'>
-          <li>Create a Potluk for your event</li>
-          <li>Share the link with friends</li>
-          <li>Choose what you bring</li>
-        </ol>
+            <Link href='/new' className='button is-primary is-inline-block is-size-4 is-large has-text-weight-bold my-5'>
+              Create New Potluk
+            </Link>
+
+            <Image
+              src='/images/screenshot.webp'
+              alt=''
+              width={400}
+              height={100}
+              priority
+              className='not-widescreen my-5'
+            />
+
+            <ol className='is-size-5 '>
+              <li>Create a Potluk for your event</li>
+              <li>Share the link with friends</li>
+              <li>Choose what you bring</li>
+            </ol>
+          </div>
+        </div>
       </main>
     </>
   )

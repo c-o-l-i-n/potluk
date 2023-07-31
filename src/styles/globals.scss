@@ -137,3 +137,34 @@ main {
     }
   }
 }
+
+.landing-page {
+  .max-width-500 {
+    max-width: 500px;
+  }
+
+  @include from($widescreen) {
+    width: 1000px;
+    position: relative;
+
+    .widescreen {
+      display: block;
+    }
+
+    .not-widescreen {
+      display: none;
+    }
+  }
+
+  @include until($widescreen) {
+    flex-direction: column;
+
+    .widescreen {
+      display: none;
+    }
+
+    .not-widescreen {
+      display: block;
+    }
+  }
+}
