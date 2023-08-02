@@ -15,7 +15,8 @@ export default function Home (): ReactElement {
           is-flex
           is-flex-direction-column
           is-align-items-center
-          is-justify-content-space-between'
+          is-justify-content-space-between
+          p-2'
       >
 
         <div className='is-flex is-align-items-center landing-page'>
