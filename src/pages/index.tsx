@@ -30,7 +30,7 @@ export default function Home (): ReactElement {
           />
 
           <div className='is-flex is-flex-direction-column is-align-items-center mb-6 max-width-500'>
-            <h1 className='is-size-2-widescreen is-size-3'>Coordinate who brings what to your potluck with a simple sharable link</h1>
+            <h1 className='is-size-2-widescreen is-size-3'>Coordinate who brings what to your potluck with a custom sharable webpage</h1>
 
             <Link href='/new' className='button is-primary is-inline-block is-size-4 is-large has-text-weight-bold my-5'>
               Create New Potluk
@@ -46,7 +46,7 @@ export default function Home (): ReactElement {
             />
 
             <ol className='is-size-5 '>
-              <li>Create a Potluk for your event</li>
+              <li>Create a page for your event</li>
               <li>Share the link with friends</li>
               <li>Choose what you bring</li>
             </ol>
