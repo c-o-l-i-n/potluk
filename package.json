@@ -39,7 +39,7 @@
 		"bulma": "^0.9.4",
 		"copy-to-clipboard": "^3.3.3",
 		"firebase": "^9.17.1",
-		"next": "^13.1.6",
+		"next": "^13.5.4",
 		"pluralize": "^8.0.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
